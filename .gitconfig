@@ -1,0 +1,23 @@
+[user]
+	name = <name> 
+	email = <email> 
+[diff]
+[pager]
+  diff =
+[color]
+  ui = auto
+[alias]
+  st = status -a
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative
+  ch = checkout -
+  wslog = log --ignore-space-at-eol -p -w -b
+  wsdiff = diff --ignore-space-at-eol -w -b --no-ext-diff
+	lga = log --graph --oneline --all --decorate
+[merge]
+    tool = threesome
+[mergetool "threesome"]
+    cmd = "vim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
+    trustExitCode = true
+# vim: set et :
+[core]
+	editor = vim

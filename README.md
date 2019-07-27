@@ -11,3 +11,4 @@
 	* ```git config --global core.excludesfile ~/.gitignore_global```
 	* ```git config --global user.name "{Your Name}"```
 	* ```git config --global user.email "{Your Email}"```
+  * ```git config --global url."git@github.com:".insteadOf "https://github.com/"```

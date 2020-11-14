@@ -26,11 +26,11 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tomtom/tcomment_vim'
-Plug 'terryma/vim-multiple-cursors'
+Plug 'mg979/vim-visual-multi'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-Plug 'hlissner/vim-multiedit'
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
+Plug 'preservim/nerdtree'
 call plug#end()
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 

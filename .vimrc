@@ -9,8 +9,6 @@ set smartcase
 set nocompatible
 set backspace=indent,eol,start
 set completeopt-=preview
-set background=dark
-color default
 filetype on
 filetype plugin on
 filetype indent on
@@ -31,6 +29,9 @@ Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
 Plug 'preservim/nerdtree'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'arcticicestudio/nord-vim'
 call plug#end()
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 
@@ -57,10 +58,16 @@ let g:go_addtags_transform = 'camelcase'
 
 let g:ale_fixers = {
       \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-      \   'javascript': ['prettier', 'eslint'],
+      \   'javascript': ['eslint'],
       \   'css': ['prettier'],
       \}
 let g:ale_fix_on_save = 1
 set formatoptions-=t
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
+set background=dark
+colorscheme nord
+let g:airline_theme='nord'
+if (has("termguicolors"))
+      set termguicolors
+endif

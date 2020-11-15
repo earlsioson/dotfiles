@@ -13,6 +13,7 @@ font:
     style: Bold
 
   size: 18.0
+  use_thin_strokes: true
 # Colors (Iceberg Dark)
 colors:
   # Default colors

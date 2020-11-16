@@ -31,7 +31,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'arcticicestudio/nord-vim'
+Plug 'gkeep/iceberg-dark'
 call plug#end()
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 
@@ -66,8 +66,8 @@ set formatoptions-=t
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 set background=dark
-colorscheme nord
-let g:airline_theme='nord'
+colorscheme iceberg
+let g:airline_theme='icebergDark'
 if (has("termguicolors"))
       set termguicolors
 endif

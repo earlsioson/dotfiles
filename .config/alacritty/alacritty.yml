@@ -39,3 +39,5 @@ colors:
     magenta: '#ada0d3'
     cyan:    '#95c4ce'
     white:   '#d2d4de'
+key_bindings:
+  - { key: K,         mods: Command,             action: ClearHistory   }

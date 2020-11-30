@@ -28,12 +28,13 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'mg979/vim-visual-multi'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+Plug 'fatih/vim-hclfmt', { 'do': 'go get github.com/fatih/hclfmt' }
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
 Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'arcticicestudio/nord-vim' 
+Plug 'arcticicestudio/nord-vim'
 call plug#end()
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 

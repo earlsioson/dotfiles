@@ -15,7 +15,8 @@ filetype plugin on
 filetype indent on
 syntax on
 let python_highlight_all=1
-let mapleader = "\<Space>"
+let mapleader="\<Space>"
+let g:VM_leader = '\'
 call plug#begin('~/.vim/plugged')
 Plug 'chiel92/vim-autoformat'
 Plug 'nvie/vim-flake8'
@@ -32,7 +33,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'gkeep/iceberg-dark'
+Plug 'arcticicestudio/nord-vim' 
 call plug#end()
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 
@@ -55,20 +56,38 @@ au BufNewFile,BufRead *.py
       \ set smartindent |
       \ set fileformat=unix
 
+set autowrite
+
 let g:go_addtags_transform = 'camelcase'
+let g:go_fmt_autosave = 1
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
 
 let g:ale_fixers = {
       \   '*': ['remove_trailing_lines', 'trim_whitespace'],
       \   'javascript': ['eslint'],
+      \   'typescript': ['eslint'],
       \   'css': ['prettier'],
       \}
 let g:ale_fix_on_save = 1
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
+let g:airline#extensions#ale#enabled = 1
+
 set formatoptions-=t
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 set background=dark
-colorscheme iceberg
-let g:airline_theme='icebergDark'
+colorscheme nord
+let g:airline_theme='nord'
 if (has("termguicolors"))
       set termguicolors
 endif

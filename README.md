@@ -1,8 +1,11 @@
 # dotfiles
 * for vim,
   * copy the contents of .vim into your $HOME/.vim directory
+	* copy the contents of .config into your $HOME/.config directory
 	* copy the .vimrc file to your home directory root
 	* install go for vim-go plugin
+	* install [tpm](https://github.com/tmux-plugins/tpm)
+	* install neovim
 	* launch vim
 	* ```:PlugInstall```
 * copy .tmux.conf to ~/

@@ -88,6 +88,7 @@ let g:netrw_banner = 0
 set background=dark
 colorscheme nord
 let g:airline_theme='nord'
+let g:airline_powerline_fonts = 1
 if (has("termguicolors"))
       set termguicolors
 endif

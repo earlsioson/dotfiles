@@ -3,6 +3,7 @@
   * copy the contents of .vim into your $HOME/.vim directory
 	* copy the contents of .config into your $HOME/.config directory
 	* copy the .vimrc file to your home directory root
+	* install font, Source Code Pro for Powerline from [github](https://github.com/powerline/fonts)
 	* install go for vim-go plugin
 	* install [tpm](https://github.com/tmux-plugins/tpm)
 	* install neovim

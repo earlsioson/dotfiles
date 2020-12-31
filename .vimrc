@@ -35,7 +35,9 @@ Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'arcticicestudio/nord-vim'
+Plug 'SirVer/ultisnips'
 call plug#end()
+
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 
 autocmd BufNewFile,BufRead *.scss set ft=scss.css
@@ -92,4 +94,7 @@ let g:airline_theme='nord'
 let g:airline_powerline_fonts = 1
 if (has("termguicolors"))
       set termguicolors
+endif
+if has('nvim')
+      let g:python3_host_prog = '/Users/earl/dev/envs/py3/bin/python3'
 endif

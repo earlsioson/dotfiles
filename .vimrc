@@ -96,5 +96,6 @@ if (has("termguicolors"))
       set termguicolors
 endif
 if has('nvim')
+      let g:loaded_python_provider = 0
       let g:python3_host_prog = '/Users/earl/dev/envs/py3/bin/python3'
 endif

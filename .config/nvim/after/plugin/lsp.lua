@@ -4,9 +4,6 @@ end
 if not pcall(require, "luasnip") then
   return
 end
-if not pcall(require, "cmp_nvim_ls") then
-  return
-end
 if not pcall(require, "lspconfig") then
   return
 end

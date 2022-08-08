@@ -10,6 +10,9 @@ set nowrap
 set mouse=a
 set scrolloff=8
 set signcolumn=yes
+set termguicolors
+set background=dark
+
 filetype on
 filetype plugin on
 filetype indent on
@@ -24,9 +27,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-startify'
 call plug#end()
-
-set background=dark
 colorscheme nord
+
 let g:airline_theme='nord'
 if has('nvim')
       let g:loaded_python_provider = 0
@@ -34,7 +36,6 @@ if has('nvim')
       lua require('init')
 endif
 if has('win32')
-  set termguicolors
   let &shell = 'pwsh'
   let &shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
   let &shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'

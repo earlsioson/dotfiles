@@ -3,6 +3,9 @@ if not pcall(require, "nvim-treesitter.configs") then
 end
 
 require'nvim-treesitter.configs'.setup {
+  autotag = {
+    enable = true,
+  },
   ensure_installed = { 
     "c", "cpp", "css", "dockerfile", "go", "hcl", "html", "javascript", 
     "json", "lua", "markdown", "proto", "python", "regex", "rust", "swift", "toml", "tsx", "typescript", "yaml" 

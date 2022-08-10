@@ -63,5 +63,10 @@ packer.startup(function()
     require("toggleterm").setup()
   end}
   use "akinsho/bufferline.nvim"
+  use {
+    "windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
+  }
+  use "windwp/nvim-ts-autotag"
 end)
 require "es.globals"

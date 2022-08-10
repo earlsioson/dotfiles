@@ -3,3 +3,4 @@ if not pcall(require, "mason") then
 end
 
 require("mason").setup()
+require("mason-lspconfig").setup()

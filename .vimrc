@@ -19,6 +19,10 @@ filetype indent on
 syntax on
 let mapleader="\<Space>"
 let g:VM_leader = '\'
+let g:netrw_banner=0
+let g:netrw_liststyle= 3
+let g:netrw_altv=1
+let g:netrw_winsize=85
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'

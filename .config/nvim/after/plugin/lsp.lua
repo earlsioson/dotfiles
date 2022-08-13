@@ -104,6 +104,11 @@ local lsp_flags = {
   -- This is the default in Nvim 0.7+
   debounce_text_changes = 150,
 }
+require'lspconfig'.sumneko_lua.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach
+}
 require'lspconfig'.gopls.setup {
   capabilities = capabilities,
   flags = lsp_flags,
@@ -134,3 +139,8 @@ vim.api.nvim_create_autocmd({"BufWritePre"}, {
   command = "EslintFixAll"
 })
 require'lspconfig'.taplo.setup{}
+require'lspconfig'.rust_analyzer.setup{
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach
+}

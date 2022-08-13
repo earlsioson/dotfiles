@@ -7,7 +7,6 @@ set expandtab
 set smartindent
 set nowrap
 set mouse=a
-set scrolloff=8
 set signcolumn=yes
 set termguicolors
 set background=dark

@@ -68,5 +68,6 @@ packer.startup(function()
     config = function() require("nvim-autopairs").setup {} end
   }
   use "windwp/nvim-ts-autotag"
+  use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
 end)
 require "es.globals"

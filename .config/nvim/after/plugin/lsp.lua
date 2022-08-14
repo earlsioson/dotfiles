@@ -107,7 +107,14 @@ local lsp_flags = {
 require'lspconfig'.sumneko_lua.setup {
   capabilities = capabilities,
   flags = lsp_flags,
-  on_attach = on_attach
+  on_attach = on_attach,
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim' }
+      }
+    }
+  }
 }
 require'lspconfig'.gopls.setup {
   capabilities = capabilities,

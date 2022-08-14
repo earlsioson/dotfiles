@@ -14,23 +14,28 @@ set background=dark
 filetype on
 filetype plugin on
 filetype indent on
+
 syntax on
+
 let mapleader="\<Space>"
 let g:VM_leader = '\'
+let g:netrw_banner=0
+
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-vinegar'
 Plug 'arcticicestudio/nord-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-startify'
+Plug 'justinmk/vim-dirvish'
 call plug#end()
+
 colorscheme nord
 
 let g:airline_theme='nord'
+
 if has('nvim')
       let g:loaded_python_provider = 0
       let g:python3_host_prog = '/Users/earl/.venv/nvim/bin/python'

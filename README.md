@@ -3,7 +3,6 @@
 ## vim/neovim setup
 
 - install vim and neovim
-- install [nord theme for the terminal](https://www.nordtheme.com/ports#search)
 - install [nerd font](https://www.nerdfonts.com/font-downloads)
 - copy the .vim of .vim into $HOME
 - copy the nvim dir from .config into $HOME/.config

@@ -30,11 +30,12 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-startify'
 Plug 'justinmk/vim-dirvish'
+Plug 'dracula/vim', { 'as': 'dracula' }
 call plug#end()
 
-colorscheme nord
+colorscheme dracula
 
-let g:airline_theme='nord'
+let g:airline_theme='dracula'
 
 if has('nvim')
       let g:loaded_python_provider = 0

@@ -1,3 +1,6 @@
+if not pcall(require, "ufo") then
+  return
+end
 vim.o.foldcolumn = '1'
 vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99

@@ -33,7 +33,7 @@ Plug 'justinmk/vim-dirvish'
 Plug 'dracula/vim', { 'as': 'dracula' }
 call plug#end()
 
-colorscheme dracula
+colorscheme nord
 
 let g:airline_theme='dracula'
 

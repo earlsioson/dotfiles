@@ -63,13 +63,11 @@ packer.startup(function()
   use {"akinsho/toggleterm.nvim", tag = 'v2.*', config = function()
     require("toggleterm").setup()
   end}
-  use "akinsho/bufferline.nvim"
   use {
     "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
   }
   use "windwp/nvim-ts-autotag"
-  use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
   use {
     'numToStr/Comment.nvim',
     config = function()

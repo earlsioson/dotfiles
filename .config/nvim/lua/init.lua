@@ -58,7 +58,6 @@ packer.startup(function()
   use { "nvim-telescope/telescope-dap.nvim" }
   use { "nvim-telescope/telescope-file-browser.nvim" }
 
-  use "lewis6991/gitsigns.nvim"
   use "kyazdani42/nvim-web-devicons"
   use {"akinsho/toggleterm.nvim", tag = 'v2.*', config = function()
     require("toggleterm").setup()

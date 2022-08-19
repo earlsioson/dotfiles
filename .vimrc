@@ -8,7 +8,6 @@ set smartindent
 set nowrap
 set mouse=a
 set signcolumn=yes
-set termguicolors
 set background=dark
 
 filetype on
@@ -35,8 +34,13 @@ Plug 'justinmk/vim-dirvish'
 Plug 'dracula/vim', { 'as': 'dracula' }
 call plug#end()
 
-colorscheme dracula
-let g:airline_theme='dracula'
+if has('termguicolors')
+  set termguicolors
+  colorscheme dracula
+  let g:airline_theme='dracula'
+else
+  colorscheme default
+endif
 
 if has('nvim')
       let g:loaded_python_provider = 0

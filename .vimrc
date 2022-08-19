@@ -34,6 +34,9 @@ Plug 'justinmk/vim-dirvish'
 Plug 'dracula/vim', { 'as': 'dracula' }
 call plug#end()
 
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+
 if has('termguicolors')
   set termguicolors
   colorscheme dracula

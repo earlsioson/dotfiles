@@ -21,6 +21,7 @@ let mapleader="\<Space>"
 let g:VM_leader = '\'
 let g:netrw_banner=0
 let g:netrw_liststyle = 3
+nnoremap <Leader><Leader>t :Explore<CR>
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'
@@ -35,7 +36,6 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 call plug#end()
 
 colorscheme dracula
-
 let g:airline_theme='dracula'
 
 if has('nvim')

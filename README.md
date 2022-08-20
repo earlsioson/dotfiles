@@ -4,9 +4,9 @@
 
 - install vim and neovim
 - install [nerd font](https://www.nerdfonts.com/font-downloads)
-- copy the .vim of .vim into $HOME
+- copy .vim into $HOME
 - copy the nvim dir from .config into $HOME/.config
-- copy the .vimrc file to $HOME 
+- copy .vimrc file to $HOME 
 
 ### neovim lsp
 

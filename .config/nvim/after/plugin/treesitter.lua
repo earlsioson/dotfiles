@@ -1,8 +1,9 @@
-if not pcall(require, "nvim-treesitter.configs") then
+local has_nvim_treesitter_configs, nvim_treesitter_configs = pcall(require, "nvim-treesitter.configs")
+if not has_nvim_treesitter_configs then
   return
 end
 
-require'nvim-treesitter.configs'.setup {
+nvim_treesitter_configs.setup {
   autotag = {
     enable = true,
   },

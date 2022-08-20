@@ -1,9 +1,8 @@
-if not pcall(require, "toggleterm") then
+local has_toggleterm, toggleterm = pcall(require, "toggleterm")
+if not has_toggleterm then
   return
 end
 
-require("toggleterm").setup()
-
-local Terminal  = require('toggleterm.terminal').Terminal
+toggleterm.setup()
 
 vim.api.nvim_set_keymap("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", {noremap = true, silent = true})

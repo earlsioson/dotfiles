@@ -1,23 +1,32 @@
-if not pcall(require, "dapui") then
-  return
-end
-if not pcall(require, "dap-go") then
-  return
-end
-if not pcall(require, "dap-python") then
-  return
-end
-if not pcall(require, "dap-vscode-js") then
-  return
-end
-if not pcall(require, "dap") then
+local has_dapui, dapui = pcall(require, "dapui")
+if not has_dapui then
   return
 end
 
-require('dapui').setup()
-require('dap-go').setup()
-require('dap-python').setup('~/.venv/nvim/bin/python')
-require("dap-vscode-js").setup({
+local has_dap_go, dap_go = pcall(require, "dap-go")
+if not has_dap_go then
+  return
+end
+
+local has_dap_python, dap_python = pcall(require, "dap-python")
+if not has_dap_python then
+  return
+end
+
+local has_dap_vscode_js, dap_vscode_js = pcall(require, "dap-vscode-js")
+if not has_dap_vscode_js then
+  return
+end
+
+local has_dap, dap = pcall(require, "dap")
+if not has_dap then
+  return
+end
+
+dapui.setup()
+dap_go.setup()
+dap_python.setup('~/.venv/nvim/bin/python')
+dap_vscode_js.setup({
   -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
   -- debugger_path = "(runtimedir)/site/pack/packer/opt/vscode-js-debug", -- Path to vscode-js-debug installation. 
   adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
@@ -70,7 +79,7 @@ for _, language in ipairs({ "typescript", "typescriptreact", "javascript", "java
     }
   }
 end
-require('dap').set_log_level('DEBUG')
+dap.set_log_level('DEBUG')
 
 vim.keymap.set("n", "<leader>dc", ":lua require'dap'.continue()<CR>")
 vim.keymap.set("n", "<leader>dv", ":lua require'dap'.step_over()<CR>")

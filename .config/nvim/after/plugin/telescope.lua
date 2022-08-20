@@ -1,8 +1,9 @@
-if not pcall(require, "telescope") then
+local has_telescope, telescope = pcall(require, "telescope")
+if not has_telescope then
   return
 end
 
-require("telescope").setup{
+telescope.setup{
   defaults = {
     prompt_prefix = "🔍 ",
     file_ignore_patterns = { "node_modules" },
@@ -11,8 +12,10 @@ require("telescope").setup{
     }
   }
 }
-require("telescope").load_extension("dap")
-require("telescope").load_extension("file_browser")
+
+telescope.load_extension("dap")
+telescope.load_extension("file_browser")
+
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", {})
 vim.keymap.set("n", "<leader>fb", "<cmd>Telescope file_browser<cr>", {})
 vim.keymap.set("n", "<leader>fs", "<cmd>Telescope grep_string<cr>", {})

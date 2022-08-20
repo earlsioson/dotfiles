@@ -1,15 +1,25 @@
-if not pcall(require, "cmp") then
+local has_cmp, cmp = pcall(require, "cmp")
+if not has_cmp then
   return
 end
-if not pcall(require, "luasnip") then
+
+local has_luasnip, luasnip = pcall(require, "luasnip")
+if not has_luasnip then
   return
 end
-if not pcall(require, "lspconfig") then
+
+local has_lspconfig, lspconfig = pcall(require, "lspconfig")
+if not has_lspconfig then
+  return
+end
+
+
+local has_cmp_nvim_lsp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+if not has_cmp_nvim_lsp then
   return
 end
 
 vim.opt.completeopt={"menu", "menuone", "noselect"}
-local cmp = require'cmp'
 
 cmp.setup({
   mapping = cmp.mapping.preset.insert({
@@ -28,7 +38,7 @@ cmp.setup({
   }),
   snippet = {
     expand = function(args)
-      require('luasnip').lsp_expand(args.body)
+      luasnip.lsp_expand(args.body)
     end,
   },
   window = {
@@ -65,7 +75,7 @@ cmp.setup.cmdline(':', {
 })
 
 -- Setup lspconfig.
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
@@ -104,7 +114,7 @@ local lsp_flags = {
   -- This is the default in Nvim 0.7+
   debounce_text_changes = 150,
 }
-require'lspconfig'.sumneko_lua.setup {
+lspconfig.sumneko_lua.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach,
@@ -116,22 +126,22 @@ require'lspconfig'.sumneko_lua.setup {
     }
   }
 }
-require'lspconfig'.gopls.setup {
+lspconfig.gopls.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach
 }
-require'lspconfig'.tsserver.setup {
+lspconfig.tsserver.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach
 }
-require'lspconfig'.pyright.setup{
+lspconfig.pyright.setup{
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach
 }
-require'lspconfig'.terraformls.setup{
+lspconfig.terraformls.setup{
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach
@@ -140,13 +150,13 @@ vim.api.nvim_create_autocmd({"BufWritePre"}, {
   pattern = {"*.tf", "*.tfvars"},
   callback = vim.lsp.buf.formatting_sync,
 })
-require'lspconfig'.eslint.setup{}
+lspconfig.eslint.setup{}
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
   pattern = {"*.ts", "*.tsx", "*.js", "*.jsx"},
   command = "EslintFixAll"
 })
-require'lspconfig'.taplo.setup{}
-require'lspconfig'.rust_analyzer.setup{
+lspconfig.taplo.setup{}
+lspconfig.rust_analyzer.setup{
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach

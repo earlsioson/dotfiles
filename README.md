@@ -15,7 +15,7 @@
   - tip - installing the [build prerequisites for neovim](https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites) satisfy requirements for the parsers configured in .config/nvim/after/plugin/treesitter.lua 
 - install treesitter
   ```
-  npm install -g tree-sitter-cli
+  npm install -g tree-sitter-cli neovim
   ```
 - create python venv for neovim 
   ```

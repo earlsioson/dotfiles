@@ -7,9 +7,9 @@ nvim_treesitter_configs.setup {
   autotag = {
     enable = true,
   },
-  ensure_installed = { 
-    "c", "cpp", "css", "dockerfile", "go", "hcl", "html", "javascript", 
-    "json", "lua", "markdown", "proto", "python", "regex", "rust", "swift", "toml", "tsx", "typescript", "yaml" 
+  ensure_installed = {
+    "c", "cpp", "css", "dockerfile", "go", "hcl", "html", "javascript",
+    "json", "lua", "markdown", "proto", "python", "regex", "rust", "swift", "toml", "tsx", "typescript", "yaml"
   },
   sync_install = false,
   auto_install = true,

@@ -18,6 +18,11 @@ if not has_dap_vscode_js then
   return
 end
 
+local has_dap_utils, dap_utils = pcall(require, "dap.utils")
+if not has_dap_utils then
+  return
+end
+
 local has_dap, dap = pcall(require, "dap")
 if not has_dap then
   return
@@ -33,7 +38,7 @@ dap_vscode_js.setup({
 })
 
 for _, language in ipairs({ "typescript", "typescriptreact", "javascript", "javascriptreact" }) do
-  require("dap").configurations[language] = {
+  dap.configurations[language] = {
     {
       type = "pwa-chrome",
       request = "launch",
@@ -59,7 +64,7 @@ for _, language in ipairs({ "typescript", "typescriptreact", "javascript", "java
       type = "pwa-node",
       request = "attach",
       name = "Attach",
-      processId = require'dap.utils'.pick_process,
+      processId = dap_utils.pick_process,
       cwd = "${workspaceFolder}",
     },
     {
@@ -81,14 +86,14 @@ for _, language in ipairs({ "typescript", "typescriptreact", "javascript", "java
 end
 dap.set_log_level('DEBUG')
 
-vim.keymap.set("n", "<leader>dc", ":lua require'dap'.continue()<CR>")
-vim.keymap.set("n", "<leader>dv", ":lua require'dap'.step_over()<CR>")
-vim.keymap.set("n", "<leader>di", ":lua require'dap'.step_into()<CR>")
-vim.keymap.set("n", "<leader>do", ":lua require'dap'.step_out()<CR>")
-vim.keymap.set("n", "<leader>b", ":lua require'dap'.toggle_breakpoint()<CR>")
-vim.keymap.set("n", "<leader>B", ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>")
-vim.keymap.set("n", "<leader>lp", ":lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>")
-vim.keymap.set("n", "<leader>dr", ":lua require'dap'.repl.open()<CR>")
-vim.keymap.set("n", "<leader>dl", ":lua require'dap'.run_last()<CR>")
-vim.keymap.set("n", "<leader>du", ":lua require'dapui'.toggle()<CR>")
+vim.keymap.set("n", "<leader>dc", dap.continue)
+vim.keymap.set("n", "<leader>dv", dap.step_over)
+vim.keymap.set("n", "<leader>di", dap.step_into)
+vim.keymap.set("n", "<leader>do", dap.step_out)
+vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint)
+vim.keymap.set("n", "<leader>B", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end)
+vim.keymap.set("n", "<leader>lp", function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set("n", "<leader>dr", dap.repl.open)
+vim.keymap.set("n", "<leader>dl", dap.run_last)
+vim.keymap.set("n", "<leader>du", dapui.toggle)
 

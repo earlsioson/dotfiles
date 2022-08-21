@@ -3,6 +3,11 @@ if not has_telescope then
   return
 end
 
+local has_telescope_builtin, telescope_builtin = pcall(require, "telescope.builtin")
+if not has_telescope_builtin then
+  return
+end
+
 telescope.setup{
   defaults = {
     prompt_prefix = "🔍 ",
@@ -13,12 +18,6 @@ telescope.setup{
   }
 }
 
-telescope.load_extension("dap")
-telescope.load_extension("file_browser")
-
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", {})
-vim.keymap.set("n", "<leader>fb", "<cmd>Telescope file_browser<cr>", {})
-vim.keymap.set("n", "<leader>fs", "<cmd>Telescope grep_string<cr>", {})
-vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", {})
-vim.keymap.set("n", "<leader>df", ":Telescope dap frames<CR>")
-vim.keymap.set("n", "<leader>db", ":Telescope dap list_breakpoints<CR>")
+vim.keymap.set("n", "<leader>ff", telescope_builtin.find_files, {})
+vim.keymap.set("n", "<leader>fs", telescope_builtin.grep_string, {})
+vim.keymap.set("n", "<leader>fg", telescope_builtin.live_grep, {})

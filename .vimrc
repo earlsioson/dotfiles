@@ -10,6 +10,8 @@ set mouse=a
 set signcolumn=yes
 set background=dark
 set foldlevel=99
+set diffopt+=iwhite
+set diffexpr=""
 
 filetype on
 filetype plugin on

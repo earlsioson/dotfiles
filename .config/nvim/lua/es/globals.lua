@@ -10,3 +10,14 @@ vim.keymap.set('n', '<leader><leader>x',
   end,
   { noremap=true, silent=true }
 )
+
+-- hack for telescope find_files not honoring folds
+-- https://github.com/tmhedberg/SimpylFold/issues/130
+vim.api.nvim_create_autocmd('BufRead', {
+   callback = function()
+      vim.api.nvim_create_autocmd('BufWinEnter', {
+         once = true,
+         command = 'normal! zx'
+      })
+   end
+})

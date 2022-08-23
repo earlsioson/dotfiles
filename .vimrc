@@ -42,6 +42,7 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 nnoremap <leader>n :Explore<CR>
 nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>g :G \| only<CR>
+vnoremap <leader>s y/<C-r>"<CR><S-n>cgn
 
 if has('termguicolors')
   set termguicolors

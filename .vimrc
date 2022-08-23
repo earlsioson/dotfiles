@@ -9,6 +9,7 @@ set nowrap
 set mouse=a
 set signcolumn=yes
 set background=dark
+set foldlevel=99
 
 filetype on
 filetype plugin on
@@ -20,7 +21,6 @@ let mapleader="\<Space>"
 let g:VM_leader = '\'
 let g:netrw_banner=0
 let g:netrw_liststyle = 3
-nnoremap <Leader><Leader>t :Explore<CR>
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'
@@ -36,6 +36,10 @@ call plug#end()
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
+
+nnoremap <leader>n :Explore<CR>
+nnoremap <leader>t :tabnew<CR>
+nnoremap <leader>g :G \| only<CR>
 
 if has('termguicolors')
   set termguicolors

@@ -11,12 +11,6 @@ vim.keymap.set('n', '<leader><leader>x',
   { noremap=true, silent=true }
 )
 
-vim.keymap.set('n', '<leader>G',
-  function()
-    vim.cmd([[G | only]])
-  end,
-  { noremap=true, silent=true }
-)
 -- hack for telescope find_files not honoring folds
 -- https://github.com/tmhedberg/SimpylFold/issues/130
 vim.api.nvim_create_autocmd('BufRead', {

@@ -150,6 +150,11 @@ vim.api.nvim_create_autocmd({"BufWritePre"}, {
   pattern = {"*.tf", "*.tfvars"},
   callback = vim.lsp.buf.formatting_sync,
 })
+lspconfig.eslint.setup{}
+vim.api.nvim_create_autocmd({"BufWritePre"}, {
+  pattern = {"*.ts", "*.tsx", "*.js", "*.jsx"},
+  command = "EslintFixAll"
+})
 lspconfig.taplo.setup{}
 lspconfig.rust_analyzer.setup{
   capabilities = capabilities,

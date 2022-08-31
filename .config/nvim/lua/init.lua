@@ -53,6 +53,11 @@ packer.startup(function()
     "nvim-telescope/telescope.nvim",
     requires = { { "nvim-lua/plenary.nvim" } },
   }
+  use {
+    "nvim-telescope/telescope-frecency.nvim",
+    requires = {"tami5/sqlite.lua"}
+  }
+  use { "nvim-telescope/telescope-file-browser.nvim" }
 
   use "kyazdani42/nvim-web-devicons"
   use {

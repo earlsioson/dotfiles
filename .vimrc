@@ -24,6 +24,7 @@ let mapleader="\<Space>"
 let g:VM_leader = '\'
 let g:netrw_banner=0
 let g:netrw_liststyle = 3
+let g:netrw_preview = 1
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'

@@ -28,6 +28,11 @@ telescope.setup{
   }
 }
 
+local has_fzy_native, _ = pcall(telescope.load_extension, "fzy_native")
+if not has_fzy_native then
+  return
+end
+
 local opt = {noremap = true, silent = true}
 vim.keymap.set("n", "<leader>ff", telescope_builtin.find_files, opt)
 vim.keymap.set("n", "<leader>fs", telescope_builtin.grep_string, opt)

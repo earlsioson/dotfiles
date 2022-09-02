@@ -28,8 +28,8 @@ telescope.setup{
   }
 }
 
-local has_fzy_native, _ = pcall(telescope.load_extension, "fzy_native")
-if not has_fzy_native then
+local has_fzf, _ = pcall(telescope.load_extension, "fzf")
+if not has_fzf then
   return
 end
 

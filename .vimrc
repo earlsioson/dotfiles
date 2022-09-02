@@ -45,7 +45,6 @@ nnoremap <leader>n :Explore<CR>
 nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>g :G \| only<CR>
 vnoremap <leader>s y/<C-r>"<CR><S-n>cgn
-noremap <silent> <leader>r <Cmd>set number <bar> setlocal relativenumber!<CR>
 
 if has('termguicolors')
   set termguicolors

@@ -1,3 +1,13 @@
+local has_dap, dap = pcall(require, "dap")
+if not has_dap then
+  return
+end
+
+local has_dap_utils, dap_utils = pcall(require, "dap.utils")
+if not has_dap_utils then
+  return
+end
+
 local has_dapui, dapui = pcall(require, "dapui")
 if not has_dapui then
   return
@@ -18,27 +28,18 @@ if not has_dap_vscode_js then
   return
 end
 
-local has_dap_utils, dap_utils = pcall(require, "dap.utils")
-if not has_dap_utils then
+local has_rust_tools, rust_tools = pcall(require, "rust-tools")
+if not has_rust_tools then
   return
 end
 
-local has_dap, dap = pcall(require, "dap")
-if not has_dap then
+local has_dap_rust, dap_rust = pcall(require, "rust-tools.dap")
+if not has_dap_rust then
   return
 end
 
-dapui.setup()
-dap_go.setup()
-dap_python.setup('~/.venv/nvim/bin/python')
-dap_vscode_js.setup({
-  -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
-  -- debugger_path = "(runtimedir)/site/pack/packer/opt/vscode-js-debug", -- Path to vscode-js-debug installation. 
-  adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
-})
-
-for _, language in ipairs({ "typescript", "typescriptreact", "javascript", "javascriptreact" }) do
-  dap.configurations[language] = {
+for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "javascriptreact" }) do
+  dap.configurations[ecma_script] = {
     {
       type = "pwa-chrome",
       request = "launch",
@@ -84,6 +85,28 @@ for _, language in ipairs({ "typescript", "typescriptreact", "javascript", "java
     }
   }
 end
+dap.adapters.codelldb = {
+  type = 'server',
+  port = '${port}',
+  executable = {
+    command = vim.env.HOME .. '/.local/share/nvim/mason/bin/codelldb',
+    args = {'--port', '${port}'},
+  }
+}
+dap.configurations.cpp = {
+  {
+    name = 'Launch',
+    type = 'codelldb',
+    request = 'launch',
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+  },
+}
+dap.configurations.c = dap.configurations.cpp
+dap.configurations.rust = dap.configurations.cpp
+
 dap.set_log_level('DEBUG')
 
 vim.keymap.set("n", "<leader>dc", dap.continue)
@@ -95,5 +118,24 @@ vim.keymap.set("n", "<leader>B", function() dap.set_breakpoint(vim.fn.input('Bre
 vim.keymap.set("n", "<leader>lp", function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
 vim.keymap.set("n", "<leader>dr", dap.repl.open)
 vim.keymap.set("n", "<leader>dl", dap.run_last)
+
+dapui.setup()
 vim.keymap.set("n", "<leader>du", dapui.toggle)
 
+dap_go.setup()
+dap_python.setup('~/.venv/nvim/bin/python')
+dap_vscode_js.setup({
+  -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+  -- debugger_path = "(runtimedir)/site/pack/packer/opt/vscode-js-debug", -- Path to vscode-js-debug installation. 
+  adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
+})
+local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.7.4/'
+local codelldb_path = extension_path .. 'adapter/codelldb'
+local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
+rust_tools.setup({
+  dap = {
+    adapter = dap_rust.get_codelldb_adapter(
+      codelldb_path, liblldb_path
+    )
+  }
+})

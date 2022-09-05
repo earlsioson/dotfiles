@@ -23,7 +23,7 @@ telescope.setup{
     prompt_prefix = "🔍 ",
     file_ignore_patterns = { "node_modules" },
     layout_config = {
-      width = 0.99 
+      width = 0.99
     }
   }
 }
@@ -35,8 +35,9 @@ end
 
 local opt = {noremap = true, silent = true}
 vim.keymap.set("n", "<leader>ff", telescope_builtin.find_files, opt)
-vim.keymap.set("n", "<leader>fs", telescope_builtin.grep_string, opt)
-vim.keymap.set("n", "<leader>fg", telescope_builtin.live_grep, opt)
+vim.keymap.set("n", "<leader>gf", telescope_builtin.git_files, opt)
+vim.keymap.set("n", "<leader>gs", telescope_builtin.grep_string, opt)
+vim.keymap.set("n", "<leader>lg", telescope_builtin.live_grep, opt)
 
-vim.keymap.set("n", "<leader>fh", telescope.extensions.frecency.frecency, opt)
+vim.keymap.set("n", "<leader>fr", telescope.extensions.frecency.frecency, opt)
 vim.keymap.set("n", "<leader>fb", telescope.extensions.file_browser.file_browser, opt)

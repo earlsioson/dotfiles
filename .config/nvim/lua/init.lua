@@ -47,8 +47,6 @@ packer.startup(function()
     run = "npm install --legacy-peer-deps && npm run compile"
   }
 
-  use "simrat39/rust-tools.nvim"
-
   use {
     "nvim-telescope/telescope.nvim",
     requires = { { "nvim-lua/plenary.nvim" } },

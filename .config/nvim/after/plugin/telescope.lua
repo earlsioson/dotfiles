@@ -34,10 +34,10 @@ if not has_fzf then
 end
 
 local opt = {noremap = true, silent = true}
-vim.keymap.set("n", "<leader>ff", telescope_builtin.find_files, opt)
-vim.keymap.set("n", "<leader>gf", telescope_builtin.git_files, opt)
-vim.keymap.set("n", "<leader>gs", telescope_builtin.grep_string, opt)
-vim.keymap.set("n", "<leader>lg", telescope_builtin.live_grep, opt)
+vim.keymap.set("n", "<leader>tf", telescope_builtin.find_files, opt)
+vim.keymap.set("n", "<leader>tg", telescope_builtin.git_files, opt)
+vim.keymap.set("n", "<leader>ts", telescope_builtin.grep_string, opt)
+vim.keymap.set("n", "<leader>tG", telescope_builtin.live_grep, opt)
 
-vim.keymap.set("n", "<leader>fr", telescope.extensions.frecency.frecency, opt)
-vim.keymap.set("n", "<leader>fb", telescope.extensions.file_browser.file_browser, opt)
+vim.keymap.set("n", "<leader>tr", telescope.extensions.frecency.frecency, opt)
+vim.keymap.set("n", "<leader>tb", telescope.extensions.file_browser.file_browser, opt)

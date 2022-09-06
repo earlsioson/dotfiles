@@ -101,12 +101,12 @@ dap.configurations.rust = dap.configurations.cpp
 dap.set_log_level('DEBUG')
 
 vim.keymap.set("n", "<leader>dc", dap.continue)
-vim.keymap.set("n", "<leader>dv", dap.step_over)
+vim.keymap.set("n", "<leader>dO", dap.step_over)
 vim.keymap.set("n", "<leader>di", dap.step_into)
 vim.keymap.set("n", "<leader>do", dap.step_out)
-vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint)
-vim.keymap.set("n", "<leader>B", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end)
-vim.keymap.set("n", "<leader>lp", function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint)
+vim.keymap.set("n", "<leader>dB", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end)
+vim.keymap.set("n", "<leader>dL", function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
 vim.keymap.set("n", "<leader>dr", dap.repl.open)
 vim.keymap.set("n", "<leader>dl", dap.run_last)
 

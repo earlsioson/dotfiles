@@ -42,7 +42,8 @@ call plug#end()
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
-nnoremap <leader>n :Explore<CR>
+nnoremap <leader>e :Explore<CR>
+nnoremap <leader>n :new<CR>
 nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>g :G \| only<CR>
 vnoremap <leader>s y/<C-r>"<CR><S-n>cgn

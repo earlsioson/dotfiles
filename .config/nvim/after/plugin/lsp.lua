@@ -81,6 +81,8 @@ local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_clie
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '/o', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '/l', vim.diagnostic.setloclist, opts)
+vim.keymap.set('n', '/s', vim.diagnostic.show, opts)
+vim.keymap.set('n', '/h', vim.diagnostic.hide, opts)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 

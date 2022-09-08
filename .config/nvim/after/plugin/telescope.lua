@@ -41,3 +41,4 @@ vim.keymap.set("n", "<leader>fG", "<cmd>Telescope live_grep<cr>", opt)
 
 vim.keymap.set("n", "<leader>fr", telescope.extensions.frecency.frecency, opt)
 vim.keymap.set("n", "<leader>fb", telescope.extensions.file_browser.file_browser, opt)
+vim.keymap.set("n", "<leader>fB", "<cmd>Telescope file_browser respect_gitignore=false<cr>", opt)

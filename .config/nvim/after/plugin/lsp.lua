@@ -76,6 +76,9 @@ cmp.setup.cmdline(':', {
 
 -- Setup lspconfig.
 local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+vim.diagnostic.config {
+    float = { border = "single" },
+}
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
@@ -116,6 +119,13 @@ local lsp_flags = {
   -- This is the default in Nvim 0.7+
   debounce_text_changes = 150,
 }
+
+local handlers =  {
+  ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = 'single'}),
+  ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = 'single' }),
+}
+
+-- LSP settings (for overriding per client)
 lspconfig.sumneko_lua.setup {
   capabilities = capabilities,
   flags = lsp_flags,
@@ -131,39 +141,58 @@ lspconfig.sumneko_lua.setup {
 lspconfig.gopls.setup {
   capabilities = capabilities,
   flags = lsp_flags,
-  on_attach = on_attach
-}
-lspconfig.tsserver.setup {
-  capabilities = capabilities,
-  flags = lsp_flags,
-  on_attach = on_attach
-}
-lspconfig.pyright.setup{
-  capabilities = capabilities,
-  flags = lsp_flags,
-  on_attach = on_attach
-}
-lspconfig.terraformls.setup{
-  capabilities = capabilities,
-  flags = lsp_flags,
-  on_attach = on_attach
+  on_attach = on_attach,
+  handlers = handlers,
 }
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
   pattern = {"*.go"},
   callback = vim.lsp.buf.formatting_sync,
 })
+
+lspconfig.pyright.setup{
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
+}
+vim.api.nvim_create_autocmd({"BufWritePre"}, {
+  pattern = {"*.py"},
+  callback = vim.lsp.buf.formatting_sync,
+})
+
+lspconfig.terraformls.setup{
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
+}
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
   pattern = {"*.tf", "*.tfvars"},
   callback = vim.lsp.buf.formatting_sync,
 })
+
+lspconfig.tsserver.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
+}
+
 lspconfig.eslint.setup{}
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
   pattern = {"*.ts", "*.tsx", "*.js", "*.jsx"},
   command = "EslintFixAll"
 })
+
 lspconfig.taplo.setup{}
+
 lspconfig.rust_analyzer.setup{
   capabilities = capabilities,
   flags = lsp_flags,
-  on_attach = on_attach
+  on_attach = on_attach,
+  handlers = handlers,
 }
+vim.api.nvim_create_autocmd({"BufWritePre"}, {
+  pattern = {"*.rs"},
+  callback = vim.lsp.buf.formatting_sync,
+})

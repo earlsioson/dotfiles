@@ -111,7 +111,7 @@ vim.keymap.set("n", "<leader>Dr", dap.repl.open)
 vim.keymap.set("n", "<leader>Dl", dap.run_last)
 
 dapui.setup()
-vim.keymap.set("n", "<leader>du", dapui.toggle)
+vim.keymap.set("n", "<leader>Du", dapui.toggle)
 
 dap_go.setup()
 dap_python.setup('~/.venv/nvim/bin/python')

@@ -19,14 +19,14 @@ if not has_cmp_nvim_lsp then
   return
 end
 
-vim.opt.completeopt={"menu", "menuone", "noselect"}
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 cmp.setup({
   mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-B>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-F>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
+    ['<C-E>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
   }),
   sources = cmp.config.sources({
@@ -77,42 +77,42 @@ cmp.setup.cmdline(':', {
 -- Setup lspconfig.
 local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 vim.diagnostic.config {
-    float = { border = "single" },
+  float = { border = "single" },
 }
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, opts)
-vim.keymap.set('n', '<leader>ds', vim.diagnostic.show, opts)
-vim.keymap.set('n', '<leader>dh', vim.diagnostic.hide, opts)
+local opts = { noremap = true, silent = true }
+vim.keymap.set('n', '<Leader>do', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '<Leader>dl', vim.diagnostic.setloclist, opts)
+vim.keymap.set('n', '<Leader>ds', vim.diagnostic.show, opts)
+vim.keymap.set('n', '<Leader>dh', vim.diagnostic.hide, opts)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
+  -- Enable completion triggered by <C-X><C-O>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', '<leader>lD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', '<leader>ld', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', '<leader>lh', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', '<leader>li', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<leader>lh', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', '<leader>lf', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<leader>lF', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<leader>ll', function()
+  local bufopts = { noremap = true, silent = true, buffer = bufnr }
+  vim.keymap.set('n', '<Leader>lD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', '<Leader>ld', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', '<Leader>lh', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', '<Leader>li', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<Leader>lh', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<Leader>lf', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<Leader>lF', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<Leader>ll', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
-  vim.keymap.set('n', '<leader>lt', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<leader>ln', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<leader>lf', vim.lsp.buf.formatting, bufopts)
+  vim.keymap.set('n', '<Leader>lt', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<Leader>ln', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<Leader>la', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', '<Leader>lr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<Leader>lf', vim.lsp.buf.formatting, bufopts)
 end
 
 local lsp_flags = {
@@ -120,9 +120,9 @@ local lsp_flags = {
   debounce_text_changes = 150,
 }
 
-local handlers =  {
-  ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = 'single'}),
-  ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = 'single' }),
+local handlers = {
+  ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
+  ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
 }
 
 -- LSP settings (for overriding per client)
@@ -138,36 +138,40 @@ lspconfig.sumneko_lua.setup {
     }
   }
 }
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*.lua" },
+  callback = vim.lsp.buf.formatting_sync,
+})
 lspconfig.gopls.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach,
   handlers = handlers,
 }
-vim.api.nvim_create_autocmd({"BufWritePre"}, {
-  pattern = {"*.go"},
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*.go" },
   callback = vim.lsp.buf.formatting_sync,
 })
 
-lspconfig.pyright.setup{
+lspconfig.pyright.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach,
   handlers = handlers,
 }
-vim.api.nvim_create_autocmd({"BufWritePre"}, {
-  pattern = {"*.py"},
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*.py" },
   callback = vim.lsp.buf.formatting_sync,
 })
 
-lspconfig.terraformls.setup{
+lspconfig.terraformls.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach,
   handlers = handlers,
 }
-vim.api.nvim_create_autocmd({"BufWritePre"}, {
-  pattern = {"*.tf", "*.tfvars"},
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*.tf", "*.tfvars" },
   callback = vim.lsp.buf.formatting_sync,
 })
 
@@ -178,21 +182,21 @@ lspconfig.tsserver.setup {
   handlers = handlers,
 }
 
-lspconfig.eslint.setup{}
-vim.api.nvim_create_autocmd({"BufWritePre"}, {
-  pattern = {"*.ts", "*.tsx", "*.js", "*.jsx"},
+lspconfig.eslint.setup {}
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
   command = "EslintFixAll"
 })
 
-lspconfig.taplo.setup{}
+lspconfig.taplo.setup {}
 
-lspconfig.rust_analyzer.setup{
+lspconfig.rust_analyzer.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach,
   handlers = handlers,
 }
-vim.api.nvim_create_autocmd({"BufWritePre"}, {
-  pattern = {"*.rs"},
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*.rs" },
   callback = vim.lsp.buf.formatting_sync,
 })

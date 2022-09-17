@@ -42,17 +42,6 @@ call plug#end()
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
-nnoremap <leader>e :Explore<CR>
-nnoremap <leader>n :new<CR>
-nnoremap <leader>t :tabnew<CR>
-nnoremap <leader>g :G \| only<CR>
-vnoremap <leader>s y/<C-r>"<CR><S-n>cgn
-" ThePrimeagen
-xnoremap <leader>p "_dP
-" asbjornHaland
-vnoremap <leader>y "+y
-nnoremap <leader>y "+y
-
 if has('termguicolors')
   set termguicolors
   colorscheme dracula

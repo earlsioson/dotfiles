@@ -53,10 +53,10 @@ packer.startup(function()
   }
   use {
     "nvim-telescope/telescope-frecency.nvim",
-    requires = {"tami5/sqlite.lua"}
+    requires = { "tami5/sqlite.lua" }
   }
   use { "nvim-telescope/telescope-file-browser.nvim" }
-  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   use "kyazdani42/nvim-web-devicons"
   use {
     "windwp/nvim-autopairs",

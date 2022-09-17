@@ -18,7 +18,7 @@ if not has_file_browser then
   return
 end
 
-telescope.setup{
+telescope.setup {
   defaults = {
     prompt_prefix = "🔍 ",
     file_ignore_patterns = { "node_modules" },
@@ -33,13 +33,13 @@ if not has_fzf then
   return
 end
 
-local opt = {noremap = true, silent = true}
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files hidden=true<cr>", opt)
-vim.keymap.set("n", "<leader>fF", "<cmd>Telescope find_files<cr>", opt)
-vim.keymap.set("n", "<leader>fG", "<cmd>Telescope git_files<cr>", opt)
-vim.keymap.set("n", "<leader>fs", "<cmd>Telescope grep_string<cr>", opt)
-vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", opt)
+local opt = { noremap = true, silent = true }
+vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files hidden=true<CR>", opt)
+vim.keymap.set("n", "<Leader>fF", "<Cmd>Telescope find_files<CR>", opt)
+vim.keymap.set("n", "<Leader>fG", "<Cmd>Telescope git_files<CR>", opt)
+vim.keymap.set("n", "<Leader>fs", "<Cmd>Telescope grep_string<CR>", opt)
+vim.keymap.set("n", "<Leader>fg", "<Cmd>Telescope live_grep<CR>", opt)
 
-vim.keymap.set("n", "<leader>fr", telescope.extensions.frecency.frecency, opt)
-vim.keymap.set("n", "<leader>fB", telescope.extensions.file_browser.file_browser, opt)
-vim.keymap.set("n", "<leader>fb", "<cmd>Telescope file_browser respect_gitignore=false<cr>", opt)
+vim.keymap.set("n", "<Leader>fr", telescope.extensions.frecency.frecency, opt)
+vim.keymap.set("n", "<Leader>fB", telescope.extensions.file_browser.file_browser, opt)
+vim.keymap.set("n", "<Leader>fb", "<Cmd>Telescope file_browser respect_gitignore=false<CR>", opt)

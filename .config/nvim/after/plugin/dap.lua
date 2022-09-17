@@ -80,7 +80,7 @@ dap.adapters.codelldb = {
   port = '${port}',
   executable = {
     command = vim.env.HOME .. '/.local/share/nvim/mason/bin/codelldb',
-    args = {'--port', '${port}'},
+    args = { '--port', '${port}' },
   }
 }
 dap.configurations.cpp = {
@@ -100,23 +100,23 @@ dap.configurations.rust = dap.configurations.cpp
 
 dap.set_log_level('DEBUG')
 
-vim.keymap.set("n", "<leader>Dc", dap.continue)
-vim.keymap.set("n", "<leader>DO", dap.step_over)
-vim.keymap.set("n", "<leader>Di", dap.step_into)
-vim.keymap.set("n", "<leader>Do", dap.step_out)
-vim.keymap.set("n", "<leader>Db", dap.toggle_breakpoint)
-vim.keymap.set("n", "<leader>DB", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end)
-vim.keymap.set("n", "<leader>DL", function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
-vim.keymap.set("n", "<leader>Dr", dap.repl.open)
-vim.keymap.set("n", "<leader>Dl", dap.run_last)
+vim.keymap.set("n", "<Leader>Dc", dap.continue)
+vim.keymap.set("n", "<Leader>DO", dap.step_over)
+vim.keymap.set("n", "<Leader>Di", dap.step_into)
+vim.keymap.set("n", "<Leader>Do", dap.step_out)
+vim.keymap.set("n", "<Leader>Db", dap.toggle_breakpoint)
+vim.keymap.set("n", "<Leader>DB", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end)
+vim.keymap.set("n", "<Leader>DL", function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set("n", "<Leader>Dr", dap.repl.open)
+vim.keymap.set("n", "<Leader>Dl", dap.run_last)
 
 dapui.setup()
-vim.keymap.set("n", "<leader>Du", dapui.toggle)
+vim.keymap.set("n", "<Leader>Du", dapui.toggle)
 
 dap_go.setup()
 dap_python.setup('~/.venv/nvim/bin/python')
 dap_vscode_js.setup({
   -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
-  -- debugger_path = "(runtimedir)/site/pack/packer/opt/vscode-js-debug", -- Path to vscode-js-debug installation. 
+  -- debugger_path = "(runtimedir)/site/pack/packer/opt/vscode-js-debug", -- Path to vscode-js-debug installation.
   adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
 })

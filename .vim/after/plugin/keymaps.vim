@@ -21,7 +21,7 @@ if has('nvim')
   endfunction
 
   " ANKI: Make a small terminal at the bottom of the screen.
-  nnoremap <Leader>t :call <SID>small_terminal()<CR>
+  nnoremap <Leader><Leader>t :call <SID>small_terminal()<CR>
 endif
 
 " Make esc leave terminal mode

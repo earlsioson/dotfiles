@@ -39,6 +39,8 @@ vim.keymap.set("n", "<Leader>fF", "<Cmd>Telescope find_files<CR>", opt)
 vim.keymap.set("n", "<Leader>fG", "<Cmd>Telescope git_files<CR>", opt)
 vim.keymap.set("n", "<Leader>fs", "<Cmd>Telescope grep_string<CR>", opt)
 vim.keymap.set("n", "<Leader>fg", "<Cmd>Telescope live_grep<CR>", opt)
+vim.keymap.set("n", "<Leader>fo", "<Cmd>Telescope oldfiles<CR>", opt)
+vim.keymap.set("n", "<Leader><Leader>fb", "<Cmd>Telescope buffers<CR>", opt)
 
 vim.keymap.set("n", "<Leader>fr", telescope.extensions.frecency.frecency, opt)
 vim.keymap.set("n", "<Leader>fB", telescope.extensions.file_browser.file_browser, opt)

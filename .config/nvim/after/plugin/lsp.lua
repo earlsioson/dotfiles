@@ -200,3 +200,11 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.rs" },
   callback = vim.lsp.buf.formatting_sync,
 })
+
+lspconfig.yamlls.setup {
+  settings = {
+    yaml = {
+      schemas = { kubernetes = "*.yaml" },
+    }
+  }
+}

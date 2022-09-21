@@ -28,6 +28,7 @@
 ## telescope optional tools
 - install [ripgrep](https://github.com/BurntSushi/ripgrep)
 - install [fd](https://github.com/sharkdp/fd)
+- install [sqlite.lua](https://github.com/kkharji/sqlite.lua)
 
 ## initialize vim/neovim (ignore any warning about missing plugins etc)
 

@@ -32,28 +32,28 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
 Plug 'arcticicestudio/nord-vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-startify'
 Plug 'justinmk/vim-dirvish'
 Plug 'dracula/vim', { 'as': 'dracula' }
 call plug#end()
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-
-if has('termguicolors')
-  set termguicolors
-  colorscheme dracula
-  let g:airline_theme='dracula'
-else
-  colorscheme default
-endif
-
 if has('nvim')
       let g:loaded_python_provider = 0
       let g:python3_host_prog = '/Users/earl/.venv/nvim/bin/python'
       lua require('init')
+      if has('termguicolors')
+        set termguicolors
+        colorscheme tokyonight
+      else
+        colorscheme darkblue
+      endif
+else
+      if has('termguicolors')
+        set termguicolors
+        colorscheme nord
+      else
+        colorscheme darkblue
+      endif
 endif
 if has('win32')
   let &shell = 'pwsh'

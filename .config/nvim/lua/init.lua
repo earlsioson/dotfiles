@@ -64,11 +64,17 @@ packer.startup(function()
   }
   use "windwp/nvim-ts-autotag"
   use {
-    'numToStr/Comment.nvim',
+    "numToStr/Comment.nvim",
     config = function()
-      require('Comment').setup()
+      require("Comment").setup()
     end
   }
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+  }
+  use "folke/tokyonight.nvim"
+
 end)
 
 require "es.globals"

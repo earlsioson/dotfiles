@@ -25,7 +25,14 @@ telescope.setup {
     layout_config = {
       width = 0.99
     }
-  }
+  },
+  pickers = {
+    live_grep = {
+      additional_args = function(opts)
+        return { "--hidden" }
+      end
+    },
+  },
 }
 
 local has_fzf, _ = pcall(telescope.load_extension, "fzf")

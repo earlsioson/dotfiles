@@ -13,6 +13,7 @@ set diffopt+=iwhite
 set diffexpr=""
 set splitbelow
 set listchars=tab:»·,eol:↲,nbsp:␣,extends:…,precedes:<,extends:>,trail:·,space:␣
+set sessionoptions-=blank
 
 filetype on
 filetype plugin on

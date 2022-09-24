@@ -1,4 +1,3 @@
-set nu
 set relativenumber
 set encoding=utf-8
 set tabstop=2 softtabstop=2
@@ -26,6 +25,7 @@ let g:VM_leader = '\'
 let g:netrw_banner=0
 let g:netrw_liststyle = 3
 let g:netrw_preview = 1
+let g:netrw_bufsettings = 'noma nomod nowrap ro nobl'
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'

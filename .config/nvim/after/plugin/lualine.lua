@@ -4,19 +4,22 @@ if not has_lualine then
 end
 
 lualine.setup {
-  options = {
-    theme = "tokyonight"
+  extensions = {
+    "fugitive",
+    "nvim-dap-ui",
+    "quickfix",
   },
   tabline = {
     lualine_a = {
       {
-        "buffers", icons_enabled = false
-      }
+        "tabs",
+        mode = 2,
+      },
     },
     lualine_b = {},
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
-    lualine_z = {}
+    lualine_z = {},
   }
 }

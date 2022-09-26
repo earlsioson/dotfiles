@@ -43,12 +43,12 @@ end
 local opt = { noremap = true, silent = true }
 vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files hidden=true<CR>", opt)
 vim.keymap.set("n", "<Leader>fF", "<Cmd>Telescope find_files<CR>", opt)
-vim.keymap.set("n", "<Leader>fG", "<Cmd>Telescope git_files<CR>", opt)
+vim.keymap.set("n", "<Leader>fg", "<Cmd>Telescope git_files<CR>", opt)
 vim.keymap.set("n", "<Leader>fs", "<Cmd>Telescope grep_string<CR>", opt)
-vim.keymap.set("n", "<Leader>fg", "<Cmd>Telescope live_grep<CR>", opt)
+vim.keymap.set("n", "<Leader>rg", "<Cmd>Telescope live_grep<CR>", opt)
 vim.keymap.set("n", "<Leader>fo", "<Cmd>Telescope oldfiles<CR>", opt)
 vim.keymap.set("n", "<Leader>fb", "<Cmd>Telescope buffers<CR>", opt)
 
 vim.keymap.set("n", "<Leader>fr", telescope.extensions.frecency.frecency, opt)
-vim.keymap.set("n", "<Leader>fE", telescope.extensions.file_browser.file_browser, opt)
-vim.keymap.set("n", "<Leader>fe", "<Cmd>Telescope file_browser respect_gitignore=false<CR>", opt)
+vim.keymap.set("n", "<Leader>fe", telescope.extensions.file_browser.file_browser, opt)
+vim.keymap.set("n", "<Leader>fE", "<Cmd>Telescope file_browser respect_gitignore=false<CR>", opt)

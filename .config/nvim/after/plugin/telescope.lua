@@ -18,17 +18,54 @@ if not has_file_browser then
   return
 end
 
+local has_telescope_previewers, telescope_previewers = pcall(require, "telescope.previewers")
+if not has_telescope_previewers then
+  return
+end
+
+local has_plenary_job, plenary_job = pcall(require, "plenary.job")
+if not has_plenary_job then
+  return
+end
+
+local new_maker = function(filepath, bufnr, opts)
+  filepath = vim.fn.expand(filepath)
+  plenary_job:new({
+    command = "file",
+    args = { "--mime-type", "-b", filepath },
+    on_exit = function(j)
+      local mime_type = vim.split(j:result()[1], "/")[1]
+      if mime_type == "text" then
+        telescope_previewers.buffer_previewer_maker(filepath, bufnr, opts)
+      else
+        -- maybe we want to write something to the buffer here
+        vim.schedule(function()
+          vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { "BINARY" })
+        end)
+      end
+    end
+  }):sync()
+end
+
 telescope.setup {
   defaults = {
     prompt_prefix = "🔍 ",
     file_ignore_patterns = { "node_modules" },
+    buffer_previewer_maker = new_maker,
     layout_config = {
       width = 0.99
+    },
+    preview = {
+      treesitter = {
+        disable = {
+          "javascript"
+        }
+      }
     }
   },
   pickers = {
     live_grep = {
-      additional_args = function(opts)
+      additional_args = function()
         return { "--hidden" }
       end
     },

@@ -45,7 +45,7 @@ if has('nvim')
       lua require('init')
       if has('termguicolors')
         set termguicolors
-        colorscheme tokyonight
+        colorscheme tokyonight-night
       else
         colorscheme darkblue
       endif

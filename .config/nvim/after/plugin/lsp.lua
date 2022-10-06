@@ -102,7 +102,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<Leader>ld', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', '<Leader>lh', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('n', '<Leader>li', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<Leader>lh', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<Leader>ls', vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set('n', '<Leader>lf', vim.lsp.buf.add_workspace_folder, bufopts)
   vim.keymap.set('n', '<Leader>lF', vim.lsp.buf.remove_workspace_folder, bufopts)
   vim.keymap.set('n', '<Leader>ll', function()
@@ -130,6 +130,7 @@ lspconfig.sumneko_lua.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   on_attach = on_attach,
+  handlers = handlers,
   settings = {
     Lua = {
       diagnostics = {
@@ -188,7 +189,12 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   command = "EslintFixAll"
 })
 
-lspconfig.taplo.setup {}
+lspconfig.taplo.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
+}
 
 lspconfig.rust_analyzer.setup {
   capabilities = capabilities,
@@ -202,6 +208,10 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 })
 
 lspconfig.yamlls.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
   settings = {
     yaml = {
       schemas = { kubernetes = "*.yaml" },
@@ -210,7 +220,10 @@ lspconfig.yamlls.setup {
 }
 
 lspconfig.jsonls.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
   on_attach = on_attach,
+  handlers = handlers,
   cmd = { vim.env.HOME .. "/.local/share/nvim/mason/bin/vscode-json-language-server", "--stdio" },
   commands = {
     Format = {

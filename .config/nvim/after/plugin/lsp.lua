@@ -183,7 +183,17 @@ lspconfig.tsserver.setup {
   handlers = handlers,
 }
 
-lspconfig.eslint.setup {}
+lspconfig.eslint.setup {
+  root_dir = lspconfig.util.root_pattern(
+    '.eslintrc',
+    '.eslintrc.js',
+    '.eslintrc.cjs',
+    '.eslintrc.yaml',
+    '.eslintrc.yml',
+    '.eslintrc.json',
+    'package.json'
+  )
+}
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
   command = "EslintFixAll"

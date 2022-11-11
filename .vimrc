@@ -37,7 +37,10 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'mhinz/vim-startify'
 Plug 'justinmk/vim-dirvish'
 Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
+
+let g:go_addtags_transform = 'camelcase'
 
 if has('nvim')
       let g:loaded_python_provider = 0

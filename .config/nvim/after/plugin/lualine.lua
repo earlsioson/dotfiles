@@ -10,16 +10,11 @@ lualine.setup {
     "quickfix",
   },
   tabline = {
-    lualine_a = {
-      {
-        "tabs",
-        mode = 2,
-      },
-    },
+    lualine_a = { 'buffers' },
     lualine_b = {},
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
-    lualine_z = {},
+    lualine_z = { 'tabs' }
   }
 }

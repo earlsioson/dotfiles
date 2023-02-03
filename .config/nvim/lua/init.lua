@@ -74,6 +74,12 @@ packer.startup(function()
     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
   }
   use "folke/tokyonight.nvim"
+  use {
+    'nvim-tree/nvim-tree.lua',
+    requires = {
+      'nvim-tree/nvim-web-devicons',
+    }
+  }
 
 end)
 

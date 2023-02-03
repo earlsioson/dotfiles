@@ -4,6 +4,7 @@ nnoremap <Leader>t :tabnew<CR>
 nnoremap <Leader>g :G \| only<CR>
 vnoremap <Leader>s y/<C-R>"<CR><S-N>cgn
 nnoremap <Leader>a :b#<CR>
+nnoremap <Leader>cd :lcd %:h<CR>
 
 " ThePrimeagen
 xnoremap <Leader>p "_dP

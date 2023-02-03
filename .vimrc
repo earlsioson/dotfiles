@@ -25,9 +25,8 @@ syntax on
 let mapleader="\<Space>"
 let g:VM_leader = '\'
 let g:netrw_banner=0
-let g:netrw_liststyle = 3
-let g:netrw_preview = 1
-let g:netrw_bufsettings = 'noma nomod nowrap ro nobl'
+let g:netrw_liststyle=3
+let g:netrw_bufsettings='noma nomod nobl nowrap ro rnu'
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'
@@ -35,7 +34,6 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
 Plug 'arcticicestudio/nord-vim'
 Plug 'mhinz/vim-startify'
-Plug 'justinmk/vim-dirvish'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()

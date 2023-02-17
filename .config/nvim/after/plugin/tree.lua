@@ -7,6 +7,9 @@ tree.setup {
   live_filter = {
     prefix = "[FILTER]: ",
     always_show_folders = false,
+  },
+  renderer = {
+    symlink_destination = false,
   }
 }
 

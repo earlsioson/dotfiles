@@ -80,7 +80,7 @@ packer.startup(function()
       'nvim-tree/nvim-web-devicons',
     }
   }
-
+  use { 'romgrk/barbar.nvim', requires = 'nvim-web-devicons' }
 end)
 
 require "es.globals"

@@ -31,7 +31,17 @@ telescope.setup {
           "javascript"
         }
       }
-    }
+    },
+    vimgrep_arguments = {
+      "rg",
+      -- "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+      "--follow"
+    },
   },
 }
 
@@ -41,8 +51,8 @@ if not has_fzf then
 end
 
 local opt = { noremap = true, silent = true }
-vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files<CR>", opt)
-vim.keymap.set("n", "<Leader>fF", "<Cmd>Telescope find_files hidden=true<CR>", opt)
+vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files follow=true<CR>", opt)
+vim.keymap.set("n", "<Leader>fF", "<Cmd>Telescope find_files follow=true hidden=true<CR>", opt)
 vim.keymap.set("n", "<Leader>fg", "<Cmd>Telescope git_files<CR>", opt)
 vim.keymap.set("n", "<Leader>fs", "<Cmd>Telescope grep_string<CR>", opt)
 vim.keymap.set("n", "<Leader>rg", "<Cmd>Telescope live_grep<CR>", opt)

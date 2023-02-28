@@ -22,62 +22,62 @@ end
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 cmp.setup({
-    mapping = cmp.mapping.preset.insert({
-        ['<C-B>'] = cmp.mapping.scroll_docs( -4),
-        ['<C-F>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-E>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
-    sources = cmp.config.sources({
-        { name = 'nvim_lua' },
-        { name = 'nvim_lsp' },
-        { name = 'path' },
-        { name = 'luasnip' },
-        { name = 'buffer',  keyword_length = 5 },
-    }),
-    snippet = {
-        expand = function(args)
-          luasnip.lsp_expand(args.body)
-        end,
-    },
-    window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-    }
+  mapping = cmp.mapping.preset.insert({
+    ['<C-B>'] = cmp.mapping.scroll_docs( -4),
+    ['<C-F>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-E>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lua' },
+    { name = 'nvim_lsp' },
+    { name = 'path' },
+    { name = 'luasnip' },
+    { name = 'buffer',  keyword_length = 5 },
+  }),
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  }
 })
 
 -- Set configuration for specific filetype.
 cmp.setup.filetype('gitcommit', {
-    sources = cmp.config.sources({
-        { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
-    }, {
-        { name = 'buffer' },
-    })
+  sources = cmp.config.sources({
+    { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+  }, {
+    { name = 'buffer' },
+  })
 })
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline('/', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-        { name = 'buffer' }
-    }
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
 })
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = 'path' }
-    }, {
-        { name = 'cmdline' }
-    })
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline' }
+  })
 })
 
 -- Setup lspconfig.
 local capabilities = cmp_nvim_lsp.default_capabilities(vim.lsp.protocol.make_client_capabilities())
 vim.diagnostic.config {
-    float = { border = "single" },
+  float = { border = "single" },
 }
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -116,130 +116,139 @@ local on_attach = function(client, bufnr)
 end
 
 local lsp_flags = {
-    -- This is the default in Nvim 0.7+
-    debounce_text_changes = 150,
+  -- This is the default in Nvim 0.7+
+  debounce_text_changes = 150,
 }
 
 local handlers = {
-    ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
-    ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
+  ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
+  ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
 }
 
 -- LSP settings (for overriding per client)
 lspconfig.lua_ls.setup {
-    capabilities = capabilities,
-    flags = lsp_flags,
-    on_attach = on_attach,
-    handlers = handlers,
-    settings = {
-        Lua = {
-            diagnostics = {
-                globals = { 'vim', 'use' }
-            }
-        }
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim', 'use' }
+      }
     }
+  }
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    pattern = { "*.lua" },
-    callback = vim.lsp.buf.formatting_sync,
+  pattern = { "*.lua" },
+  callback = vim.lsp.buf.formatting_sync,
 })
 lspconfig.gopls.setup {
-    capabilities = capabilities,
-    flags = lsp_flags,
-    on_attach = on_attach,
-    handlers = handlers,
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    pattern = { "*.go" },
-    callback = vim.lsp.buf.formatting_sync,
+  pattern = { "*.go" },
+  callback = vim.lsp.buf.formatting_sync,
 })
 
 lspconfig.pyright.setup {
-    capabilities = capabilities,
-    flags = lsp_flags,
-    on_attach = on_attach,
-    handlers = handlers,
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    pattern = { "*.py" },
-    callback = vim.lsp.buf.formatting_sync,
+  pattern = { "*.py" },
+  callback = vim.lsp.buf.formatting_sync,
 })
 
 lspconfig.terraformls.setup {
-    capabilities = capabilities,
-    flags = lsp_flags,
-    on_attach = on_attach,
-    handlers = handlers,
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    pattern = { "*.tf", "*.tfvars" },
-    callback = vim.lsp.buf.formatting_sync,
+  pattern = { "*.tf", "*.tfvars" },
+  callback = vim.lsp.buf.formatting_sync,
 })
 
 lspconfig.tsserver.setup {
-    capabilities = capabilities,
-    flags = lsp_flags,
-    on_attach = on_attach,
-    handlers = handlers,
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
 }
 
 lspconfig.eslint.setup {
-    root_dir = lspconfig.util.root_pattern(
-        '.eslintrc',
-        '.eslintrc.js',
-        '.eslintrc.cjs',
-        '.eslintrc.yaml',
-        '.eslintrc.yml',
-        '.eslintrc.json',
-        'package.json'
-    )
+  root_dir = lspconfig.util.root_pattern(
+    '.eslintrc',
+    '.eslintrc.js',
+    '.eslintrc.cjs',
+    '.eslintrc.yaml',
+    '.eslintrc.yml',
+    '.eslintrc.json',
+    'package.json'
+  )
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
-    command = "EslintFixAll"
+  pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
+  command = "EslintFixAll"
 })
 
 lspconfig.taplo.setup {
-    capabilities = capabilities,
-    flags = lsp_flags,
-    on_attach = on_attach,
-    handlers = handlers,
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
 }
 
 lspconfig.rust_analyzer.setup {
-    capabilities = capabilities,
-    flags = lsp_flags,
-    on_attach = on_attach,
-    handlers = handlers,
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    pattern = { "*.rs" },
-    callback = vim.lsp.buf.formatting_sync,
+  pattern = { "*.rs" },
+  callback = vim.lsp.buf.formatting_sync,
 })
 
 lspconfig.yamlls.setup {
-    capabilities = capabilities,
-    flags = lsp_flags,
-    on_attach = on_attach,
-    handlers = handlers,
-    settings = {
-        yaml = {
-            schemas = { kubernetes = "*.yaml" },
-        }
-    }
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
 }
 
 lspconfig.jsonls.setup {
-    capabilities = capabilities,
-    flags = lsp_flags,
-    on_attach = on_attach,
-    handlers = handlers,
-    cmd = { vim.env.HOME .. "/.local/share/nvim/mason/bin/vscode-json-language-server", "--stdio" },
-    commands = {
-        Format = {
-            function()
-              vim.lsp.buf.range_formatting({}, { 0, 0 }, { vim.fn.line("$"), 0 })
-            end
-        }
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
+  cmd = { vim.env.HOME .. "/.local/share/nvim/mason/bin/vscode-json-language-server", "--stdio" },
+  commands = {
+    Format = {
+      function()
+        vim.lsp.buf.range_formatting({}, { 0, 0 }, { vim.fn.line("$"), 0 })
+      end
     }
+  }
+}
+
+lspconfig.dockerls.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
+}
+
+lspconfig.docker_compose_language_service.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
 }

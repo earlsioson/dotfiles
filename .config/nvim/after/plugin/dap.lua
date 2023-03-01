@@ -72,6 +72,17 @@ for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "j
       cwd = "${workspaceFolder}",
       console = "integratedTerminal",
       internalConsoleOptions = "neverOpen",
+    },
+    {
+      type = "node-terminal",
+      request = "launch",
+      name = "Next.js: debug full stack",
+      command = "npm run dev",
+      serverReadyAction = {
+        pattern = "started server on .+, url: (https?://.+)",
+        uriFormat = "%s",
+        action = "debugWithChrome"
+      }
     }
   }
 end
@@ -100,18 +111,19 @@ dap.configurations.rust = dap.configurations.cpp
 
 dap.set_log_level('DEBUG')
 
-vim.keymap.set("n", "<Leader>Dc", dap.continue)
-vim.keymap.set("n", "<Leader>DO", dap.step_over)
-vim.keymap.set("n", "<Leader>Di", dap.step_into)
-vim.keymap.set("n", "<Leader>Do", dap.step_out)
-vim.keymap.set("n", "<Leader>Db", dap.toggle_breakpoint)
-vim.keymap.set("n", "<Leader>DB", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end)
-vim.keymap.set("n", "<Leader>DL", function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
-vim.keymap.set("n", "<Leader>Dr", dap.repl.open)
-vim.keymap.set("n", "<Leader>Dl", dap.run_last)
+vim.keymap.set("n", "<Leader><Leader>dc", dap.continue)
+vim.keymap.set("n", "<Leader><Leader>dO", dap.step_over)
+vim.keymap.set("n", "<Leader><Leader>di", dap.step_into)
+vim.keymap.set("n", "<Leader><Leader>do", dap.step_out)
+vim.keymap.set("n", "<Leader><Leader>db", dap.toggle_breakpoint)
+vim.keymap.set("n", "<Leader><Leader>dB", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end)
+vim.keymap.set("n", "<Leader><Leader>dL",
+  function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set("n", "<Leader><Leader>dr", dap.repl.open)
+vim.keymap.set("n", "<Leader><Leader>dl", dap.run_last)
 
 dapui.setup()
-vim.keymap.set("n", "<Leader>Du", dapui.toggle)
+vim.keymap.set("n", "<Leader><Leader>du", dapui.toggle)
 
 dap_go.setup()
 dap_python.setup('~/.venv/nvim/bin/python')

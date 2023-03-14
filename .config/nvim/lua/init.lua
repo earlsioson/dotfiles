@@ -1,86 +1,79 @@
 local vim = vim
-local execute = vim.api.nvim_command
-local fn = vim.fn
--- ensure that packer is installed
-local install_path = fn.stdpath "data" .. "/site/pack/packer/opt/packer.nvim"
-if fn.empty(fn.glob(install_path)) > 0 then
-  execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
-  execute "packadd packer.nvim"
+
+require "es.globals"
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
-vim.cmd "packadd packer.nvim"
-local packer = require "packer"
-local util = require "packer.util"
-packer.init {
-  package_root = util.join_paths(vim.fn.stdpath "data", "site", "pack"),
-}
---- startup and add configure plugins
-packer.startup(function()
-  local use = use
-
-  use "neovim/nvim-lspconfig"
-  use "williamboman/mason.nvim"
-  use "williamboman/mason-lspconfig.nvim"
-
-  use {
+vim.opt.rtp:prepend(lazypath)
+local plugins = {
+  "neovim/nvim-lspconfig",
+  "williamboman/mason.nvim",
+  "williamboman/mason-lspconfig.nvim",
+  {
     "nvim-treesitter/nvim-treesitter",
     run = function()
       require("nvim-treesitter.install").update { with_sync = true }
     end,
-  }
-
-  use "hrsh7th/nvim-cmp"
-  use "hrsh7th/cmp-buffer"
-  use "hrsh7th/cmp-path"
-  use "hrsh7th/cmp-cmdline"
-  use "hrsh7th/cmp-nvim-lua"
-  use "hrsh7th/cmp-nvim-lsp"
-  use "saadparwaiz1/cmp_luasnip"
-  use "L3MON4D3/LuaSnip"
-  use "mfussenegger/nvim-dap"
-  use "rcarriga/nvim-dap-ui"
-  use "mfussenegger/nvim-dap-python"
-  use "leoluz/nvim-dap-go"
-  use "mxsdev/nvim-dap-vscode-js"
-  use {
+  },
+  "hrsh7th/nvim-cmp",
+  "hrsh7th/cmp-buffer",
+  "hrsh7th/cmp-path",
+  "hrsh7th/cmp-cmdline",
+  "hrsh7th/cmp-nvim-lua",
+  "hrsh7th/cmp-nvim-lsp",
+  "saadparwaiz1/cmp_luasnip",
+  "L3MON4D3/LuaSnip",
+  "mfussenegger/nvim-dap",
+  "rcarriga/nvim-dap-ui",
+  "mfussenegger/nvim-dap-python",
+  "leoluz/nvim-dap-go",
+  "mxsdev/nvim-dap-vscode-js",
+  "nvim-lua/plenary.nvim",
+  {
     "microsoft/vscode-js-debug",
     opt = true,
     run = "npm install --legacy-peer-deps && npm run compile"
-  }
-
-  use {
+  },
+  {
     "nvim-telescope/telescope.nvim",
-    requires = { { "nvim-lua/plenary.nvim" } },
-  }
-  use {
+  },
+  {
     "nvim-telescope/telescope-frecency.nvim",
     requires = { "tami5/sqlite.lua" }
-  }
-  use { "nvim-telescope/telescope-file-browser.nvim" }
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-  use "kyazdani42/nvim-web-devicons"
-  use {
+  },
+  { "nvim-telescope/telescope-file-browser.nvim" },
+  { 'nvim-telescope/telescope-fzf-native.nvim',  run = 'make' },
+  "kyazdani42/nvim-web-devicons",
+  {
     "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
-  }
-  use "windwp/nvim-ts-autotag"
-  use {
+  },
+  {
     "numToStr/Comment.nvim",
     config = function()
       require("Comment").setup()
     end
-  }
-  use {
+  },
+  {
     'nvim-lualine/lualine.nvim',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-  }
-  use "folke/tokyonight.nvim"
-  use {
+  },
+  "folke/tokyonight.nvim",
+  {
     'nvim-tree/nvim-tree.lua',
     requires = {
       'nvim-tree/nvim-web-devicons',
     }
-  }
-  use { 'romgrk/barbar.nvim', requires = 'nvim-web-devicons' }
-end)
-
-require "es.globals"
+  },
+  { 'romgrk/barbar.nvim', requires = 'nvim-web-devicons' },
+}
+require("lazy").setup(plugins)

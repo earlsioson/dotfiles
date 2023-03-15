@@ -20,7 +20,7 @@ local plugins = {
   "williamboman/mason-lspconfig.nvim",
   {
     "nvim-treesitter/nvim-treesitter",
-    run = function()
+    build = function()
       require("nvim-treesitter.install").update { with_sync = true }
     end,
   },
@@ -37,21 +37,21 @@ local plugins = {
   "mfussenegger/nvim-dap-python",
   "leoluz/nvim-dap-go",
   "mxsdev/nvim-dap-vscode-js",
-  "nvim-lua/plenary.nvim",
   {
     "microsoft/vscode-js-debug",
-    opt = true,
-    run = "npm install --legacy-peer-deps && npm run compile"
+    lazy = true,
+    build = "npm install --legacy-peer-deps && npm run compile"
   },
   {
     "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" }
   },
   {
     "nvim-telescope/telescope-frecency.nvim",
-    requires = { "tami5/sqlite.lua" }
+    dependencies = { "tami5/sqlite.lua" }
   },
   { "nvim-telescope/telescope-file-browser.nvim" },
-  { 'nvim-telescope/telescope-fzf-native.nvim',  run = 'make' },
+  { "nvim-telescope/telescope-fzf-native.nvim",  build = "make" },
   "kyazdani42/nvim-web-devicons",
   {
     "windwp/nvim-autopairs",
@@ -65,15 +65,18 @@ local plugins = {
   },
   {
     'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
   },
   "folke/tokyonight.nvim",
   {
     'nvim-tree/nvim-tree.lua',
-    requires = {
-      'nvim-tree/nvim-web-devicons',
-    }
   },
-  { 'romgrk/barbar.nvim', requires = 'nvim-web-devicons' },
+  { 'romgrk/barbar.nvim' },
+  "tpope/vim-surround",
+  "tpope/vim-unimpaired",
+  "tpope/vim-fugitive",
+  "arcticicestudio/nord-vim",
+  "mhinz/vim-startify",
+  { "dracula/vim", name = "dracula" },
+  { "fatih/vim-go", build = ":GoUpdateBinaries" },
 }
 require("lazy").setup(plugins)

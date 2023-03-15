@@ -28,18 +28,6 @@ let g:netrw_banner=0
 let g:netrw_liststyle=3
 let g:netrw_bufsettings='noma nomod nobl nowrap ro rnu'
 
-call plug#begin('~/.vim/plugged')
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-fugitive'
-Plug 'arcticicestudio/nord-vim'
-Plug 'mhinz/vim-startify'
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-call plug#end()
-
-let g:go_addtags_transform = 'camelcase'
-
 if has('nvim')
       let g:loaded_python_provider = 0
       let g:python3_host_prog = '/Users/earl/.venv/nvim/bin/python'
@@ -51,6 +39,18 @@ if has('nvim')
         colorscheme darkblue
       endif
 else
+      call plug#begin('~/.vim/plugged')
+      Plug 'tpope/vim-surround'
+      Plug 'tpope/vim-unimpaired'
+      Plug 'tpope/vim-fugitive'
+      Plug 'arcticicestudio/nord-vim'
+      Plug 'mhinz/vim-startify'
+      Plug 'dracula/vim', { 'as': 'dracula' }
+      Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+      call plug#end()
+
+      let g:go_addtags_transform = 'camelcase'
+
       if has('termguicolors')
         set termguicolors
         colorscheme nord
@@ -58,6 +58,38 @@ else
         colorscheme darkblue
       endif
 endif
+
+nnoremap <Leader>e :Explore<CR>
+nnoremap <Leader>n :new<CR>
+nnoremap <Leader>t :tabnew<CR>
+nnoremap <Leader>g :G \| only<CR>
+vnoremap <Leader>s y/<C-R>"<CR><S-N>cgn
+nnoremap <Leader>a :b#<CR>
+nnoremap <Leader>cd :lcd %:h<CR>
+
+" ThePrimeagen
+xnoremap <Leader>p "_dP
+" asbjornHaland
+vnoremap <Leader>y "+y
+nnoremap <Leader>y "+y
+
+" tjdevries
+if has('nvim')
+  function! s:small_terminal() abort
+    new
+    wincmd J
+    call nvim_win_set_height(0, 12)
+    set winfixheight
+    term
+  endfunction
+
+  " ANKI: Make a small terminal at the bottom of the screen.
+  nnoremap <Leader><Leader>t :call <SID>small_terminal()<CR>
+endif
+
+" Make esc leave terminal mode
+tnoremap <Leader><Esc> <C-\><C-n>
+
 if has('win32')
   let &shell = 'pwsh'
   let &shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'

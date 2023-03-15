@@ -20,9 +20,7 @@ local plugins = {
   "williamboman/mason-lspconfig.nvim",
   {
     "nvim-treesitter/nvim-treesitter",
-    build = function()
-      require("nvim-treesitter.install").update { with_sync = true }
-    end,
+    build = ":TSUpdate",
   },
   "hrsh7th/nvim-cmp",
   "hrsh7th/cmp-buffer",

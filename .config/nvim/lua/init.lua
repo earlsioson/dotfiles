@@ -73,7 +73,7 @@ local plugins = {
   "tpope/vim-unimpaired",
   "tpope/vim-fugitive",
   "arcticicestudio/nord-vim",
-  "mhinz/vim-startify",
+  {"mhinz/vim-startify", lazy = false },
   { "dracula/vim", name = "dracula" },
   { "fatih/vim-go", build = ":GoUpdateBinaries" },
 }

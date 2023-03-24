@@ -2,6 +2,21 @@ local vim = vim
 
 require "es.globals"
 
+if vim.env.TMUX then
+  vim.g.clipboard = {
+    name = 'tmux',
+    copy = {
+      ["+"] = { 'tmux', 'load-buffer', '-w', '-' },
+      ["*"] = { 'tmux', 'load-buffer', '-w', '-' },
+    },
+    paste = {
+      ["+"] = { 'bash', '-c', 'tmux refresh-client -l && sleep 0.2 && tmux save-buffer -' },
+      ["*"] = { 'bash', '-c', 'tmux refresh-client -l && sleep 0.2 && tmux save-buffer -' },
+    },
+    cache_enabled = false,
+  }
+end
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -73,8 +88,8 @@ local plugins = {
   "tpope/vim-unimpaired",
   "tpope/vim-fugitive",
   "arcticicestudio/nord-vim",
-  {"mhinz/vim-startify", lazy = false },
-  { "dracula/vim", name = "dracula" },
-  { "fatih/vim-go", build = ":GoUpdateBinaries" },
+  { "mhinz/vim-startify", lazy = false },
+  { "dracula/vim",        name = "dracula" },
+  { "fatih/vim-go",       build = ":GoUpdateBinaries" },
 }
 require("lazy").setup(plugins)

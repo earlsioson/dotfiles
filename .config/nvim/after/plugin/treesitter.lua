@@ -10,7 +10,7 @@ nvim_treesitter_configs.setup {
   ensure_installed = {
     "cpp", "css", "dockerfile", "go", "hcl", "html", "javascript",
     "json", "markdown", "proto", "python", "regex", "rust", "swift", "toml", "tsx", "typescript", "yaml",
-    "vim", "lua"
+    "lua", "vim"
   },
   sync_install = false,
   auto_install = true,

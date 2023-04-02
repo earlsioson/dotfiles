@@ -3,6 +3,11 @@ if not has_telescope then
   return
 end
 
+local has_telescope_actions, telescope_actions = pcall(require, "telescope.actions.set")
+if not has_telescope_actions then
+  return
+end
+
 local has_telescope_builtin, telescope_builtin = pcall(require, "telescope.builtin")
 if not has_telescope_builtin then
   return
@@ -17,6 +22,20 @@ local has_file_browser, _ = pcall(telescope.load_extension, "file_browser")
 if not has_file_browser then
   return
 end
+
+-- https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-934727312
+-- fixes problem with folds not working when opened via telescope
+local fixfolds = {
+  hidden = true,
+  attach_mappings = function(_)
+    telescope_actions.select:enhance({
+      post = function()
+        vim.cmd(":normal! zx")
+      end,
+    })
+    return true
+  end,
+}
 
 telescope.setup {
   defaults = {
@@ -44,6 +63,15 @@ telescope.setup {
       "-g",
       "!.git"
     },
+  },
+  pickers = {
+    buffers = fixfolds,
+    file_browser = fixfolds,
+    find_files = fixfolds,
+    git_files = fixfolds,
+    grep_string = fixfolds,
+    live_grep = fixfolds,
+    oldfiles = fixfolds,
   },
 }
 

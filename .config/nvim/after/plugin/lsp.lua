@@ -141,7 +141,9 @@ lspconfig.lua_ls.setup {
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.lua" },
-  callback = vim.lsp.buf.formatting_sync,
+  callback = function()
+    vim.lsp.buf.format()
+  end,
 })
 lspconfig.gopls.setup {
   capabilities = capabilities,
@@ -151,7 +153,9 @@ lspconfig.gopls.setup {
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.go" },
-  callback = vim.lsp.buf.formatting_sync,
+  callback = function()
+    vim.lsp.buf.format()
+  end,
 })
 
 lspconfig.pyright.setup {
@@ -162,7 +166,9 @@ lspconfig.pyright.setup {
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.py" },
-  callback = vim.lsp.buf.formatting_sync,
+  callback = function()
+    vim.lsp.buf.format()
+  end,
 })
 
 lspconfig.terraformls.setup {
@@ -173,7 +179,9 @@ lspconfig.terraformls.setup {
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.tf", "*.tfvars" },
-  callback = vim.lsp.buf.formatting_sync,
+  callback = function()
+    vim.lsp.buf.format()
+  end,
 })
 
 lspconfig.tsserver.setup {
@@ -214,7 +222,9 @@ lspconfig.rust_analyzer.setup {
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.rs" },
-  callback = vim.lsp.buf.formatting_sync,
+  callback = function()
+    vim.lsp.buf.format()
+  end,
 })
 
 lspconfig.yamlls.setup {

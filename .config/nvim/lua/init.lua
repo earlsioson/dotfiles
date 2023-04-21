@@ -91,5 +91,6 @@ local plugins = {
   { "mhinz/vim-startify", lazy = false },
   { "dracula/vim",        name = "dracula" },
   { "fatih/vim-go",       build = ":GoUpdateBinaries" },
+  "github/copilot.vim"
 }
 require("lazy").setup(plugins)

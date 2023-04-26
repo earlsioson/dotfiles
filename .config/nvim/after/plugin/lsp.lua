@@ -23,7 +23,7 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 cmp.setup({
   mapping = cmp.mapping.preset.insert({
-    ['<C-B>'] = cmp.mapping.scroll_docs( -4),
+    ['<C-B>'] = cmp.mapping.scroll_docs(-4),
     ['<C-F>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-E>'] = cmp.mapping.abort(),
@@ -232,6 +232,11 @@ lspconfig.yamlls.setup {
   flags = lsp_flags,
   on_attach = on_attach,
   handlers = handlers,
+  settings = {
+    yaml = {
+      keyOrdering = false
+    }
+  }
 }
 
 lspconfig.jsonls.setup {

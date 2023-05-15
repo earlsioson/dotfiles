@@ -53,7 +53,7 @@ local plugins = {
   {
     "microsoft/vscode-js-debug",
     lazy = true,
-    build = "npm install --legacy-peer-deps && npm run compile"
+    build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -64,7 +64,8 @@ local plugins = {
     dependencies = { "tami5/sqlite.lua" }
   },
   { "nvim-telescope/telescope-file-browser.nvim" },
-  { "nvim-telescope/telescope-fzf-native.nvim",  build = "make" },
+  { "nvim-telescope/telescope-live-grep-args.nvim" },
+  { "nvim-telescope/telescope-fzf-native.nvim",    build = "make" },
   "kyazdani42/nvim-web-devicons",
   {
     "windwp/nvim-autopairs",

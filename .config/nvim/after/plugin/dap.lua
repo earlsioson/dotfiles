@@ -28,22 +28,12 @@ if not has_dap_vscode_js then
   return
 end
 
+local has_dap_utils, dap_utils = pcall(require, "dap.utils")
+if not has_dap_utils then
+  return
+end
 for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "javascriptreact" }) do
   dap.configurations[ecma_script] = {
-    {
-      type = "pwa-chrome",
-      request = "launch",
-      name = "Launch Chrome against localhost",
-      url = "http://localhost:3000",
-      webRoot = "${workspaceFolder}",
-    },
-    {
-      type = "pwa-chrome",
-      request = "attach",
-      name = "Attach to Chrome",
-      port = 9222,
-      webRoot = "${workspaceFolder}",
-    },
     {
       type = "pwa-node",
       request = "launch",
@@ -73,17 +63,6 @@ for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "j
       console = "integratedTerminal",
       internalConsoleOptions = "neverOpen",
     },
-    {
-      type = "node-terminal",
-      request = "launch",
-      name = "Next.js: debug full stack",
-      command = "npm run dev",
-      serverReadyAction = {
-        pattern = "started server on .+, url: (https?://.+)",
-        uriFormat = "%s",
-        action = "debugWithChrome"
-      }
-    }
   }
 end
 dap.adapters.codelldb = {
@@ -121,6 +100,20 @@ vim.keymap.set("n", "<Leader><Leader>dL",
   function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
 vim.keymap.set("n", "<Leader><Leader>dr", dap.repl.open)
 vim.keymap.set("n", "<Leader><Leader>dl", dap.run_last)
+vim.keymap.set({ 'n', 'v' }, '<Leader><Leader>dh', function()
+  require('dap.ui.widgets').hover()
+end)
+vim.keymap.set({ 'n', 'v' }, '<Leader><Leader>dp', function()
+  require('dap.ui.widgets').preview()
+end)
+vim.keymap.set('n', '<Leader><Leader>df', function()
+  local widgets = require('dap.ui.widgets')
+  widgets.centered_float(widgets.frames)
+end)
+vim.keymap.set('n', '<Leader><Leader>ds', function()
+  local widgets = require('dap.ui.widgets')
+  widgets.centered_float(widgets.scopes)
+end)
 
 dapui.setup()
 vim.keymap.set("n", "<Leader><Leader>du", dapui.toggle)
@@ -129,6 +122,10 @@ dap_go.setup()
 dap_python.setup('~/.venv/nvim/bin/python')
 dap_vscode_js.setup({
   -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
-  -- debugger_path = "(runtimedir)/site/pack/packer/opt/vscode-js-debug", -- Path to vscode-js-debug installation.
+  debugger_path = vim.env.HOME .. '/.local/share/nvim/lazy/vscode-js-debug',                   -- Path to vscode-js-debug installation.
+  -- debugger_cmd = { "js-debug-adapter" }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
   adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
+  -- log_file_path = "(stdpath cache)/dap_vscode_js.log" -- Path for file logging
+  -- log_file_level = false -- Logging level for output to file. Set to false to disable file logging.
+  -- log_console_level = vim.log.levels.ERROR -- Logging level for output to console. Set to false to disable console output.
 })

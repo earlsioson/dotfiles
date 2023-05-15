@@ -95,28 +95,6 @@ if not has_fzf then
   return
 end
 
-local find_in_repos = function()
-  local vim_edit_prompt = function(prompt_bufnr)
-    local current_picker = telescope_actions_state.get_current_picker(prompt_bufnr)
-    local prompt = current_picker:_get_prompt()
-    local cwd = current_picker.cwd
-    telescope_actions.close(prompt_bufnr)
-    vim.api.nvim_exec(':edit ' .. cwd .. '/' .. prompt, false)
-    return true
-  end
-
-  telescope_builtin.find_files({
-    prompt_title = "< my_find >",
-    cwd = "~/dev/e2g/repos",
-    hidden = true,
-    no_ignore = true,
-    attach_mappings = function(_, map)
-      map('i', '<c-n>', vim_edit_prompt)
-      return true
-    end
-  })
-end
-
 local search_dir = function()
   vim.ui.input({
       prompt = "Search: ",
@@ -130,7 +108,7 @@ end
 
 local opt = { noremap = true, silent = true }
 vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files follow=true<CR>", opt)
-vim.keymap.set("n", "<Leader>fF", "<Cmd>Telescope find_files follow=true hidden=true<CR>", opt)
+vim.keymap.set("n", "<Leader><Leader>ff", "<Cmd>Telescope find_files follow=true hidden=true<CR>", opt)
 vim.keymap.set("n", "<Leader>fg", "<Cmd>Telescope git_files<CR>", opt)
 vim.keymap.set("n", "<Leader>fs", "<Cmd>Telescope grep_string<CR>", opt)
 vim.keymap.set("n", "<Leader>rg", search_dir, opt)
@@ -138,7 +116,6 @@ vim.keymap.set("n", "<Leader><Leader>rg", telescope.extensions.live_grep_args.li
 vim.keymap.set("n", "<Leader>fo", "<Cmd>Telescope oldfiles<CR>", opt)
 vim.keymap.set("n", "<Leader>fb", "<Cmd>Telescope buffers<CR>", opt)
 
-vim.keymap.set("n", "<Leader>fR", find_in_repos, opt)
 vim.keymap.set("n", "<Leader>fr", telescope.extensions.frecency.frecency, opt)
 vim.keymap.set("n", "<Leader>fe", telescope.extensions.file_browser.file_browser, opt)
-vim.keymap.set("n", "<Leader>fE", "<Cmd>Telescope file_browser respect_gitignore=false<CR>", opt)
+vim.keymap.set("n", "<Leader><Leader>fe", "<Cmd>Telescope file_browser respect_gitignore=false<CR>", opt)

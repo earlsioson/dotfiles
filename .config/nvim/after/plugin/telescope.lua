@@ -99,20 +99,31 @@ local search_dir = function()
   vim.ui.input({
       prompt = "Search: ",
       default = "",
-      completion = "file",
+      completion = "dir",
     },
     function(input)
       telescope.extensions.live_grep_args.live_grep_args({ search_dirs = { input } })
     end)
 end
 
+local find_dir = function()
+  vim.ui.input({
+      prompt = "Find: ",
+      default = "",
+      completion = "dir",
+    },
+    function(input)
+      telescope_builtin.find_files({ search_dirs = { input }, follow = true })
+    end)
+end
+
 local opt = { noremap = true, silent = true }
-vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files follow=true<CR>", opt)
-vim.keymap.set("n", "<Leader><Leader>ff", "<Cmd>Telescope find_files follow=true hidden=true<CR>", opt)
+vim.keymap.set("n", "<Leader><Leader>ff", find_dir, opt)
+vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files follow=true hidden=true<CR>", opt)
 vim.keymap.set("n", "<Leader>fg", "<Cmd>Telescope git_files<CR>", opt)
 vim.keymap.set("n", "<Leader>fs", "<Cmd>Telescope grep_string<CR>", opt)
-vim.keymap.set("n", "<Leader>rg", search_dir, opt)
-vim.keymap.set("n", "<Leader><Leader>rg", telescope.extensions.live_grep_args.live_grep_args, opt)
+vim.keymap.set("n", "<Leader><Leader>rg", search_dir, opt)
+vim.keymap.set("n", "<Leader>rg", telescope.extensions.live_grep_args.live_grep_args, opt)
 vim.keymap.set("n", "<Leader>fo", "<Cmd>Telescope oldfiles<CR>", opt)
 vim.keymap.set("n", "<Leader>fb", "<Cmd>Telescope buffers<CR>", opt)
 

@@ -32,6 +32,12 @@ local has_dap_utils, dap_utils = pcall(require, "dap.utils")
 if not has_dap_utils then
   return
 end
+
+local has_ext_vscode, ext_vscode = pcall(require, "dap.ext.vscode")
+if not has_ext_vscode then
+  return
+end
+
 for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "javascriptreact" }) do
   dap.configurations[ecma_script] = {
     {
@@ -90,6 +96,7 @@ dap.configurations.rust = dap.configurations.cpp
 
 dap.set_log_level('DEBUG')
 
+vim.keymap.set("n", "<Leader>bv", ext_vscode.load_launchjs)
 vim.keymap.set("n", "<Leader>bc", dap.continue)
 vim.keymap.set("n", "<Leader>bO", dap.step_over)
 vim.keymap.set("n", "<Leader>bi", dap.step_into)

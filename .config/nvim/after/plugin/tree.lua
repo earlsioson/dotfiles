@@ -14,7 +14,7 @@ local function on_attach(bufnr)
   end
   api.config.mappings.default_on_attach(bufnr)
   vim.keymap.del('n', '<C-k>', { buffer = bufnr })
-  vim.keymap.set('n', '<C-i>', api.node.show_info_popup, opts('Info'))
+  vim.keymap.set('n', '<M-i>', api.node.show_info_popup, opts('Info'))
 end
 
 tree.setup {

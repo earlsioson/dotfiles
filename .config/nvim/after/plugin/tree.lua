@@ -8,7 +8,16 @@ if not has_api then
   return
 end
 
+local function on_attach(bufnr)
+  local function opts(desc)
+    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
+  api.config.mappings.default_on_attach(bufnr)
+  vim.keymap.set('n', '<C-i>', api.node.show_info_popup, opts('Info'))
+end
+
 tree.setup {
+  on_attach = on_attach,
   live_filter = {
     prefix = "[FILTER]: ",
     always_show_folders = false,

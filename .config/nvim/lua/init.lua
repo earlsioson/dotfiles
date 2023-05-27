@@ -93,6 +93,10 @@ local plugins = {
   { "dracula/vim",        name = "dracula" },
   { "fatih/vim-go",       build = ":GoUpdateBinaries" },
   "github/copilot.vim",
-  "dense-analysis/ale"
+  "dense-analysis/ale",
+  {
+    'stevearc/dressing.nvim',
+    opts = {},
+  }
 }
 require("lazy").setup(plugins)

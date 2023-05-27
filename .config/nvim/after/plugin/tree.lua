@@ -25,7 +25,10 @@ tree.setup {
   },
   renderer = {
     symlink_destination = false,
-  }
+  },
+  view = {
+    relativenumber = true,
+  },
 }
 
 local open_dir = function()

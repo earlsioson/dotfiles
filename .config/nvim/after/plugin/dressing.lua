@@ -10,4 +10,14 @@ dressing.setup({
       winblend = 0,
     }
   },
+  select = {
+    backend = { "builtin" },
+    builtin = {
+      relative = "editor",
+      min_width = .99,
+      win_options = {
+        winblend = 0,
+      }
+    }
+  },
 })

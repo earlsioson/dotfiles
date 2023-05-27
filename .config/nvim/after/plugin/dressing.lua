@@ -5,5 +5,9 @@ end
 dressing.setup({
   input = {
     relative = "editor",
+    min_width = .9,
+    win_options = {
+      winblend = 0,
+    }
   },
 })

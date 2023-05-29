@@ -97,6 +97,7 @@ local plugins = {
   {
     'stevearc/dressing.nvim',
     opts = {},
-  }
+  },
+  "ziglang/zig.vim"
 }
 require("lazy").setup(plugins)

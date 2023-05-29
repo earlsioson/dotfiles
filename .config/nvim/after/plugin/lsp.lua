@@ -204,3 +204,10 @@ lspconfig.docker_compose_language_service.setup {
   on_attach = on_attach,
   handlers = handlers,
 }
+
+lspconfig.zls.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  on_attach = on_attach,
+  handlers = handlers,
+}

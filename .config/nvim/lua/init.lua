@@ -98,6 +98,7 @@ local plugins = {
     'stevearc/dressing.nvim',
     opts = {},
   },
-  "ziglang/zig.vim"
+  "ziglang/zig.vim",
+  "ThePrimeagen/harpoon"
 }
 require("lazy").setup(plugins)

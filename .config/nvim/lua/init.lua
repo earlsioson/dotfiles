@@ -77,21 +77,16 @@ local plugins = {
       require("Comment").setup()
     end
   },
-  {
-    'nvim-lualine/lualine.nvim',
-  },
   "folke/tokyonight.nvim",
   {
     'nvim-tree/nvim-tree.lua',
   },
-  { 'romgrk/barbar.nvim' },
   "tpope/vim-surround",
   "tpope/vim-unimpaired",
   "tpope/vim-fugitive",
   "arcticicestudio/nord-vim",
-  { "mhinz/vim-startify", lazy = false },
-  { "dracula/vim",        name = "dracula" },
-  { "fatih/vim-go",       build = ":GoUpdateBinaries" },
+  { "dracula/vim",  name = "dracula" },
+  { "fatih/vim-go", build = ":GoUpdateBinaries" },
   "github/copilot.vim",
   "dense-analysis/ale",
   {
@@ -99,6 +94,11 @@ local plugins = {
     opts = {},
   },
   "ziglang/zig.vim",
-  "ThePrimeagen/harpoon"
+  "ThePrimeagen/harpoon",
+  -- { 'romgrk/barbar.nvim' },
+  -- {
+  --   'nvim-lualine/lualine.nvim',
+  -- },
+  -- { "mhinz/vim-startify", lazy = false },
 }
 require("lazy").setup(plugins)

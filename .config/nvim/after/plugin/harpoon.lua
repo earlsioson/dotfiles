@@ -8,11 +8,6 @@ if not has_harpoon_ui then
   return
 end
 
-local has_harpoon_term, harpoon_term = pcall(require, "harpoon.term")
-if not has_harpoon_term then
-  return
-end
-
 local opt = { noremap = true, silent = true }
 vim.keymap.set("n", "<Leader>ha", harpoon_mark.add_file, opt)
 vim.keymap.set("n", "<Leader>hq", harpoon_ui.toggle_quick_menu, opt)

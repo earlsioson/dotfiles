@@ -94,6 +94,5 @@ local plugins = {
     opts = {},
   },
   "ziglang/zig.vim",
-  "ThePrimeagen/harpoon",
 }
 require("lazy").setup(plugins)

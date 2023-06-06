@@ -95,10 +95,5 @@ local plugins = {
   },
   "ziglang/zig.vim",
   "ThePrimeagen/harpoon",
-  -- { 'romgrk/barbar.nvim' },
-  -- {
-  --   'nvim-lualine/lualine.nvim',
-  -- },
-  -- { "mhinz/vim-startify", lazy = false },
 }
 require("lazy").setup(plugins)

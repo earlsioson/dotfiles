@@ -8,6 +8,11 @@ if not has_dap_utils then
   return
 end
 
+local has_dap_ui_widgets, dap_ui_widgets = pcall(require, "dap.ui.widgets")
+if not has_dap_ui_widgets then
+  return
+end
+
 local has_dapui, dapui = pcall(require, "dapui")
 if not has_dapui then
   return
@@ -25,11 +30,6 @@ end
 
 local has_dap_vscode_js, dap_vscode_js = pcall(require, "dap-vscode-js")
 if not has_dap_vscode_js then
-  return
-end
-
-local has_dap_utils, dap_utils = pcall(require, "dap.utils")
-if not has_dap_utils then
   return
 end
 
@@ -85,10 +85,11 @@ dap.set_log_level('DEBUG')
 vim.keymap.set("n", "<Leader>bv",
   function() ext_vscode.load_launchjs(nil, { codelldb = { 'c', 'cpp', 'rust', 'zig' } }) end)
 vim.keymap.set("n", "<Leader>bc", dap.continue)
-vim.keymap.set("n", "<Leader>bO", dap.step_over)
-vim.keymap.set("n", "<Leader>bi", dap.step_into)
-vim.keymap.set("n", "<Leader>bo", dap.step_out)
+vim.keymap.set("n", "<Leader>bo", dap.step_over)
+vim.keymap.set("n", "<Leader>bI", dap.step_into)
+vim.keymap.set("n", "<Leader>bO", dap.step_out)
 vim.keymap.set("n", "<Leader>bb", dap.toggle_breakpoint)
+vim.keymap.set("n", "<Leader><Leader>bb", dap.clear_breakpoints)
 vim.keymap.set("n", "<Leader>be", function() dap.set_exception_breakpoints() end)
 vim.keymap.set("n", "<Leader>bB", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end)
 vim.keymap.set("n", "<Leader>bL",
@@ -96,18 +97,16 @@ vim.keymap.set("n", "<Leader>bL",
 vim.keymap.set("n", "<Leader>br", dap.repl.open)
 vim.keymap.set("n", "<Leader>bl", dap.run_last)
 vim.keymap.set({ 'n', 'v' }, '<Leader>bh', function()
-  require('dap.ui.widgets').hover()
+  dap_ui_widgets.hover()
 end)
 vim.keymap.set({ 'n', 'v' }, '<Leader>bp', function()
-  require('dap.ui.widgets').preview()
+  dap_ui_widgets.preview()
 end)
 vim.keymap.set('n', '<Leader>bf', function()
-  local widgets = require('dap.ui.widgets')
-  widgets.centered_float(widgets.frames)
+  dap_ui_widgets.centered_float(dap_ui_widgets.frames)
 end)
 vim.keymap.set('n', '<Leader>bs', function()
-  local widgets = require('dap.ui.widgets')
-  widgets.centered_float(widgets.scopes)
+  dap_ui_widgets.centered_float(dap_ui_widgets.scopes)
 end)
 
 dapui.setup()

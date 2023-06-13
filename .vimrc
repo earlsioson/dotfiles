@@ -43,6 +43,7 @@ else
       Plug 'tpope/vim-surround'
       Plug 'tpope/vim-unimpaired'
       Plug 'tpope/vim-fugitive'
+      Plug 'airblade/vim-gitgutter'
       Plug 'arcticicestudio/nord-vim'
       Plug 'mhinz/vim-startify'
       Plug 'dracula/vim', { 'as': 'dracula' }

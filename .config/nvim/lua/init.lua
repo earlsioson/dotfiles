@@ -84,6 +84,7 @@ local plugins = {
   "tpope/vim-surround",
   "tpope/vim-unimpaired",
   "tpope/vim-fugitive",
+  "airblade/vim-gitgutter",
   "arcticicestudio/nord-vim",
   { "dracula/vim",  name = "dracula" },
   { "fatih/vim-go", build = ":GoUpdateBinaries" },

@@ -70,6 +70,11 @@ nnoremap <Leader>cd :lcd %:h<CR>
 
 " ThePrimeagen
 xnoremap <Leader>p "_dP
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
 " asbjornHaland
 vnoremap <Leader>y "+y
 nnoremap <Leader>y "+y

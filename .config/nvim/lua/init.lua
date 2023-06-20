@@ -37,6 +37,7 @@ local plugins = {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
   },
+  "nvim-treesitter/nvim-treesitter-context",
   "hrsh7th/nvim-cmp",
   "hrsh7th/cmp-buffer",
   "hrsh7th/cmp-path",

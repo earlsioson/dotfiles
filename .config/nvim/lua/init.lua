@@ -97,5 +97,6 @@ local plugins = {
   },
   "ziglang/zig.vim",
   "mbbill/undotree",
+  "terrastruct/d2-vim"
 }
 require("lazy").setup(plugins)

@@ -96,5 +96,6 @@ local plugins = {
     opts = {},
   },
   "ziglang/zig.vim",
+  "mbbill/undotree",
 }
 require("lazy").setup(plugins)

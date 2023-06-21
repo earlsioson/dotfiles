@@ -48,6 +48,7 @@ else
       Plug 'mhinz/vim-startify'
       Plug 'dracula/vim', { 'as': 'dracula' }
       Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+      Plug 'mbbill/undotree'
       call plug#end()
 
       let g:go_addtags_transform = 'camelcase'

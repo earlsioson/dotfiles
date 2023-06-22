@@ -45,9 +45,11 @@ else
       Plug 'tpope/vim-fugitive'
       Plug 'airblade/vim-gitgutter'
       Plug 'arcticicestudio/nord-vim'
-      Plug 'mhinz/vim-startify'
       Plug 'dracula/vim', { 'as': 'dracula' }
       Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+      Plug 'github/copilot.vim'
+      Plug 'dense-analysis/ale'
+      Plug 'ziglang/zig.vim'
       Plug 'mbbill/undotree'
       Plug 'terrastruct/d2-vim'
       call plug#end()
@@ -60,6 +62,16 @@ else
       else
         colorscheme darkblue
       endif
+      let g:ale_linters = {
+            \   'proto': ['buf-lint'],
+            \}
+      let g:ale_lint_on_text_changed = 'never'
+      let g:ale_linters_explicit = 1
+
+      let g:ale_fixers = {
+            \   'proto': ['buf-format'],
+            \}
+      let g:ale_fix_on_save = 1
 endif
 
 nnoremap <Leader>e :Explore<CR>

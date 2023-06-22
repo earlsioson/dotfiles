@@ -82,6 +82,10 @@ local plugins = {
   {
     'nvim-tree/nvim-tree.lua',
   },
+  {
+    'stevearc/dressing.nvim',
+    opts = {},
+  },
   "tpope/vim-surround",
   "tpope/vim-unimpaired",
   "tpope/vim-fugitive",
@@ -91,12 +95,8 @@ local plugins = {
   { "fatih/vim-go", build = ":GoUpdateBinaries" },
   "github/copilot.vim",
   "dense-analysis/ale",
-  {
-    'stevearc/dressing.nvim',
-    opts = {},
-  },
   "ziglang/zig.vim",
   "mbbill/undotree",
-  "terrastruct/d2-vim"
+  "terrastruct/d2-vim",
 }
 require("lazy").setup(plugins)

@@ -34,7 +34,7 @@ cmp.setup({
       else
         fallback()
       end
-    end, { "i", "s" }),
+    end),
   }),
   sources = cmp.config.sources({
     { name = "copilot", group_index = 2 },

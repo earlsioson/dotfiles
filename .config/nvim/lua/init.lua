@@ -83,8 +83,17 @@ local plugins = {
     'nvim-tree/nvim-tree.lua',
   },
   {
-    'stevearc/dressing.nvim',
+    "stevearc/dressing.nvim",
     opts = {},
+  },
+  {
+    "zbirenbaum/copilot.lua",
+  },
+  {
+    "zbirenbaum/copilot-cmp",
+    config = function()
+      require("copilot_cmp").setup()
+    end
   },
   "tpope/vim-surround",
   "tpope/vim-unimpaired",
@@ -93,7 +102,6 @@ local plugins = {
   "arcticicestudio/nord-vim",
   { "dracula/vim",  name = "dracula" },
   { "fatih/vim-go", build = ":GoUpdateBinaries" },
-  "github/copilot.vim",
   "dense-analysis/ale",
   "ziglang/zig.vim",
   "mbbill/undotree",

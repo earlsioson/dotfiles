@@ -86,15 +86,7 @@ local plugins = {
     "stevearc/dressing.nvim",
     opts = {},
   },
-  {
-    "zbirenbaum/copilot.lua",
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    config = function()
-      require("copilot_cmp").setup()
-    end
-  },
+  "github/copilot.vim",
   "tpope/vim-surround",
   "tpope/vim-unimpaired",
   "tpope/vim-fugitive",

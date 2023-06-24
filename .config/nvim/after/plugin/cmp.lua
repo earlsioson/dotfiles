@@ -37,7 +37,6 @@ cmp.setup({
     end),
   }),
   sources = cmp.config.sources({
-    { name = "copilot", group_index = 2 },
     { name = 'nvim_lua' },
     { name = 'nvim_lsp' },
     { name = 'path' },

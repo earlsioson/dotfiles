@@ -110,6 +110,8 @@ endif
 " Make esc leave terminal mode
 tnoremap <Leader><Esc> <C-\><C-n>
 
+set autowrite
+
 if has('win32')
   let &shell = 'pwsh'
   let &shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'

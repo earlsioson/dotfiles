@@ -1,0 +1,66 @@
+{
+  "name": "snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "go"
+        ],
+        "path": "./go.json"
+      },
+      {
+        "language": [
+          "javascript",
+          "javascriptreact"
+        ],
+        "path": "./javascript/javascript.json"
+      },
+      {
+        "language": "jsdoc",
+        "path": "./javascript/jsdoc.json"
+      },
+      {
+        "language": "tsdoc",
+        "path": "./javascript/tsdoc.json"
+      },
+      {
+        "language": [
+          "typescript",
+          "typescriptreact"
+        ],
+        "path": "./javascript/typescript.json"
+      },
+      {
+        "language": "javascriptreact",
+        "path": "./javascript/react.json"
+      },
+      {
+        "language": "javascriptreact",
+        "path": "./javascript/react-native.json"
+      },
+      {
+        "language": "javascriptreact",
+        "path": "./javascript/next.json"
+      },
+      {
+        "language": "typescriptreact",
+        "path": "./javascript/react-ts.json"
+      },
+      {
+        "language": "typescriptreact",
+        "path": "./javascript/next-ts.json"
+      },
+      {
+        "language": "typescriptreact",
+        "path": "./javascript/react-native-ts.json"
+      },
+      {
+        "language": [
+          "javascriptreact",
+          "typescriptreact"
+        ],
+        "path": "./javascript/react-es7.json"
+      }
+    ]
+  }
+}

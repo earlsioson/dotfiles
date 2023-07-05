@@ -29,49 +29,49 @@ let g:netrw_liststyle=3
 let g:netrw_bufsettings='noma nomod nobl nowrap ro rnu'
 
 if has('nvim')
-      let g:loaded_python_provider = 0
-      let g:python3_host_prog = '/Users/earl/.venv/nvim/bin/python'
-      lua require('init')
-      if has('termguicolors')
-        set termguicolors
-        colorscheme tokyonight-night
-      else
-        colorscheme darkblue
-      endif
+  let g:loaded_python_provider = 0
+  let g:python3_host_prog = '/Users/earl/.venv/nvim/bin/python'
+  lua require('init')
+  if has('termguicolors')
+    set termguicolors
+    colorscheme tokyonight-night
+  else
+    colorscheme darkblue
+  endif
 else
-      call plug#begin('~/.vim/plugged')
-      Plug 'tpope/vim-surround'
-      Plug 'tpope/vim-unimpaired'
-      Plug 'tpope/vim-fugitive'
-      Plug 'airblade/vim-gitgutter'
-      Plug 'arcticicestudio/nord-vim'
-      Plug 'dracula/vim', { 'as': 'dracula' }
-      Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-      Plug 'github/copilot.vim'
-      Plug 'dense-analysis/ale'
-      Plug 'ziglang/zig.vim'
-      Plug 'mbbill/undotree'
-      Plug 'terrastruct/d2-vim'
-      call plug#end()
+  call plug#begin('~/.vim/plugged')
+  Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-unimpaired'
+  Plug 'tpope/vim-fugitive'
+  Plug 'airblade/vim-gitgutter'
+  Plug 'arcticicestudio/nord-vim'
+  Plug 'dracula/vim', { 'as': 'dracula' }
+  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+  Plug 'github/copilot.vim'
+  Plug 'dense-analysis/ale'
+  Plug 'ziglang/zig.vim'
+  Plug 'mbbill/undotree'
+  Plug 'terrastruct/d2-vim'
+  call plug#end()
 
-      let g:go_addtags_transform = 'camelcase'
+  let g:go_addtags_transform = 'camelcase'
 
-      if has('termguicolors')
-        set termguicolors
-        colorscheme nord
-      else
-        colorscheme darkblue
-      endif
-      let g:ale_linters = {
-            \   'proto': ['buf-lint'],
-            \}
-      let g:ale_lint_on_text_changed = 'never'
-      let g:ale_linters_explicit = 1
+  if has('termguicolors')
+    set termguicolors
+    colorscheme nord
+  else
+    colorscheme darkblue
+  endif
+  let g:ale_linters = {
+        \   'proto': ['buf-lint'],
+        \}
+  let g:ale_lint_on_text_changed = 'never'
+  let g:ale_linters_explicit = 1
 
-      let g:ale_fixers = {
-            \   'proto': ['buf-format'],
-            \}
-      let g:ale_fix_on_save = 1
+  let g:ale_fixers = {
+        \   'proto': ['buf-format'],
+        \}
+  let g:ale_fix_on_save = 1
 endif
 
 nnoremap <Leader>e :Explore<CR>
@@ -91,6 +91,34 @@ nnoremap <C-u> <C-u>zz
 " asbjornHaland
 vnoremap <Leader>y "+y
 nnoremap <Leader>y "+y
+
+function! Tabline() abort
+  let l:line = ''
+  let l:current = tabpagenr()
+
+  for l:i in range(1, tabpagenr('$'))
+    if l:i == l:current
+      let l:line .= '%#TabLineSel#'
+    else
+      let l:line .= '%#TabLine#'
+    endif
+
+    let l:label = fnamemodify(
+          \ bufname(tabpagebuflist(l:i)[tabpagewinnr(l:i) - 1]),
+          \ ':t'
+          \ )
+
+    let l:line .= '%' . i . 'T' " Starts mouse click target region.
+    let l:line .= '  ' . l:label . '  '
+  endfor
+
+  let l:line .= '%#TabLineFill#'
+  let l:line .= '%T' " Ends mouse click target region(s).
+
+  return l:line
+endfunction
+
+set tabline=%!Tabline()
 
 " tjdevries
 if has('nvim')

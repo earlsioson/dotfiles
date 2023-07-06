@@ -109,6 +109,7 @@ function! Tabline() abort
           \ )
 
     let l:line .= '%' . i . 'T' " Starts mouse click target region.
+    let l:line .= ' '. (i) . ' '
     let l:line .= '  ' . l:label . '  '
   endfor
 

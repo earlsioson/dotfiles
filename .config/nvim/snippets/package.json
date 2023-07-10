@@ -3,6 +3,14 @@
   "contributes": {
     "snippets": [
       {
+        "language": "rust",
+        "path": "./rust/rust.json"
+      },
+      {
+        "language": "rustdoc",
+        "path": "./rust/rustdoc.json"
+      },
+      {
         "language": [
           "go"
         ],

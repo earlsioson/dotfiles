@@ -71,7 +71,32 @@ for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "j
     },
   }
 end
+
 dap.adapters.codelldb = {
+  type = 'server',
+  port = '${port}',
+  executable = {
+    command = vim.env.HOME .. '/.local/share/nvim/mason/bin/codelldb',
+    args = { '--port', '${port}' },
+  }
+}
+dap.configurations.cpp = {
+  {
+    name = "Launch file",
+    type = "codelldb",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+  },
+}
+dap.configurations.c = dap.configurations.cpp
+dap.configurations.rust = dap.configurations.cpp
+dap.configurations.zig = dap.configurations.cpp
+
+dap.adapters.lldb = {
   type = 'server',
   port = '${port}',
   executable = {
@@ -83,7 +108,7 @@ dap.adapters.codelldb = {
 dap.set_log_level('DEBUG')
 
 vim.keymap.set("n", "<Leader>bv",
-  function() ext_vscode.load_launchjs(nil, { codelldb = { 'c', 'cpp', 'rust', 'zig' } }) end)
+  function() ext_vscode.load_launchjs(nil, { lldb = { 'c', 'cpp', 'rust', 'zig' } }) end)
 vim.keymap.set("n", "<Leader>bc", dap.continue)
 vim.keymap.set("n", "<Leader>bo", dap.step_over)
 vim.keymap.set("n", "<Leader>bI", dap.step_into)

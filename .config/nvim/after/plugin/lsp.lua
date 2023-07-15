@@ -152,7 +152,15 @@ lspconfig.rust_analyzer.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
+  settings = {
+    ["rust-analyzer"] = {
+      check = {
+        command = "clippy"
+      }
+    }
+  }
 }
+
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.rs" },
   callback = function()

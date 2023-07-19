@@ -93,5 +93,12 @@ local plugins = {
   "ziglang/zig.vim",
   "mbbill/undotree",
   "terrastruct/d2-vim",
+  {
+    "nvim-lualine/lualine.nvim",
+  },
+  {
+    'glepnir/dashboard-nvim',
+    event = 'VimEnter',
+  }
 }
 require("lazy").setup(plugins)

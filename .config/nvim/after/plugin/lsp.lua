@@ -210,3 +210,9 @@ lspconfig.zls.setup {
   flags = lsp_flags,
   handlers = handlers,
 }
+
+lspconfig.bashls.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  handlers = handlers,
+}

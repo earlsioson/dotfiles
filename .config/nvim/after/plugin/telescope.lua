@@ -8,23 +8,8 @@ if not has_telescope_builtin then
   return
 end
 
-local has_telescope_actions, telescope_actions = pcall(require, "telescope.actions")
-if not has_telescope_actions then
-  return
-end
-
 local has_telescope_actions_set, telescope_actions_set = pcall(require, "telescope.actions.set")
 if not has_telescope_actions_set then
-  return
-end
-
-local has_telescope_actions_state, telescope_actions_state = pcall(require, "telescope.actions.state")
-if not has_telescope_actions_state then
-  return
-end
-
-local has_frecency, _ = pcall(telescope.load_extension, "frecency")
-if not has_frecency then
   return
 end
 
@@ -128,6 +113,5 @@ vim.keymap.set("n", "<Leader>rg", telescope.extensions.live_grep_args.live_grep_
 vim.keymap.set("n", "<Leader>fo", "<Cmd>Telescope oldfiles<CR>", opt)
 vim.keymap.set("n", "<Leader>fb", "<Cmd>Telescope buffers<CR>", opt)
 
-vim.keymap.set("n", "<Leader>fr", telescope.extensions.frecency.frecency, opt)
 vim.keymap.set("n", "<Leader>fe", telescope.extensions.file_browser.file_browser, opt)
 vim.keymap.set("n", "<Leader><Leader>fe", "<Cmd>Telescope file_browser respect_gitignore=false<CR>", opt)

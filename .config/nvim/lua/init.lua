@@ -96,6 +96,7 @@ local plugins = {
   {
     'glepnir/dashboard-nvim',
     event = 'VimEnter',
-  }
+  },
+  "rmagatti/auto-session",
 }
 require("lazy").setup(plugins)

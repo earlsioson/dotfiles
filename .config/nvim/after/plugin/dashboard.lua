@@ -36,5 +36,8 @@ dashboard.setup({
         key = 'b',
       },
     },
+    project = {
+      enable = false,
+    },
   },
 })

@@ -44,5 +44,6 @@ end
 
 local opt = { noremap = true, silent = true }
 vim.keymap.set("n", "<Leader>nt", "<Cmd>NvimTreeToggle<CR>", opt)
+vim.keymap.set("n", "<Leader>nf", "<Cmd>NvimTreeFindFile<CR>", opt)
 vim.keymap.set("n", "<Leader>no", open_dir, opt)
 vim.keymap.set("n", "<Leader>nc", "<Cmd>NvimTreeClose<CR>", opt)

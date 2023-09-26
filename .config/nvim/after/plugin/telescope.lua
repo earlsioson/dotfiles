@@ -3,6 +3,11 @@ if not has_telescope then
   return
 end
 
+local has_telescope_actions, telescope_actions = pcall(require, "telescope.actions")
+if not has_telescope_actions then
+  return
+end
+
 local has_telescope_builtin, telescope_builtin = pcall(require, "telescope.builtin")
 if not has_telescope_builtin then
   return
@@ -71,7 +76,14 @@ telescope.setup {
     },
   },
   pickers = {
-    buffers = fixfolds,
+    buffers = {
+      unpack(fixfolds),
+      mappings = {
+        i = {
+          ["<M-d>"] = telescope_actions.delete_buffer + telescope_actions.move_to_top,
+        }
+      }
+    },
     file_browser = fixfolds,
     find_files = fixfolds,
     git_files = fixfolds,

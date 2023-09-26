@@ -69,6 +69,14 @@ for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "j
       console = "integratedTerminal",
       internalConsoleOptions = "neverOpen",
     },
+    {
+      type = "pwa-chrome",
+      request = "launch",
+      name = "Start Chrome with \"localhost\"",
+      url = "http://localhost:3333",
+      webRoot = "${workspaceFolder}",
+      userDataDir = "${workspaceFolder}/.vscode/vscode-chrome-debug-userdatadir"
+    },
   }
 end
 

@@ -28,6 +28,7 @@ tree.setup {
   },
   view = {
     relativenumber = true,
+    width = 50,
   },
 }
 

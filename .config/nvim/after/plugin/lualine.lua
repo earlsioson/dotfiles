@@ -19,7 +19,12 @@ lualine.setup {
   },
   sections = {
     lualine_b = { "FugitiveHead" },
-    lualine_c = { as_lib.current_session_name, 'filename' },
+    lualine_c = {
+      {
+        'filename',
+        path = 1,
+      },
+    }
   }
   -- tabline = {
   --   lualine_a = { 'buffers' },

@@ -84,7 +84,6 @@ nnoremap <Leader>cd :lcd %:h<CR>
 nnoremap <Leader>k :let @/ = ""<CR>
 
 " ThePrimeagen
-xnoremap <Leader>p "_dP
 nnoremap <C-d> <C-d>zz
 nnoremap <C-u> <C-u>zz
 

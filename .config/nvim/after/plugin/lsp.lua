@@ -133,14 +133,13 @@ lspconfig.eslint.setup {
     '.eslintrc.cjs',
     '.eslintrc.yaml',
     '.eslintrc.yml',
-    '.eslintrc.json',
-    'package.json'
+    '.eslintrc.json'
   )
 }
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-  pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
-  command = "EslintFixAll"
-})
+-- vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+--   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
+--   command = "EslintFixAll"
+-- })
 
 lspconfig.taplo.setup {
   capabilities = capabilities,
@@ -212,6 +211,12 @@ lspconfig.zls.setup {
 }
 
 lspconfig.bashls.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  handlers = handlers,
+}
+
+lspconfig.biome.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,

@@ -3,6 +3,13 @@ if not has_nvim_treesitter_configs then
   return
 end
 
+local has_nvim_treesitter_install, nvim_treesitter_install = pcall(require, "nvim-treesitter.install")
+if not has_nvim_treesitter_install then
+  return
+end
+
+nvim_treesitter_install.compilers = { "clang" }
+
 nvim_treesitter_configs.setup {
   autotag = {
     enable = true,

@@ -23,8 +23,6 @@ vim.keymap.set('n', '<Leader>do', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '<Leader>dl', vim.diagnostic.setloclist, opts)
 vim.keymap.set('n', '<Leader>ds', vim.diagnostic.show, opts)
 vim.keymap.set('n', '<Leader>dh', vim.diagnostic.hide, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
@@ -51,6 +49,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<Leader>lr', vim.lsp.buf.references, bufopts)
     vim.keymap.set('n', '<Leader>=', function()
       vim.lsp.buf.format { async = true }
+    end, opts)
+    vim.keymap.set('n', '<Leader>lI', function()
+      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
     end, opts)
   end,
 })
@@ -88,6 +89,19 @@ lspconfig.gopls.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
+  settings = {
+    gopls = {
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
+        compositeLiteralTypes = true,
+        constantValues = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
+      },
+    },
+  },
 }
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.go" },
@@ -124,6 +138,32 @@ lspconfig.tsserver.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
+  settings = {
+    typescript = {
+      inlayHints = {
+        includeInlayParameterNameHints = 'all',
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
+      }
+    },
+    javascript = {
+      inlayHints = {
+        includeInlayParameterNameHints = 'all',
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
+      }
+    }
+  }
 }
 
 lspconfig.eslint.setup {
@@ -156,7 +196,13 @@ lspconfig.rust_analyzer.setup {
       check = {
         command = "clippy"
       }
-    }
+    },
+    inlayHints = {
+      enable = true,
+      showParameterNames = true,
+      parameterHintsPrefix = "<- ",
+      otherHintsPrefix = "=> ",
+    },
   }
 }
 

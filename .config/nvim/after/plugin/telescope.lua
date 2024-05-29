@@ -124,6 +124,7 @@ end
 local opt = { noremap = true, silent = true }
 vim.keymap.set("n", "<Leader>fp", session_lens.search_session, opt)
 vim.keymap.set("n", "<Leader><Leader>ff", find_dir, opt)
+vim.keymap.set("n", "<Leader>fh", "<Cmd>Telescope find_files follow=true hidden=true<CR>", opt)
 vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files follow=true hidden=false<CR>", opt)
 vim.keymap.set("n", "<Leader>fd", "<Cmd>Telescope lsp_document_symbols<CR>", opt)
 vim.keymap.set("n", "<Leader>fw", "<Cmd>Telescope lsp_dynamic_workspace_symbols<CR>", opt)

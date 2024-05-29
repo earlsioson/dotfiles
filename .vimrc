@@ -13,6 +13,7 @@ set foldlevel=99
 set diffopt+=iwhite
 set diffexpr=""
 set splitbelow
+set splitright
 set listchars=tab:»·,eol:↲,nbsp:␣,extends:…,precedes:<,extends:>,trail:·,space:␣
 set sessionoptions-=blank
 
@@ -49,9 +50,6 @@ else
   Plug 'dracula/vim', { 'as': 'dracula' }
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   Plug 'github/copilot.vim'
-  Plug 'dense-analysis/ale'
-  Plug 'ziglang/zig.vim'
-  Plug 'mbbill/undotree'
   Plug 'terrastruct/d2-vim'
   call plug#end()
 
@@ -63,16 +61,6 @@ else
   else
     colorscheme darkblue
   endif
-  let g:ale_linters = {
-        \   'proto': ['buf-lint'],
-        \}
-  let g:ale_lint_on_text_changed = 'never'
-  let g:ale_linters_explicit = 1
-
-  let g:ale_fixers = {
-        \   'proto': ['buf-format'],
-        \}
-  let g:ale_fix_on_save = 1
 endif
 
 nnoremap <Leader>e :Explore<CR>
@@ -83,6 +71,10 @@ vnoremap <Leader>s y/<C-R>"<CR><S-N>cgn
 nnoremap <Leader>a :b#<CR>
 nnoremap <Leader>cd :lcd %:h<CR>
 nnoremap <Leader>k :let @/ = ""<CR>
+nnoremap <M-.> <C-w>5>
+nnoremap <M-,> <C-w>5<
+nnoremap <M-'> <C-w>+
+nnoremap <M-;> <C-w>-
 
 " ThePrimeagen
 nnoremap <C-d> <C-d>zz
@@ -139,11 +131,3 @@ endif
 tnoremap <Leader><Esc> <C-\><C-n>
 
 set autowrite
-
-if has('win32')
-  let &shell = 'pwsh'
-  let &shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
-  let &shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-  let &shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-  set shellquote= shellxquote=
-endif

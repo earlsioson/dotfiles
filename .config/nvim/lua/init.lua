@@ -64,12 +64,6 @@ local plugins = {
     "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
   },
-  {
-    "numToStr/Comment.nvim",
-    config = function()
-      require("Comment").setup()
-    end
-  },
   "folke/tokyonight.nvim",
   {
     'nvim-tree/nvim-tree.lua',
@@ -86,9 +80,6 @@ local plugins = {
   "arcticicestudio/nord-vim",
   { "dracula/vim",  name = "dracula" },
   { "fatih/vim-go", build = ":GoUpdateBinaries" },
-  "dense-analysis/ale",
-  "ziglang/zig.vim",
-  "mbbill/undotree",
   "terrastruct/d2-vim",
   {
     "nvim-lualine/lualine.nvim",

@@ -28,7 +28,7 @@ tree.setup {
   },
   view = {
     relativenumber = true,
-    width = 50,
+    width = 40,
   },
 }
 

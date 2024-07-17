@@ -64,7 +64,12 @@ local plugins = {
     "windwp/nvim-autopairs",
     config = function() require("nvim-autopairs").setup {} end
   },
-  "folke/tokyonight.nvim",
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
   {
     'nvim-tree/nvim-tree.lua',
   },

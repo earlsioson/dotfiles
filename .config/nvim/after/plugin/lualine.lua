@@ -9,9 +9,6 @@ if not has_as_lib then
 end
 
 lualine.setup {
-  options = {
-    theme = "tokyonight"
-  },
   extensions = {
     "fugitive",
     "nvim-dap-ui",

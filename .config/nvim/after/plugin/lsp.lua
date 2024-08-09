@@ -174,7 +174,10 @@ lspconfig.eslint.setup {
     '.eslintrc.yaml',
     '.eslintrc.yml',
     '.eslintrc.json'
-  )
+  ),
+  capabilities = capabilities,
+  flags = lsp_flags,
+  handlers = handlers,
 }
 -- vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 --   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
@@ -263,6 +266,10 @@ lspconfig.bashls.setup {
 }
 
 lspconfig.biome.setup {
+  root_dir = lspconfig.util.root_pattern(
+    'biome.json',
+    'biome.jsonc'
+  ),
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,

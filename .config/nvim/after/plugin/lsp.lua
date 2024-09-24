@@ -134,7 +134,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
-lspconfig.tsserver.setup {
+lspconfig.ts_ls.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -271,6 +271,19 @@ lspconfig.biome.setup {
     'biome.jsonc'
   ),
   capabilities = capabilities,
+  flags = lsp_flags,
+  handlers = handlers,
+}
+local merged = {
+  unpack(capabilities),
+  workspace = {
+    didChangeWatchedFiles = {
+      dynamicRegistration = true,
+    },
+  }
+}
+lspconfig.sourcekit.setup {
+  capabilities = merged,
   flags = lsp_flags,
   handlers = handlers,
 }

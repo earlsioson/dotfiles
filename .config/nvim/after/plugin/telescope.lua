@@ -134,6 +134,7 @@ vim.keymap.set("n", "<Leader><Leader>rg", search_dir, opt)
 vim.keymap.set("n", "<Leader>rg", telescope.extensions.live_grep_args.live_grep_args, opt)
 vim.keymap.set("n", "<Leader>fo", "<Cmd>Telescope oldfiles<CR>", opt)
 vim.keymap.set("n", "<Leader>fb", "<Cmd>Telescope buffers<CR>", opt)
+vim.keymap.set("n", "<Leader>fk", "<Cmd>Telescope keymaps<CR>", opt)
 
 vim.keymap.set("n", "<Leader>fe", telescope.extensions.file_browser.file_browser, opt)
 vim.keymap.set("n", "<Leader><Leader>fe", "<Cmd>Telescope file_browser respect_gitignore=false<CR>", opt)

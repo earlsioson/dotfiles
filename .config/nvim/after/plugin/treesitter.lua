@@ -16,7 +16,7 @@ nvim_treesitter_configs.setup {
   },
   ensure_installed = {
     "c", "cpp", "css", "dockerfile", "go", "hcl", "html", "javascript",
-    "json", "markdown", "proto", "python", "regex", "rust", "swift", "toml", "tsx", "typescript", "yaml",
+    "json", "markdown", "markdown_inline", "proto", "python", "regex", "rust", "swift", "toml", "tsx", "typescript", "yaml",
     "lua", "vim", "vimdoc", "query"
   },
   sync_install = false,
@@ -25,5 +25,12 @@ nvim_treesitter_configs.setup {
     enable = true,
     additional_vim_regex_highlighting = true,
   },
-  indent = { enable = true }
+  indent = {
+    enable = true,
+    disable = {
+      "yaml",
+      "markdown",
+      "markdown_inline",
+    }
+  }
 }

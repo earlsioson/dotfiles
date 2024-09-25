@@ -274,7 +274,8 @@ lspconfig.biome.setup {
   flags = lsp_flags,
   handlers = handlers,
 }
-local merged = {
+
+local with_dynamic_registration = {
   unpack(capabilities),
   workspace = {
     didChangeWatchedFiles = {
@@ -282,8 +283,15 @@ local merged = {
     },
   }
 }
+
 lspconfig.sourcekit.setup {
-  capabilities = merged,
+  capabilities = with_dynamic_registration,
+  flags = lsp_flags,
+  handlers = handlers,
+}
+
+lspconfig.markdown_oxide.setup {
+  capabilities = with_dynamic_registration,
   flags = lsp_flags,
   handlers = handlers,
 }

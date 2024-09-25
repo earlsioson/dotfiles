@@ -94,5 +94,7 @@ local plugins = {
     event = 'VimEnter',
   },
   "rmagatti/auto-session",
+  "nvimdev/lspsaga.nvim",
+  { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
 }
 require("lazy").setup(plugins)

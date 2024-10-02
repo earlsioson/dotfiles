@@ -17,7 +17,7 @@ vim.keymap.set("n", "<leader>sd", "<cmd>Lspsaga goto_definition<cr>", opt)
 vim.keymap.set("n", "<leader>st", "<cmd>Lspsaga goto_type_definition<cr>", opt)
 vim.keymap.set("n", "<leader>sf", "<cmd>Lspsaga finder<cr>", opt)
 vim.keymap.set("n", "<leader>sr", "<cmd>Lspsaga rename<cr>", opt)
-vim.keymap.set("n", "<leader>sn", "<cmd>Lspsaga diagnostic_jump_next<cr>", opt)
-vim.keymap.set("n", "<leader>sp", "<cmd>Lspsaga diagnostic_jump_prev<cr>", opt)
+vim.keymap.set("n", "<leader>sj", "<cmd>Lspsaga diagnostic_jump_next<cr>", opt)
+vim.keymap.set("n", "<leader>sJ", "<cmd>Lspsaga diagnostic_jump_prev<cr>", opt)
 
 lspsaga.setup {}

@@ -81,7 +81,6 @@ local plugins = {
   "tpope/vim-surround",
   "tpope/vim-unimpaired",
   "tpope/vim-fugitive",
-  "airblade/vim-gitgutter",
   "arcticicestudio/nord-vim",
   { "dracula/vim",  name = "dracula" },
   { "fatih/vim-go", build = ":GoUpdateBinaries" },
@@ -96,5 +95,6 @@ local plugins = {
   "rmagatti/auto-session",
   "nvimdev/lspsaga.nvim",
   { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
+  "lewis6991/gitsigns.nvim",
 }
 require("lazy").setup(plugins)

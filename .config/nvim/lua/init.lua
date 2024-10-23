@@ -48,7 +48,10 @@ local plugins = {
   "saadparwaiz1/cmp_luasnip",
   "L3MON4D3/LuaSnip",
   "mfussenegger/nvim-dap",
-  "rcarriga/nvim-dap-ui",
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }
+  },
   "mfussenegger/nvim-dap-python",
   "leoluz/nvim-dap-go",
   "mxsdev/nvim-dap-vscode-js",

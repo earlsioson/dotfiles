@@ -110,7 +110,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
-lspconfig.pyright.setup {
+lspconfig.ruff.setup {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -266,10 +266,6 @@ lspconfig.bashls.setup {
 }
 
 lspconfig.biome.setup {
-  root_dir = lspconfig.util.root_pattern(
-    'biome.json',
-    'biome.jsonc'
-  ),
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -291,6 +287,22 @@ lspconfig.sourcekit.setup {
 }
 
 lspconfig.markdown_oxide.setup {
+  capabilities = with_dynamic_registration,
+  flags = lsp_flags,
+  handlers = handlers,
+}
+
+lspconfig.glsl_analyzer.setup {
+  capabilities = with_dynamic_registration,
+  flags = lsp_flags,
+  handlers = handlers,
+}
+lspconfig.wgsl_analyzer.setup {
+  capabilities = with_dynamic_registration,
+  flags = lsp_flags,
+  handlers = handlers,
+}
+lspconfig.mojo.setup {
   capabilities = with_dynamic_registration,
   flags = lsp_flags,
   handlers = handlers,

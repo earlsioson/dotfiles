@@ -28,12 +28,6 @@ if not has_live_grep_args then
   return
 end
 
-local has_session_lens, session_lens = pcall(require, "auto-session.session-lens")
-if not has_session_lens then
-  return
-end
-telescope.load_extension("session-lens")
-
 -- https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-934727312
 -- fixes problem with folds not working when opened via telescope
 local fixfolds = {
@@ -122,7 +116,6 @@ local find_dir = function()
 end
 
 local opt = { noremap = true, silent = true }
-vim.keymap.set("n", "<Leader>fp", session_lens.search_session, opt)
 vim.keymap.set("n", "<Leader><Leader>ff", find_dir, opt)
 vim.keymap.set("n", "<Leader>fh", "<Cmd>Telescope find_files follow=true hidden=true<CR>", opt)
 vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files follow=true hidden=false<CR>", opt)

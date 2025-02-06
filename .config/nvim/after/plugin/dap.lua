@@ -81,12 +81,8 @@ for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "j
 end
 
 dap.adapters.codelldb = {
-  type = 'server',
-  port = '${port}',
-  executable = {
-    command = vim.env.HOME .. '/.local/share/nvim/mason/bin/codelldb',
-    args = { '--port', '${port}' },
-  }
+  type = 'executable',
+  command = vim.env.HOME .. '/.local/share/nvim/mason/bin/codelldb',
 }
 dap.configurations.cpp = {
   {

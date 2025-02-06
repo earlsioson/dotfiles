@@ -14,7 +14,6 @@ set diffexpr=""
 set splitbelow
 set splitright
 set listchars=tab:»·,eol:↲,nbsp:␣,extends:…,precedes:<,extends:>,trail:·,space:␣
-set sessionoptions-=blank
 
 filetype on
 filetype plugin on

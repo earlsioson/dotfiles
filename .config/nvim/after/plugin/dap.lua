@@ -28,15 +28,21 @@ if not has_dap_python then
   return
 end
 
-local has_dap_vscode_js, dap_vscode_js = pcall(require, "dap-vscode-js")
-if not has_dap_vscode_js then
-  return
-end
-
 local has_ext_vscode, ext_vscode = pcall(require, "dap.ext.vscode")
 if not has_ext_vscode then
   return
 end
+
+dap.adapters["pwa-node"] = {
+  type = "server",
+  host = "localhost",
+  port = "${port}",
+  executable = {
+    command = "node",
+    -- 💀 Make sure to update this path to point to your installation
+    args = { "vim.env.HOME .. '/.local/share/oss/vscode-js-debug/src/dapDebugServer.ts',", "${port}" },
+  }
+}
 
 for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "javascriptreact" }) do
   dap.configurations[ecma_script] = {
@@ -100,15 +106,6 @@ dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 dap.configurations.zig = dap.configurations.cpp
 
-dap.adapters.lldb = {
-  type = 'server',
-  port = '${port}',
-  executable = {
-    command = vim.env.HOME .. '/.local/share/nvim/mason/bin/codelldb',
-    args = { '--port', '${port}' },
-  }
-}
-
 dap.set_log_level('DEBUG')
 
 vim.keymap.set("n", "<Leader>bv",
@@ -147,12 +144,3 @@ vim.keymap.set("n", "<Leader>bu", dapui.toggle)
 
 dap_go.setup()
 dap_python.setup('~/.venv/nvim/bin/python')
-dap_vscode_js.setup({
-  -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
-  debugger_path = vim.env.HOME .. '/.local/share/oss/vscode-js-debug',                         -- Path to vscode-js-debug installation.
-  -- debugger_cmd = { "js-debug-adapter" }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
-  adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
-  -- log_file_path = "(stdpath cache)/dap_vscode_js.log" -- Path for file logging
-  -- log_file_level = false -- Logging level for output to file. Set to false to disable file logging.
-  -- log_console_level = vim.log.levels.ERROR -- Logging level for output to console. Set to false to disable console output.
-})

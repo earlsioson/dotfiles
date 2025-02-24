@@ -31,7 +31,34 @@ end
 vim.opt.rtp:prepend(lazypath)
 local plugins = {
   "neovim/nvim-lspconfig",
-  "williamboman/mason.nvim",
+  {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "bash-language-server",
+        "biome",
+        "clang-format",
+        "clangd",
+        "cmake-language-server",
+        "codelldb",
+        "delve",
+        "docker-compose-language-service",
+        "dockerfile-language-server",
+        "glsl_analyzer",
+        "json_lsp",
+        "lua-language-server",
+        "markdown-oxide",
+        "rust-analyzer",
+        "taplo",
+        "terraform-ls",
+        "typescript-language-server",
+        "vim-language-server",
+        "wgsl-analyzer",
+        "yaml-language-server",
+        "zls",
+      },
+    },
+  },
   "williamboman/mason-lspconfig.nvim",
   {
     "nvim-treesitter/nvim-treesitter",
@@ -54,7 +81,6 @@ local plugins = {
   },
   "mfussenegger/nvim-dap-python",
   "leoluz/nvim-dap-go",
-  "mxsdev/nvim-dap-vscode-js",
   {
     "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" }

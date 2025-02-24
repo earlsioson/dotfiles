@@ -297,12 +297,26 @@ lspconfig.glsl_analyzer.setup {
   flags = lsp_flags,
   handlers = handlers,
 }
+
 lspconfig.wgsl_analyzer.setup {
   capabilities = with_dynamic_registration,
   flags = lsp_flags,
   handlers = handlers,
 }
+
 lspconfig.mojo.setup {
+  capabilities = with_dynamic_registration,
+  flags = lsp_flags,
+  handlers = handlers,
+}
+
+lspconfig.cmake.setup {
+  capabilities = with_dynamic_registration,
+  flags = lsp_flags,
+  handlers = handlers,
+}
+
+lspconfig.clangd.setup {
   capabilities = with_dynamic_registration,
   flags = lsp_flags,
   handlers = handlers,

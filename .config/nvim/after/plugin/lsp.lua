@@ -280,12 +280,6 @@ local with_dynamic_registration = {
   }
 }
 
-lspconfig.sourcekit.setup {
-  capabilities = with_dynamic_registration,
-  flags = lsp_flags,
-  handlers = handlers,
-}
-
 lspconfig.markdown_oxide.setup {
   capabilities = with_dynamic_registration,
   flags = lsp_flags,

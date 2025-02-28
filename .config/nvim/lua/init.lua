@@ -37,7 +37,6 @@ local plugins = {
       ensure_installed = {
         "bash-language-server",
         "biome",
-        "clang-format",
         "clangd",
         "cmake-language-server",
         "codelldb",

@@ -320,4 +320,8 @@ lspconfig.clangd.setup {
   capabilities = with_dynamic_registration,
   flags = lsp_flags,
   handlers = handlers,
+  cmd = {
+    "clangd",
+    "--offset-encoding=utf-16",
+  },
 }

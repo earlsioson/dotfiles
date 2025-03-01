@@ -9,4 +9,25 @@ if not has_mason_lspconfig then
 end
 
 mason.setup()
-mason_lspconfig.setup()
+mason_lspconfig.setup {
+  ensure_installed = {
+    "bashls",
+    "biome",
+    "clangd",
+    "cmake",
+    "docker_compose_language_service",
+    "dockerls",
+    "glsl_analyzer",
+    "jsonls",
+    "lua_ls",
+    "markdown_oxide",
+    "rust_analyzer",
+    "taplo",
+    "terraformls",
+    "ts_ls",
+    "vimls",
+    "wgsl_analyzer",
+    "yamlls",
+    "zls",
+  },
+}

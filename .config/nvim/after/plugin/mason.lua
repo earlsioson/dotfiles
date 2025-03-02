@@ -21,6 +21,7 @@ mason_lspconfig.setup {
     "jsonls",
     "lua_ls",
     "markdown_oxide",
+    "pyright",
     "ruff",
     "rust_analyzer",
     "taplo",

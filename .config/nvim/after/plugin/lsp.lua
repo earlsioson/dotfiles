@@ -115,6 +115,23 @@ lspconfig.ruff.setup {
   flags = lsp_flags,
   handlers = handlers,
 }
+lspconfig.pyright.setup {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  handlers = handlers,
+  settings = {
+    pyright = {
+      -- Using Ruff's import organizer
+      disableOrganizeImports = true,
+    },
+    python = {
+      analysis = {
+        -- Ignore all files for analysis to exclusively use Ruff for linting
+        ignore = { '*' },
+      },
+    },
+  },
+}
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.py" },
   callback = function()

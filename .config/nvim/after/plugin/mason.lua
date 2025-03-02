@@ -21,6 +21,7 @@ mason_lspconfig.setup {
     "jsonls",
     "lua_ls",
     "markdown_oxide",
+    "ruff",
     "rust_analyzer",
     "taplo",
     "terraformls",

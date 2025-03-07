@@ -97,5 +97,11 @@ local plugins = {
   "nvimdev/lspsaga.nvim",
   { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
   "lewis6991/gitsigns.nvim",
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    lazy = false,
+  }
 }
 require("lazy").setup(plugins)

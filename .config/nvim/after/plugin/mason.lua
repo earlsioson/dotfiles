@@ -18,6 +18,7 @@ mason_lspconfig.setup {
     "docker_compose_language_service",
     "dockerls",
     "glsl_analyzer",
+    "gopls",
     "jsonls",
     "lua_ls",
     "markdown_oxide",

@@ -100,7 +100,7 @@ local plugins = {
   {
     'stevearc/oil.nvim',
     opts = {},
-    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     lazy = false,
   }
 }

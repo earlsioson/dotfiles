@@ -62,7 +62,6 @@ else
   endif
 endif
 
-nnoremap <Leader>e :Explore<CR>
 nnoremap <Leader>n :new<CR>
 nnoremap <Leader>t :tabnew<CR>
 nnoremap <Leader>g :G \| only<CR>

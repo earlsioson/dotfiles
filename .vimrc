@@ -45,8 +45,6 @@ else
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-fugitive'
   Plug 'airblade/vim-gitgutter'
-  Plug 'arcticicestudio/nord-vim'
-  Plug 'dracula/vim', { 'as': 'dracula' }
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   Plug 'github/copilot.vim'
   Plug 'terrastruct/d2-vim'
@@ -54,12 +52,6 @@ else
 
   let g:go_addtags_transform = 'camelcase'
 
-  if has('termguicolors')
-    set termguicolors
-    colorscheme nord
-  else
-    colorscheme darkblue
-  endif
 endif
 
 nnoremap <Leader>n :new<CR>

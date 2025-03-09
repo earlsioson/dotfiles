@@ -298,7 +298,17 @@ local with_dynamic_registration = {
 }
 
 lspconfig.markdown_oxide.setup {
-  capabilities = with_dynamic_registration,
+  capabilities = vim.tbl_deep_extend(
+    'force',
+    capabilities,
+    {
+      workspace = {
+        didChangeWatchedFiles = {
+          dynamicRegistration = true,
+        },
+      },
+    }
+  ),
   flags = lsp_flags,
   handlers = handlers,
 }

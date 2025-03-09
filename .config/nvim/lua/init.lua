@@ -94,7 +94,6 @@ local plugins = {
     'glepnir/dashboard-nvim',
     event = 'VimEnter',
   },
-  "nvimdev/lspsaga.nvim",
   { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
   "lewis6991/gitsigns.nvim",
   {

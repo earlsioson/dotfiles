@@ -1,6 +1,18 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = '$all$directory$line_break$character'
+format = """
+$hostname\
+$gcloud\
+$kubernetes\
+$nats\
+$git_branch\
+$directory\
+$line_break\
+$character\
+"""
+
+[hostname]
+ssh_only = false
 
 [gcloud]
 format = '[$symbol$active]($style) '
@@ -9,9 +21,6 @@ symbol = '☁️ '
 
 [kubernetes]
 disabled = false
-
-[hostname]
-ssh_only = false
 
 [nats]
 disabled = false

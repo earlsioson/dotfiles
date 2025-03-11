@@ -330,3 +330,9 @@ lspconfig.clangd.setup {
     "--offset-encoding=utf-16",
   },
 }
+
+lspconfig.tailwindcss.setup {
+  capabilities = with_dynamic_registration,
+  flags = lsp_flags,
+  handlers = handlers,
+}

@@ -10,6 +10,7 @@ $nodejs\
 $python\
 $rust\
 $zig\
+$mojo\
 $git_branch\
 $directory\
 $line_break\
@@ -44,3 +45,7 @@ disabled = false
 
 [zig]
 disabled = false
+
+[mojo]
+disabled = false
+

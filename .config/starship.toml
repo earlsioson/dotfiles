@@ -5,6 +5,11 @@ $hostname\
 $gcloud\
 $kubernetes\
 $nats\
+$golang\
+$nodejs\
+$python\
+$rust\
+$zig\
 $git_branch\
 $directory\
 $line_break\
@@ -23,4 +28,19 @@ symbol = '☁️ '
 disabled = false
 
 [nats]
+disabled = false
+
+[golang]
+disabled = false
+
+[nodejs]
+disabled = false
+
+[python]
+disabled = false
+
+[rust]
+disabled = false
+
+[zig]
 disabled = false

@@ -46,14 +46,6 @@ cmp.setup({
   }),
   sources = cmp.config.sources({
     { name = 'nvim_lua' },
-    {
-      name = 'nvim_lsp',
-      option = {
-        markdown_oxide = {
-          keyword_pattern = [[\(\k\| \|\/\|#\)\+]]
-        }
-      },
-    },
     { name = 'path' },
     { name = 'luasnip' },
     { name = 'buffer',                 keyword_length = 5 },

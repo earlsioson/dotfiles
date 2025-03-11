@@ -24,6 +24,7 @@ mason_lspconfig.setup {
     "pyright",
     "ruff",
     "rust_analyzer",
+    "tailwindcss",
     "taplo",
     "terraformls",
     "ts_ls",

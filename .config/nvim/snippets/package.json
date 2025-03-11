@@ -44,10 +44,6 @@
       },
       {
         "language": "javascriptreact",
-        "path": "./javascript/react-native.json"
-      },
-      {
-        "language": "javascriptreact",
         "path": "./javascript/next.json"
       },
       {
@@ -57,10 +53,6 @@
       {
         "language": "typescriptreact",
         "path": "./javascript/next-ts.json"
-      },
-      {
-        "language": "typescriptreact",
-        "path": "./javascript/react-native-ts.json"
       },
       {
         "language": [

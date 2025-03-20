@@ -184,14 +184,6 @@ lspconfig.ts_ls.setup {
 }
 
 lspconfig.eslint.setup {
-  root_dir = lspconfig.util.root_pattern(
-    '.eslintrc',
-    '.eslintrc.js',
-    '.eslintrc.cjs',
-    '.eslintrc.yaml',
-    '.eslintrc.yml',
-    '.eslintrc.json'
-  ),
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -288,41 +280,32 @@ lspconfig.biome.setup {
   handlers = handlers,
 }
 
-local with_dynamic_registration = {
-  unpack(capabilities),
-  workspace = {
-    didChangeWatchedFiles = {
-      dynamicRegistration = true,
-    },
-  }
-}
-
 lspconfig.glsl_analyzer.setup {
-  capabilities = with_dynamic_registration,
+  capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
 }
 
 lspconfig.wgsl_analyzer.setup {
-  capabilities = with_dynamic_registration,
+  capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
 }
 
 lspconfig.mojo.setup {
-  capabilities = with_dynamic_registration,
+  capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
 }
 
 lspconfig.cmake.setup {
-  capabilities = with_dynamic_registration,
+  capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
 }
 
 lspconfig.clangd.setup {
-  capabilities = with_dynamic_registration,
+  capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
   cmd = {
@@ -332,7 +315,7 @@ lspconfig.clangd.setup {
 }
 
 lspconfig.tailwindcss.setup {
-  capabilities = with_dynamic_registration,
+  capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
 }

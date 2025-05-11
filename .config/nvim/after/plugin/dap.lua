@@ -38,9 +38,9 @@ dap.adapters["pwa-node"] = {
   host = "localhost",
   port = "${port}",
   executable = {
-    command = "node",
+    command = "js-debug-adapter",
     -- 💀 Make sure to update this path to point to your installation
-    args = { "vim.env.HOME .. '/.local/share/oss/vscode-js-debug/src/dapDebugServer.ts',", "${port}" },
+    args = { "${port}" },
   }
 }
 
@@ -82,6 +82,14 @@ for _, ecma_script in ipairs({ "typescript", "typescriptreact", "javascript", "j
       url = "http://localhost:3333",
       webRoot = "${workspaceFolder}",
       userDataDir = "${workspaceFolder}/.vscode/vscode-chrome-debug-userdatadir"
+    },
+    {
+      name = "Next.js: node-terminal",
+      type = "pwa-node",
+      request = "launch",
+      program = "${workspaceFolder}/node_modules/.bin/next dev",
+      cwd = "${workspaceFolder}",
+      console = "integratedTerminal",
     },
   }
 end

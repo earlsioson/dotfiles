@@ -1,9 +1,3 @@
-local has_lspconfig, lspconfig = pcall(require, "lspconfig")
-if not has_lspconfig then
-  return
-end
-
-
 local has_cmp_nvim_lsp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 if not has_cmp_nvim_lsp then
   return
@@ -11,7 +5,6 @@ end
 
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
--- Setup lspconfig.
 local capabilities = cmp_nvim_lsp.default_capabilities(vim.lsp.protocol.make_client_capabilities())
 vim.diagnostic.config {
   float = { border = "single" },
@@ -67,7 +60,7 @@ local handlers = {
 }
 
 -- LSP settings (for overriding per client)
-lspconfig.lua_ls.setup {
+vim.lsp.config('lua_ls', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -78,14 +71,16 @@ lspconfig.lua_ls.setup {
       }
     }
   }
-}
+})
+vim.lsp.enable({ 'lua_ls' })
+
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.lua" },
   callback = function()
     vim.lsp.buf.format()
   end,
 })
-lspconfig.gopls.setup {
+vim.lsp.config('gopls', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -102,7 +97,9 @@ lspconfig.gopls.setup {
       },
     },
   },
-}
+})
+
+vim.lsp.enable({ 'gopls' })
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.go" },
   callback = function()
@@ -110,12 +107,13 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
-lspconfig.ruff.setup {
+vim.lsp.config('ruff', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
-lspconfig.pyright.setup {
+})
+vim.lsp.enable({ 'ruff' })
+vim.lsp.config('pyright', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -131,7 +129,8 @@ lspconfig.pyright.setup {
       },
     },
   },
-}
+})
+vim.lsp.enable({ 'pyright' })
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.py" },
   callback = function()
@@ -139,11 +138,12 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
-lspconfig.terraformls.setup {
+vim.lsp.config('terraformls', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'terraformls' })
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.tf", "*.tfvars" },
   callback = function()
@@ -151,7 +151,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
-lspconfig.ts_ls.setup {
+vim.lsp.config('ts_ls', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -181,25 +181,28 @@ lspconfig.ts_ls.setup {
       }
     }
   }
-}
+})
+vim.lsp.enable({ 'ts_ls' })
 
-lspconfig.eslint.setup {
+vim.lsp.config('eslint', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
 -- vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 --   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
 --   command = "EslintFixAll"
 -- })
+vim.lsp.enable({ 'eslint' })
 
-lspconfig.taplo.setup {
+vim.lsp.config('taplo', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'taplo' })
 
-lspconfig.rust_analyzer.setup {
+vim.lsp.config('rust_analyzer', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -216,7 +219,8 @@ lspconfig.rust_analyzer.setup {
       otherHintsPrefix = "=> ",
     },
   }
-}
+})
+vim.lsp.enable({ 'rust_analyzer' })
 
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*.rs" },
@@ -225,7 +229,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
-lspconfig.yamlls.setup {
+vim.lsp.config('yamlls', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -234,9 +238,10 @@ lspconfig.yamlls.setup {
       keyOrdering = false
     }
   }
-}
+})
+vim.lsp.enable({ 'yamlls' })
 
-lspconfig.jsonls.setup {
+vim.lsp.config('jsonls', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -248,63 +253,73 @@ lspconfig.jsonls.setup {
       end
     }
   }
-}
+})
+vim.lsp.enable({ 'jsonls' })
 
-lspconfig.dockerls.setup {
+vim.lsp.config('dockerls', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'dockerls' })
 
-lspconfig.docker_compose_language_service.setup {
+vim.lsp.config('docker_compose_language_service', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'docker_compose_language_service' })
 
-lspconfig.zls.setup {
+vim.lsp.config('zls', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'zls' })
 
-lspconfig.bashls.setup {
+vim.lsp.config('bashls', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'bashls' })
 
-lspconfig.biome.setup {
+vim.lsp.config('biome', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'biome' })
 
-lspconfig.glsl_analyzer.setup {
+vim.lsp.config('glsl_analyzer', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'glsl_analyzer' })
 
-lspconfig.wgsl_analyzer.setup {
+vim.lsp.config('wgsl_analyzer', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'wgsl_analyzer' })
 
-lspconfig.mojo.setup {
+vim.lsp.config('mojo', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'mojo' })
 
-lspconfig.cmake.setup {
+vim.lsp.config('cmake', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'cmake' })
 
-lspconfig.clangd.setup {
+vim.lsp.config('clangd', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
@@ -312,10 +327,19 @@ lspconfig.clangd.setup {
     "clangd",
     "--offset-encoding=utf-16",
   },
-}
+})
+vim.lsp.enable({ 'cland' })
 
-lspconfig.tailwindcss.setup {
+vim.lsp.config('tailwindcss', {
   capabilities = capabilities,
   flags = lsp_flags,
   handlers = handlers,
-}
+})
+vim.lsp.enable({ 'tailwindcss' })
+
+vim.lsp.config('oxlint', {
+  capabilities = capabilities,
+  flags = lsp_flags,
+  handlers = handlers,
+})
+vim.lsp.enable({ 'oxlint' })

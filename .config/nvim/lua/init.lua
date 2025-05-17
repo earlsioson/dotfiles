@@ -1,5 +1,3 @@
-local vim = vim
-
 require "es.globals"
 
 if vim.env.TMUX then

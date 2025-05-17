@@ -26,14 +26,16 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<Leader>lh', vim.lsp.buf.hover, bufopts)
     vim.keymap.set('n', '<Leader>li', vim.lsp.buf.implementation, bufopts)
     vim.keymap.set('n', '<Leader>ls', vim.lsp.buf.signature_help, bufopts)
-    vim.keymap.set('n', '<Leader>lf', vim.lsp.buf.add_workspace_folder, bufopts)
-    vim.keymap.set('n', '<Leader>lF', vim.lsp.buf.remove_workspace_folder, bufopts)
+    vim.keymap.set('n', '<Leader>lf', vim.lsp.buf.format, bufopts)
+    vim.keymap.set('n', '<Leader>lw', vim.lsp.buf.add_workspace_folder, bufopts)
+    vim.keymap.set('n', '<Leader>lW', vim.lsp.buf.remove_workspace_folder, bufopts)
     vim.keymap.set('n', '<Leader>ll', function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, bufopts)
     vim.keymap.set('n', '<Leader>lt', vim.lsp.buf.type_definition, bufopts)
     vim.keymap.set('n', '<Leader>ln', vim.lsp.buf.rename, bufopts)
     vim.keymap.set('n', '<Leader>la', vim.lsp.buf.code_action, bufopts)
+    vim.keymap.set('n', '<Leader>lA',"<Cmd>LspTypescriptSourceAction<CR>", bufopts)
     vim.keymap.set('n', '<Leader>lr', vim.lsp.buf.references, bufopts)
     vim.keymap.set('n', '<Leader>=', function()
       vim.lsp.buf.format { async = true }
@@ -44,26 +46,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
-vim.lsp.enable({ 'lua_ls' })
-vim.lsp.enable({ 'gopls' })
-vim.lsp.enable({ 'ruff' })
-vim.lsp.enable({ 'pyright' })
-vim.lsp.enable({ 'terraformls' })
-vim.lsp.enable({ 'ts_ls' })
-vim.lsp.enable({ 'eslint' })
-vim.lsp.enable({ 'taplo' })
-vim.lsp.enable({ 'rust_analyzer' })
-vim.lsp.enable({ 'yamlls' })
-vim.lsp.enable({ 'jsonls' })
-vim.lsp.enable({ 'dockerls' })
-vim.lsp.enable({ 'docker_compose_language_service' })
-vim.lsp.enable({ 'zls' })
-vim.lsp.enable({ 'bashls' })
-vim.lsp.enable({ 'biome' })
-vim.lsp.enable({ 'glsl_analyzer' })
-vim.lsp.enable({ 'wgsl_analyzer' })
-vim.lsp.enable({ 'mojo' })
-vim.lsp.enable({ 'cmake' })
-vim.lsp.enable({ 'cland' })
-vim.lsp.enable({ 'tailwindcss' })
-vim.lsp.enable({ 'oxlint' })
+vim.lsp.config('lua_ls', {
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim', 'use' }
+      }
+    }
+  }
+})

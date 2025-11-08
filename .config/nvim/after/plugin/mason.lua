@@ -8,6 +8,20 @@ if not has_mason_lspconfig then
   return
 end
 
+local has_mason_dap, mason_dap = pcall(require, "mason-nvim-dap")
+if not has_mason_dap then
+  return
+end
+
+mason_dap.setup {
+  ensure_installed = {
+    "codelldb",
+    "debugpy",
+    "delve",
+    "js-debug-adapter",
+  },
+}
+
 mason.setup()
 mason_lspconfig.setup {
   ensure_installed = {

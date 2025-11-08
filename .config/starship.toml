@@ -2,6 +2,7 @@
 
 format = """
 $hostname\
+$aws\
 $gcloud\
 $kubernetes\
 $nats\
@@ -19,6 +20,10 @@ $character\
 
 [hostname]
 ssh_only = false
+
+[aws]
+format = '[$symbol$profile]($style) '
+symbol = '☁️ '
 
 [gcloud]
 format = '[$symbol$active]($style) '

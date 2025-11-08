@@ -32,6 +32,10 @@ local plugins = {
   "williamboman/mason.nvim",
   "williamboman/mason-lspconfig.nvim",
   {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
   },

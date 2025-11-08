@@ -6,9 +6,9 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 ## Table of Contents
 - [Quick Start](#quick-start)
   - [Base editor prerequisites](#base-editor-prerequisites)
-  - [Plugin bootstrap (lazy.nvim)](#plugin-bootstrap-lazynvim)
   - [Tree-sitter + Node.js toolchain](#tree-sitter--nodejs-toolchain)
   - [Python support for Neovim/DAP](#python-support-for-neovimdap)
+  - [Plugin bootstrap (lazy.nvim)](#plugin-bootstrap-lazynvim)
   - [Optional tooling](#optional-tooling)
 - [tmux Configuration](#tmux-configuration)
   - [Setup](#setup)
@@ -30,11 +30,6 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 2. Install a Nerd Font (I usually grab one from [nerdfonts.com](https://www.nerdfonts.com/font-downloads)).
 3. Copy `.vim/` into `$HOME/.vim`, `.config/nvim/` into `$HOME/.config/nvim`, and `.vimrc` into `$HOME/.vimrc`.
 
-### Plugin bootstrap (lazy.nvim)
-1. Launch Neovim once; the `lazy.nvim` bootstrapper clones itself into `~/.local/share/nvim/lazy`.
-2. Run `:Lazy sync` to pull the plugin graph defined in `lua/init.lua`.
-3. Restart Neovim so Mason, Tree-sitter, and DAP adapters finish their post-install steps.
-
 ### Tree-sitter + Node.js toolchain
 - Install Node.js so LSP servers and formatters can run under `node`.
 - Install the Tree-sitter CLI plus Neovim’s npm helper:
@@ -52,6 +47,9 @@ pip install --upgrade pip
 pip install debugpy pynvim
 ```
 Update `~/.vimrc` and `.config/nvim/after/plugin/dap.lua` so both editors point at the virtualenv’s Python interpreter. That keeps DAP, LSP assistants, and the Python host in sync.
+
+### Plugin bootstrap (lazy.nvim)
+When launching Neovim you'll see the Mason installer and Tree-sitter setup run automatically.
 
 ### Optional tooling
 - Telescope pickers expect [`ripgrep`](https://github.com/BurntSushi/ripgrep) and [`fd`](https://github.com/sharkdp/fd) on `$PATH`.

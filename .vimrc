@@ -31,10 +31,12 @@ let g:netrw_bufsettings='noma nomod nobl nowrap ro rnu'
 
 let g:markdown_folding = 1
 let g:markdown_enable_folding = 1
+let g:loaded_perl_provider = 0
+let g:loaded_ruby_provider = 0
 
 if has('nvim')
   let g:loaded_python_provider = 0
-  let g:python3_host_prog = expand('~/.venv/nvim/bin/python')
+  let g:python3_host_prog = expand('~/dev/repos/dotfiles/.venv/bin/python')
 
   lua require('init')
   if has('termguicolors')

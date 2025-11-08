@@ -40,12 +40,7 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
   The CLI is only strictly required for `:TSInstallFromGrammar`, but having it satisfies `:checkhealth` and lets you generate/inspect parsers locally.
 
 ### Python support for Neovim/DAP
-```bash
-python3 -m venv ~/.venv/nvim
-. ~/.venv/nvim/bin/activate
-pip install --upgrade pip
-pip install debugpy pynvim
-```
+Use your preferred python package manager to create a virtualenv and install debugpy and pynvim.
 Update `~/.vimrc` and `.config/nvim/after/plugin/dap.lua` so both editors point at the virtualenv’s Python interpreter. That keeps DAP, LSP assistants, and the Python host in sync.
 
 ### Plugin bootstrap (lazy.nvim)

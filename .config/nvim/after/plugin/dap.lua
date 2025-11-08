@@ -151,4 +151,4 @@ dapui.setup()
 vim.keymap.set("n", "<Leader>bu", dapui.toggle)
 
 dap_go.setup()
-dap_python.setup('~/.venv/nvim/bin/python')
+dap_python.setup('~/dev/repos/dotfiles/.venv/bin/python')

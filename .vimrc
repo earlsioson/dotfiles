@@ -24,7 +24,6 @@ filetype indent on
 syntax on
 
 let mapleader="\<Space>"
-let g:VM_leader = '\'
 let g:netrw_banner=0
 let g:netrw_liststyle=3
 let g:netrw_bufsettings='noma nomod nobl nowrap ro rnu'
@@ -74,10 +73,6 @@ nnoremap <M-;> <C-w>-
 nnoremap z1 :set foldlevel=1<CR>
 nnoremap z2 :set foldlevel=2<CR>
 nnoremap z3 :set foldlevel=3<CR>
-
-" ThePrimeagen
-nnoremap <C-d> <C-d>zz
-nnoremap <C-u> <C-u>zz
 
 " asbjornHaland
 vnoremap <Leader>y "+y

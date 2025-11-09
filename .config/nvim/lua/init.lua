@@ -104,6 +104,7 @@ local plugins = {
   },
   { "ellisonleao/glow.nvim", cmd = "Glow" },
   "lewis6991/gitsigns.nvim",
+  "karb94/neoscroll.nvim",
   {
     'stevearc/oil.nvim',
     opts = {},

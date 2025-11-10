@@ -12,7 +12,11 @@ autocmd("TextYankPost", {
 
 autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   group = general,
-  command = "checktime",
+  callback = function()
+    if vim.fn.getcmdwintype() == "" then
+      vim.cmd("checktime")
+    end
+  end,
 })
 
 autocmd("VimResized", {

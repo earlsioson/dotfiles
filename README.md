@@ -196,6 +196,7 @@ File tree navigation.
 | `<Leader>nf` | NvimTree find file |
 | `<Leader>no` | NvimTree open dir |
 | `<Leader>nc` | NvimTree close |
+| `<Leader>np` | NvimTree open parent directory |
 
 #### Diagnostics (`<Leader>x*`)
 LSP diagnostic management.

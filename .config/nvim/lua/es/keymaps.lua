@@ -218,6 +218,10 @@ map("n", "<Leader>no", function()
   })
 end, { desc = "NvimTree open directory (browser)" })
 map("n", "<Leader>nc", "<Cmd>NvimTreeClose<CR>", { desc = "NvimTree close" })
+map("n", "<Leader>np", function()
+  local parent_dir = vim.fn.expand("%:p:h")
+  require("nvim-tree.api").tree.open({ path = parent_dir })
+end, { desc = "NvimTree open parent directory" })
 
 -- ============================================================================
 -- Other Mappings

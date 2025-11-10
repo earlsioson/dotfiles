@@ -194,17 +194,27 @@ map("n", "<Leader>xl", vim.diagnostic.setloclist, { desc = "Diagnostic loclist" 
 map("n", "<Leader>nt", "<Cmd>NvimTreeToggle<CR>", { desc = "NvimTree toggle" })
 map("n", "<Leader>nf", "<Cmd>NvimTreeFindFile<CR>", { desc = "NvimTree find file" })
 map("n", "<Leader>no", function()
-  vim.ui.input({
-    prompt = "Open: ",
-    default = "",
-    completion = "dir",
-  }, function(input)
-    if not input or input == "" then
-      return
-    end
-    require("nvim-tree.api").tree.open({ path = input })
-  end)
-end, { desc = "NvimTree open dir" })
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+
+  require("telescope").extensions.file_browser.file_browser({
+    path = vim.fn.getcwd(),
+    cwd = vim.fn.getcwd(),
+    files = false,  -- Only show directories
+    depth = false,  -- Show all depths
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if selection then
+          local path = selection.path or selection.value
+          require("nvim-tree.api").tree.open({ path = path })
+        end
+      end)
+      return true
+    end,
+  })
+end, { desc = "NvimTree open directory (browser)" })
 map("n", "<Leader>nc", "<Cmd>NvimTreeClose<CR>", { desc = "NvimTree close" })
 
 -- ============================================================================

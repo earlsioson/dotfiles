@@ -52,15 +52,19 @@ return {
           },
         },
         pickers = {
-          buffers = vim.tbl_deep_extend("force", vim.deepcopy(fixfolds), {
+          buffers = vim.tbl_deep_extend("force", {}, fixfolds, {
             mappings = {
               i = {
                 ["<M-d>"] = actions.delete_buffer + actions.move_to_top,
               },
             },
           }),
-          file_browser = fixfolds,
-          find_files = fixfolds,
+          file_browser = vim.tbl_deep_extend("force", {}, fixfolds, {
+            use_fd = true,
+          }),
+          find_files = vim.tbl_deep_extend("force", {}, fixfolds, {
+            find_command = { "fd", "--type", "f", "--strip-cwd-prefix" },
+          }),
           git_files = fixfolds,
           grep_string = fixfolds,
           live_grep = fixfolds,

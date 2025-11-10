@@ -94,7 +94,26 @@ end, { desc = "Find with ripgrep (live grep)" })
 map("n", "<Leader>fb", "<Cmd>Telescope buffers<CR>", { desc = "Find buffers" })
 map("n", "<Leader>fg", "<Cmd>Telescope git_files<CR>", { desc = "Find git files" })
 map("n", "<Leader>fo", "<Cmd>Telescope oldfiles<CR>", { desc = "Find oldfiles (recent)" })
-map("n", "<Leader>fh", "<Cmd>Telescope find_files follow=true hidden=true<CR>", { desc = "Find hidden files" })
+map("n", "<Leader>fh", function()
+  require("telescope.builtin").find_files({
+    hidden = true,
+    no_ignore = true,
+    find_command = { 
+      "fd", "--type", "f", "--hidden", "--no-ignore", 
+      "--exclude", "node_modules",
+      "--exclude", ".git",
+      "--exclude", "target",        -- Rust build dir
+      "--exclude", "dist",          -- Common build output
+      "--exclude", "build",         -- Common build output
+      "--exclude", ".next",         -- Next.js
+      "--exclude", "__pycache__",   -- Python cache
+      "--exclude", ".pytest_cache", -- pytest
+      "--exclude", ".venv",         -- Python venv
+      "--exclude", "venv",          -- Python venv
+      "--strip-cwd-prefix" 
+    }
+  })
+end, { desc = "Find hidden files (including gitignored)" })
 map("n", "<Leader>fw", "<Cmd>Telescope lsp_dynamic_workspace_symbols<CR>", { desc = "Find workspace symbols" })
 map("n", "<Leader>fd", "<Cmd>Telescope lsp_document_symbols<CR>", { desc = "Find document symbols" })
 map("n", "<Leader>fk", "<Cmd>Telescope keymaps<CR>", { desc = "Find keymaps" })
@@ -167,13 +186,7 @@ map("n", "<Leader>xh", vim.diagnostic.hide, { desc = "Diagnostic hide" })
 -- ============================================================================
 -- Flash Navigation
 -- ============================================================================
--- Quick jump navigation (preserves vim defaults for s/S)
-
-map({ "n", "x", "o" }, "<Leader>s", function() require("flash").jump() end, { desc = "Flash jump" })
-map({ "n", "x", "o" }, "<Leader>S", function() require("flash").treesitter() end, { desc = "Flash treesitter" })
-map("o", "r", function() require("flash").remote() end, { desc = "Flash remote" })
-map({ "o", "x" }, "R", function() require("flash").treesitter_search() end, { desc = "Flash treesitter search" })
-map("c", "<C-s>", function() require("flash").toggle() end, { desc = "Flash toggle search" })
+-- Flash keymaps are defined in the plugin spec for lazy loading
 
 -- ============================================================================
 -- NvimTree (<Leader>n* = "nvimtree")
@@ -207,4 +220,4 @@ map("n", "-", "<CMD>Oil<CR>", { desc = "Oil parent directory" })
 map("n", "<Leader>mp", "<Cmd>Glow<CR>", { desc = "Markdown preview" })
 
 -- Copilot
-map("n", "<Leader>ct", "<Cmd>Copilot toggle<CR>", { desc = "Copilot toggle" })
+map("n", "<Leader>cT", "<Cmd>Copilot toggle<CR>", { desc = "Copilot toggle" })

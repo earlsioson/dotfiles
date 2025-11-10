@@ -1,3 +1,5 @@
+local unpack = unpack or table.unpack
+
 local function setup_cmp()
   local cmp = require("cmp")
   local luasnip = require("luasnip")

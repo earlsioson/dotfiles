@@ -1,3 +1,6 @@
+-- Python host path - centralized for reuse across config
+vim.g.python_host_path = vim.fn.expand("~/dev/repos/dotfiles/.venv/bin/python")
+
 -- tjdevries
 P = function(v)
   print(vim.inspect(v))

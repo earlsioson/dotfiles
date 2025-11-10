@@ -45,7 +45,7 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 
 ### Python support for Neovim/DAP
 Use your preferred python package manager to create a virtualenv and install debugpy and pynvim.
-Update `~/.vimrc` and `.config/nvim/lua/es/plugin/dap.lua` so both editors point at the virtualenv’s Python interpreter. That keeps DAP, LSP assistants, and the Python host in sync.
+Update the Python path in `.config/nvim/lua/es/globals.lua` (`vim.g.python_host_path`) to point at your virtualenv's Python interpreter. This path is automatically used by `init.lua` and DAP, keeping the Python host and debugger in sync.
 
 ### Plugin bootstrap (lazy.nvim)
 When launching Neovim you'll see the Mason installer and Tree-sitter setup run automatically.
@@ -89,6 +89,8 @@ When launching Neovim you'll see the Mason installer and Tree-sitter setup run a
 > Classic Vim still loads `github/copilot.vim` + `airblade/vim-gitgutter`; Neovim uses the Lua-native Copilot/cmp stack and gitsigns.
 >
 > Plugins auto-load from `.config/nvim/lua/es/plugins/*.lua` via lazy.nvim. Tree-sitter uses `prefer_git = true` to download pre-built parsers. Mason auto-installs DAP adapters (`debugpy`, `delve`, `codelldb`, `js-debug-adapter`) on first launch.
+>
+> The configuration follows modern Neovim 0.10+ idioms with proper lazy loading, uses `vim.uv` for async operations, and centralizes settings for maintainability.
 
 ### Keymaps
 All Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.
@@ -125,6 +127,7 @@ LSP actions for modifying, analyzing, and navigating code.
 | `<Leader>ct` | Code type definition |
 | `<Leader>ci` | Code inlay hints (toggle) |
 | `<Leader>cx` | Code context jump (treesitter) |
+| `<Leader>cT` | Copilot toggle |
 
 #### Debug operations (`<Leader>d*`)
 DAP debugger controls and inspection.
@@ -220,7 +223,6 @@ Quick jump navigation (preserves vim defaults for `s`/`S`).
 | --- | --- |
 | `-` | Oil parent directory |
 | `<Leader>mp` | Markdown preview |
-| `<Leader>ct` | Copilot toggle |
 
 #### Shared keymaps (`.vim/common.vim`)
 These work in both Vim and Neovim.

@@ -36,61 +36,15 @@ return {
     "williamboman/mason-lspconfig.nvim",
     dependencies = {
       "williamboman/mason.nvim",
+      "neovim/nvim-lspconfig",
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      local lspconfig = require("lspconfig")
-
-      require("mason-lspconfig").setup({
-        ensure_installed = servers,
-        handlers = {
-          function(server_name)
-            lspconfig[server_name].setup({
-              capabilities = capabilities,
-            })
-          end,
-          ["lua_ls"] = function()
-            lspconfig.lua_ls.setup({
-              capabilities = capabilities,
-              settings = {
-                Lua = {
-                  runtime = {
-                    version = "LuaJIT",
-                  },
-                  diagnostics = {
-                    globals = { "vim" },
-                  },
-                  workspace = {
-                    library = vim.api.nvim_get_runtime_file("", true),
-                    checkThirdParty = false,
-                  },
-                  telemetry = {
-                    enable = false,
-                  },
-                },
-              },
-            })
-          end,
-        },
-      })
-    end,
-  },
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
-      "hrsh7th/cmp-nvim-lsp",
-    },
-    event = { "BufNewFile", "BufReadPre" },
-    config = function()
-      vim.diagnostic.config({
-        float = { border = "single" },
-      })
-
-      -- Configure lua_ls using the built-in vim.lsp.config API
+      
+      -- Use modern vim.lsp.config API for Neovim 0.11+
       vim.lsp.config("lua_ls", {
+        capabilities = capabilities,
         settings = {
           Lua = {
             runtime = {
@@ -108,6 +62,32 @@ return {
             },
           },
         },
+      })
+
+      -- Configure other servers to use vim.lsp.config as well
+      for _, server in ipairs(servers) do
+        if server ~= "lua_ls" then
+          vim.lsp.config(server, {
+            capabilities = capabilities,
+          })
+        end
+      end
+
+      require("mason-lspconfig").setup({
+        ensure_installed = servers,
+      })
+    end,
+  },
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/cmp-nvim-lsp",
+    },
+    config = function()
+      vim.diagnostic.config({
+        float = { border = "single" },
       })
 
       vim.api.nvim_create_autocmd("LspAttach", {

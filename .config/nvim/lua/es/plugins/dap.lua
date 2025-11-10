@@ -104,11 +104,11 @@ return {
       dap.configurations.rust = dap.configurations.cpp
       dap.configurations.zig = dap.configurations.cpp
 
-      dap.set_log_level("DEBUG")
+      dap.set_log_level("INFO")
 
       dapui.setup()
       dap_go.setup()
-      dap_python.setup("~/dev/repos/dotfiles/.venv/bin/python")
+      dap_python.setup(vim.g.python_host_path)
 
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()

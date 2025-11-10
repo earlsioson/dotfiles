@@ -233,6 +233,8 @@ These work in both Vim and Neovim.
 | `<Leader>s` (visual) | Search selection for quick change |
 | `<Leader>k` | Clear last search highlight |
 | `<M-.>`, `<M-,>`, `<M-'>`, `<M-;>` | Resize windows |
+| `z0` | Set foldlevel to 99 (show all folds) |
+| `z1` - `z6` | Set foldlevel 1-6 (useful for Markdown heading hierarchy) |
 | `<Leader><Leader>t` | Open bottom terminal helper |
 | `<Leader><Esc>` | Exit terminal-mode |
 

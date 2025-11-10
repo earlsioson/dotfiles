@@ -2,6 +2,11 @@ local opt = vim.opt
 
 opt.diffopt:append({ "linematch:50" })
 
+-- Treesitter-based folding
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldlevelstart = 99
+
 if vim.env.TMUX then
   vim.g.clipboard = {
     name = "tmux",

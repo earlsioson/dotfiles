@@ -16,7 +16,7 @@ set nowrap
 set mouse=a
 set signcolumn=yes
 set background=dark
-set foldlevel=99
+set foldlevelstart=99
 set foldmethod=syntax
 set splitbelow
 set splitright
@@ -75,9 +75,13 @@ nnoremap <M-.> <C-w>5>
 nnoremap <M-,> <C-w>5<
 nnoremap <M-'> <C-w>+
 nnoremap <M-;> <C-w>-
+nnoremap z0 :set foldlevel=99<CR>
 nnoremap z1 :set foldlevel=1<CR>
 nnoremap z2 :set foldlevel=2<CR>
 nnoremap z3 :set foldlevel=3<CR>
+nnoremap z4 :set foldlevel=4<CR>
+nnoremap z5 :set foldlevel=5<CR>
+nnoremap z6 :set foldlevel=6<CR>
 vnoremap <Leader>y "+y
 nnoremap <Leader>y "+y
 nnoremap <silent> <Leader><Leader>t :call <SID>small_terminal()<CR>

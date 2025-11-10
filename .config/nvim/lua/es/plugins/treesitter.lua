@@ -10,6 +10,8 @@ return {
       install.prefer_git = true
 
       configs.setup({
+        modules = {},
+        ignore_install = {},
         autotag = {
           enable = true,
         },
@@ -58,15 +60,6 @@ return {
     opts = {
       enable = true,
       max_lines = 1,
-    },
-    keys = {
-      {
-        "<Leader>x",
-        function()
-          require("treesitter-context").go_to_context()
-        end,
-        desc = "Treesitter context jump",
-      },
     },
   },
 }

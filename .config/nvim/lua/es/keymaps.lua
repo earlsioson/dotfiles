@@ -47,6 +47,8 @@ map("n", "<Leader>cx", function()
   require("treesitter-context").go_to_context()
 end, { desc = "Code context jump (treesitter)" })
 
+map("n", "<Leader>cX", "<Cmd>TSContextToggle<CR>", { desc = "Code context toggle (treesitter)" })
+
 -- ============================================================================
 -- Debug Operations (<Leader>d* = "debug")
 -- ============================================================================

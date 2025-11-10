@@ -77,9 +77,11 @@ When launching Neovim you'll see the Mason installer and Tree-sitter setup run a
 | Completion | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lua`, `hrsh7th/cmp-nvim-lsp`, `hrsh7th/cmp-nvim-lsp-signature-help`, `saadparwaiz1/cmp_luasnip`, `L3MON4D3/LuaSnip` |
 | Debugging | `mfussenegger/nvim-dap`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |
 | Telescope | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
-| UI | `kyazdani42/nvim-web-devicons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `glepnir/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim` |
-| Productivity | `github/copilot.vim`, `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim` |
-| Language Extras | `arcticicestudio/nord-vim`, `dracula/vim`, `fatih/vim-go`, `terrastruct/d2-vim` |
+| UI | `nvim-tree/nvim-web-devicons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim` |
+| Productivity | `zbirenbaum/copilot.lua`, `zbirenbaum/copilot-cmp`, `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim` |
+| Language Extras | `nordtheme/vim`, `dracula/vim`, `fatih/vim-go`, `terrastruct/d2-vim` |
+
+> Classic Vim still loads `github/copilot.vim` + `airblade/vim-gitgutter`; Neovim uses the Lua-native Copilot/cmp stack and gitsigns.
 
 ### Keymaps
 Keymaps assume `<Space>` as the leader key unless noted.
@@ -230,11 +232,13 @@ Keymaps assume `<Space>` as the leader key unless noted.
 | `<Leader>bu` | Toggle UI |
 
 #### Copilot & completion
+Neovim routes Copilot suggestions through `copilot.lua` + `copilot-cmp` (so `<C-l>` triggers a normal `cmp.confirm`). Vim keeps the Vimscript `github/copilot.vim` backend, but the keymaps match.
+
 ##### Copilot
 
 | Shortcut | Action |
 | --- | --- |
-| `<C-l>` | Accept suggestion |
+| `<C-l>` | Accept suggestion / confirm completion |
 | `<Leader>ce` | Enable Copilot |
 | `<Leader>cd` | Disable Copilot |
 

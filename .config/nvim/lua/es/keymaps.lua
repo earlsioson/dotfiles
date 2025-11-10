@@ -1,0 +1,1 @@
+-- Core keymaps live in ~/.vim/common.vim, which is sourced for both Vim and Neovim.

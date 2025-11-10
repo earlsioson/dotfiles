@@ -16,12 +16,17 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 - [Neovim Configuration](#neovim-configuration)
   - [Plugin stack](#plugin-stack)
   - [Keymaps](#keymaps)
-    - [Core workflow](#core-workflow)
-    - [Navigation & search](#navigation--search)
-    - [LSP](#lsp)
-    - [Git](#git)
-    - [Debugging](#debugging)
-    - [Copilot & completion](#copilot--completion)
+    - [Vim conventions](#vim-conventions-no-leader)
+    - [Code operations](#code-operations-leaderc)
+    - [Debug operations](#debug-operations-leaderd)
+    - [Find operations](#find-operations-leaderf)
+    - [Git operations](#git-operations-leaderg)
+    - [NvimTree](#nvimtree-leadern)
+    - [Diagnostics](#diagnostics-leaderx)
+    - [Flash navigation](#flash-navigation)
+    - [Other mappings](#other-mappings)
+    - [Shared keymaps](#shared-keymaps-vimcommonvim)
+    - [nvim-cmp completion](#nvim-cmp-completion)
 
 ## Quick Start
 
@@ -37,11 +42,10 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
   npm install -g tree-sitter-cli neovim
   tree-sitter --version   # sanity check
   ```
-  The CLI is only strictly required for `:TSInstallFromGrammar`, but having it satisfies `:checkhealth` and lets you generate/inspect parsers locally.
 
 ### Python support for Neovim/DAP
 Use your preferred python package manager to create a virtualenv and install debugpy and pynvim.
-Update `~/.vimrc` and `.config/nvim/after/plugin/dap.lua` so both editors point at the virtualenv’s Python interpreter. That keeps DAP, LSP assistants, and the Python host in sync.
+Update `~/.vimrc` and `.config/nvim/lua/es/plugin/dap.lua` so both editors point at the virtualenv’s Python interpreter. That keeps DAP, LSP assistants, and the Python host in sync.
 
 ### Plugin bootstrap (lazy.nvim)
 When launching Neovim you'll see the Mason installer and Tree-sitter setup run automatically.
@@ -77,173 +81,162 @@ When launching Neovim you'll see the Mason installer and Tree-sitter setup run a
 | Completion | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lua`, `hrsh7th/cmp-nvim-lsp`, `hrsh7th/cmp-nvim-lsp-signature-help`, `saadparwaiz1/cmp_luasnip`, `L3MON4D3/LuaSnip` |
 | Debugging | `mfussenegger/nvim-dap`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |
 | Telescope | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
-| UI | `nvim-tree/nvim-web-devicons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim` |
+| UI | `nvim-tree/nvim-web-devicons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
+| Navigation | `folke/flash.nvim` |
 | Productivity | `zbirenbaum/copilot.lua`, `zbirenbaum/copilot-cmp`, `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim` |
 | Language Extras | `nordtheme/vim`, `dracula/vim`, `fatih/vim-go`, `terrastruct/d2-vim` |
 
 > Classic Vim still loads `github/copilot.vim` + `airblade/vim-gitgutter`; Neovim uses the Lua-native Copilot/cmp stack and gitsigns.
+>
+> Plugins auto-load from `.config/nvim/lua/es/plugins/*.lua` via lazy.nvim. Tree-sitter uses `prefer_git = true` to download pre-built parsers. Mason auto-installs DAP adapters (`debugpy`, `delve`, `codelldb`, `js-debug-adapter`) on first launch.
 
 ### Keymaps
-Keymaps assume `<Space>` as the leader key unless noted.
+All Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.
 
-#### Core workflow
+The keymap system follows a consistent mnemonic namespace:
+- **Vim conventions** (1-key, no leader): Standard vim/LSP mappings like `gd`, `K`, `]d`, `[d`
+- **`<Leader>c*`** = "code" operations (LSP actions)
+- **`<Leader>d*`** = "debug" operations (DAP debugger)
+- **`<Leader>f*`** = "find" operations (Telescope with ripgrep/fd)
+- **`<Leader>g*`** = "git" operations (fugitive + gitsigns)
+- **`<Leader>n*`** = "nvimtree" operations (file tree navigation)
+- **`<Leader>x*`** = diagnostics ("fix" operations)
+
+#### Vim conventions (no leader)
 | Shortcut | Action |
 | --- | --- |
-| `<Space>` | Leader key |
-| `\` | Leader key for Visual Multi |
-| `<Leader>y` | Yank to the system clipboard (normal/visual) |
-| `<Leader>n` | New split |
-| `<Leader>t` | New tab |
-| `<Leader>a` | Alternate buffer |
-| `<Leader>cd` | Set local cwd |
-| `<Leader>g` | Run `:G | only` |
-| `<Leader>s` (visual) | Search selection for quick change |
-| `<Leader>k` | Clear last search highlight |
-| `<M-.>`, `<M-,>`, `<M-'>`, `<M-;>` | Resize windows |
-| `<C-d>`, `<C-u>` | Recenter while paging |
-| `<Leader><Leader>t` | Open bottom terminal helper |
-| `<Leader><Esc>` | Exit terminal-mode |
-| `<Leader><Leader>x` | Write and reload current Lua file |
+| `gd` | Go to definition |
+| `gD` | Go to declaration |
+| `gr` | Go to references |
+| `gi` | Go to implementation |
+| `K` | Hover documentation |
+| `]d` / `[d` | Next/previous diagnostic |
+| `]c` / `[c` | Next/previous git hunk |
 
-#### Navigation & search
-##### Telescope Pickers
+#### Code operations (`<Leader>c*`)
+LSP actions for modifying, analyzing, and navigating code.
+
+| Shortcut | Action |
+| --- | --- |
+| `<Leader>ca` | Code action |
+| `<Leader>cr` | Code rename |
+| `<Leader>cf` | Code format |
+| `<Leader>cs` | Code signature help |
+| `<Leader>ct` | Code type definition |
+| `<Leader>ci` | Code inlay hints (toggle) |
+| `<Leader>cx` | Code context jump (treesitter) |
+
+#### Debug operations (`<Leader>d*`)
+DAP debugger controls and inspection.
+
+| Shortcut | Action |
+| --- | --- |
+| `<Leader>dc` | Debug continue |
+| `<Leader>db` | Debug breakpoint (toggle) |
+| `<Leader>dB` | Debug breakpoint (conditional) |
+| `<Leader>ds` | Debug step over |
+| `<Leader>di` | Debug step into |
+| `<Leader>do` | Debug step out |
+| `<Leader>dt` | Debug terminate |
+| `<Leader>dr` | Debug REPL |
+| `<Leader>du` | Debug UI (toggle) |
+| `<Leader>dv` | Debug load vscode config |
+| `<Leader>dl` | Debug run last |
+| `<Leader>dk` | Debug kill all breakpoints |
+| `<Leader>dh` | Debug hover variables |
+| `<Leader>dw` | Debug watches |
+| `<Leader>df` | Debug frames |
+| `<Leader>dp` | Debug preview scopes |
+
+#### Find operations (`<Leader>f*`)
+Telescope pickers using ripgrep for text search and fd for file finding.
 
 | Shortcut | Action |
 | --- | --- |
 | `<Leader>ff` | Find files |
+| `<Leader>fr` | Find with ripgrep (live grep) |
+| `<Leader>fb` | Find buffers |
+| `<Leader>fg` | Find git files |
+| `<Leader>fo` | Find oldfiles (recent) |
 | `<Leader>fh` | Find hidden files |
-| `<Leader><Leader>ff` | Prompt for directory before listing files |
-| `<Leader>fg` | Find git-tracked files |
-| `<Leader>fb` | List buffers |
-| `<Leader>fo` | Show recently opened files |
-| `<Leader>fk` | Show keymaps |
+| `<Leader>fw` | Find workspace symbols |
+| `<Leader>fd` | Find document symbols |
+| `<Leader>fk` | Find keymaps |
+| `<Leader>fe` | Find explorer (file browser) |
+| `<Leader>fE` | Find explorer all (no gitignore) |
 
-##### Telescope Search & Symbols
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>fs` | Grep word under cursor |
-| `<Leader>rg` | Live grep |
-| `<Leader><Leader>rg` | Prompt for directories before live grep |
-| `<Leader>fd` | Document symbols |
-| `<Leader>fw` | Workspace symbols |
-
-##### Telescope File Browser
+#### Git operations (`<Leader>g*`)
+Git operations via fugitive and gitsigns.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>fe` | Respect `.gitignore` |
-| `<Leader><Leader>fe` | Ignore `.gitignore` |
+| `<Leader>gg` | Git status |
+| `<Leader>gs` | Git stage hunk |
+| `<Leader>gr` | Git reset hunk |
+| `<Leader>gS` | Git stage buffer |
+| `<Leader>gR` | Git reset buffer |
+| `<Leader>gu` | Git undo stage |
+| `<Leader>gp` | Git preview hunk |
+| `<Leader>gb` | Git blame line |
+| `<Leader>gt` | Git toggle blame |
+| `<Leader>gx` | Git toggle deleted |
+| `<Leader>gd` | Git diff |
+| `<Leader>gD` | Git diff against `~` |
+| `ih` (text object) | Git hunk text object |
 
-##### File Explorers
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>nt` | Toggle NvimTree |
-| `<Leader>nf` | Reveal current file in NvimTree |
-| `<Leader>no` | Prompt for directory in NvimTree |
-| `<Leader>nc` | Close NvimTree |
-| `<M-i>` | Open info popup inside NvimTree |
-| `-` | Open parent directory in oil |
-
-##### Misc
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>x` | Treesitter context jump |
-| `<Leader>mp` | Glow preview |
-
-#### LSP
-##### Diagnostics
+#### NvimTree (`<Leader>n*`)
+File tree navigation.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>do` | Show diagnostics float |
-| `<Leader>dl` | Populate location list with diagnostics |
-| `<Leader>ds` | Show diagnostics |
-| `<Leader>dh` | Hide diagnostics |
+| `<Leader>nt` | NvimTree toggle |
+| `<Leader>nf` | NvimTree find file |
+| `<Leader>no` | NvimTree open dir |
+| `<Leader>nc` | NvimTree close |
 
-##### Buffer-local (attached)
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>lD` | Go to declaration |
-| `<Leader>ld` | Go to definition |
-| `<Leader>lh` | Hover |
-| `<Leader>li` | Go to implementation |
-| `<Leader>ls` | Signature help |
-| `<Leader>lf` | Format buffer |
-| `<Leader>lw` | Add workspace folder |
-| `<Leader>lW` | Remove workspace folder |
-| `<Leader>ll` | List workspace folders |
-| `<Leader>lt` | Go to type definition |
-| `<Leader>ln` | Rename symbol |
-| `<Leader>la` | Code action |
-| `<Leader>lA` | TypeScript source action |
-| `<Leader>lr` | References |
-| `<Leader>=` | Async format |
-| `<Leader>lI` | Toggle inlay hints |
-
-#### Git
-| Shortcut | Action |
-| --- | --- |
-| `[c` / `]c` | Hunk navigation (gitsigns) |
-| `<Leader>hs` | Stage hunk |
-| `<Leader>hr` | Reset hunk |
-| `<Leader>hS` | Stage buffer |
-| `<Leader>hu` | Undo stage |
-| `<Leader>hR` | Reset buffer |
-| `<Leader>hp` | Preview hunk |
-| `<Leader>hb` | Blame line |
-| `<Leader>tb` | Toggle blame |
-| `<Leader>hd` | Diff against index |
-| `<Leader>hD` | Diff against `~` |
-| `<Leader>td` | Toggle deleted |
-| `ih` | Hunk text object |
-
-#### Debugging
-##### Core
+#### Diagnostics (`<Leader>x*`)
+LSP diagnostic management.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>bv` | Load launch config |
-| `<Leader>bc` | Continue |
-| `<Leader>bo` | Step over |
-| `<Leader>bI` | Step into |
-| `<Leader>bO` | Step out |
-| `<Leader>bb` | Toggle breakpoint |
-| `<Leader>bt` | Terminate session |
-| `<Leader><Leader>bb` | Clear breakpoints |
+| `<Leader>xx` | Diagnostic float |
+| `<Leader>xl` | Diagnostic loclist |
+| `<Leader>xs` | Diagnostic show |
+| `<Leader>xh` | Diagnostic hide |
 
-##### Extras
+#### Flash navigation
+Quick jump navigation (preserves vim defaults for `s`/`S`).
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>be` | Configure exception breakpoints |
-| `<Leader>bB` | Conditional breakpoint |
-| `<Leader>bL` | Logpoint |
-| `<Leader>br` | Open REPL |
-| `<Leader>bl` | Run last debugging configuration |
-| `<Leader>bw` | Manage watches |
-| `<Leader>bh` | Hover variables |
-| `<Leader>bp` | Preview variables |
-| `<Leader>bf` | Show frames |
-| `<Leader>bs` | Show scopes |
-| `<Leader>bu` | Toggle UI |
+| `<Leader>s` | Flash jump |
+| `<Leader>S` | Flash treesitter |
+| `r` (operator pending) | Flash remote |
+| `R` (operator/visual) | Flash treesitter search |
+| `<C-s>` (command mode) | Flash toggle search |
 
-#### Copilot & completion
-Neovim routes Copilot suggestions through `copilot.lua` + `copilot-cmp` (so `<C-l>` triggers a normal `cmp.confirm`). Vim keeps the Vimscript `github/copilot.vim` backend, but the keymaps match.
+#### Other mappings
+| Shortcut | Action |
+| --- | --- |
+| `-` | Oil parent directory |
+| `<Leader>mp` | Markdown preview |
+| `<Leader>ct` | Copilot toggle |
 
-##### Copilot
+#### Shared keymaps (`.vim/common.vim`)
+These work in both Vim and Neovim.
 
 | Shortcut | Action |
 | --- | --- |
-| `<C-l>` | Accept suggestion / confirm completion |
-| `<Leader>ce` | Enable Copilot |
-| `<Leader>cd` | Disable Copilot |
+| `<Leader>y` | Yank to system clipboard (normal/visual) |
+| `<Leader>n` | New split |
+| `<Leader>a` | Alternate buffer |
+| `<Leader>s` (visual) | Search selection for quick change |
+| `<Leader>k` | Clear last search highlight |
+| `<M-.>`, `<M-,>`, `<M-'>`, `<M-;>` | Resize windows |
+| `<Leader><Leader>t` | Open bottom terminal helper |
+| `<Leader><Esc>` | Exit terminal-mode |
 
-##### nvim-cmp
-
+#### nvim-cmp completion
 | Shortcut | Action |
 | --- | --- |
 | `<C-b>` / `<C-f>` | Scroll docs |

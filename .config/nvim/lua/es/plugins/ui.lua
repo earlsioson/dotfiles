@@ -51,35 +51,13 @@ return {
         },
       }
     end,
-    keys = {
-      { "<Leader>nt", "<Cmd>NvimTreeToggle<CR>", desc = "NvimTree toggle" },
-      { "<Leader>nf", "<Cmd>NvimTreeFindFile<CR>", desc = "NvimTree find file" },
-      {
-        "<Leader>no",
-        function()
-          vim.ui.input({
-            prompt = "Open: ",
-            default = "",
-            completion = "dir",
-          }, function(input)
-            if not input or input == "" then
-              return
-            end
-            require("nvim-tree.api").tree.open({ path = input })
-          end)
-        end,
-        desc = "NvimTree open dir",
-      },
-      { "<Leader>nc", "<Cmd>NvimTreeClose<CR>", desc = "NvimTree close" },
-    },
+    -- NvimTree keymaps are centralized in es.keymaps
   },
   {
     "stevearc/oil.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {},
-    keys = {
-      { "-", "<CMD>Oil<CR>", desc = "Oil parent directory" },
-    },
+    -- Oil keymaps are centralized in es.keymaps
   },
   {
     "stevearc/dressing.nvim",
@@ -133,9 +111,7 @@ return {
     opts = {
       border = "rounded",
     },
-    keys = {
-      { "<Leader>mp", "<Cmd>Glow<CR>", desc = "Markdown preview" },
-    },
+    -- Glow keymaps are centralized in es.keymaps
   },
   {
     "karb94/neoscroll.nvim",

@@ -15,10 +15,7 @@ return {
         help = true,
       },
     },
-    keys = {
-      { "<Leader>ce", "<Cmd>Copilot enable<CR>", mode = "n", desc = "Copilot enable" },
-      { "<Leader>cd", "<Cmd>Copilot disable<CR>", mode = "n", desc = "Copilot disable" },
-    },
+    -- Copilot keymaps are centralized in es.keymaps
   },
   {
     "zbirenbaum/copilot-cmp",

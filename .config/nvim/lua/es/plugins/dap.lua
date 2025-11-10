@@ -2,17 +2,10 @@ return {
   {
     "jay-babu/mason-nvim-dap.nvim",
     dependencies = { "williamboman/mason.nvim" },
-    config = function()
-      require("mason-nvim-dap").setup({
-        ensure_installed = {
-          "codelldb",
-          "debugpy",
-          "delve",
-          "js-debug-adapter",
-        },
-        automatic_installation = true,
-      })
-    end,
+    opts = {
+      automatic_installation = true,
+      handlers = {},
+    },
   },
   {
     "mfussenegger/nvim-dap",
@@ -127,145 +120,6 @@ return {
         dapui.close()
       end
     end,
-    keys = {
-      {
-        "<Leader>bv",
-        function()
-          require("dap.ext.vscode").load_launchjs(nil, { lldb = { "c", "cpp", "rust", "zig" } })
-        end,
-        desc = "DAP load launch.json",
-      },
-      {
-        "<Leader>bc",
-        function()
-          require("dap").continue()
-        end,
-        desc = "DAP continue",
-      },
-      {
-        "<Leader>bo",
-        function()
-          require("dap").step_over()
-        end,
-        desc = "DAP step over",
-      },
-      {
-        "<Leader>bI",
-        function()
-          require("dap").step_into()
-        end,
-        desc = "DAP step into",
-      },
-      {
-        "<Leader>bO",
-        function()
-          require("dap").step_out()
-        end,
-        desc = "DAP step out",
-      },
-      {
-        "<Leader>bb",
-        function()
-          require("dap").toggle_breakpoint()
-        end,
-        desc = "DAP breakpoint",
-      },
-      {
-        "<Leader>bt",
-        function()
-          require("dap").terminate()
-        end,
-        desc = "DAP terminate",
-      },
-      {
-        "<Leader><Leader>bb",
-        function()
-          require("dap").clear_breakpoints()
-        end,
-        desc = "DAP clear breakpoints",
-      },
-      {
-        "<Leader>be",
-        function()
-          require("dap").set_exception_breakpoints()
-        end,
-        desc = "DAP exception breakpoints",
-      },
-      {
-        "<Leader>bB",
-        function()
-          require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
-        end,
-        desc = "DAP conditional breakpoint",
-      },
-      {
-        "<Leader>bL",
-        function()
-          require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
-        end,
-        desc = "DAP logpoint",
-      },
-      {
-        "<Leader>br",
-        function()
-          require("dap").repl.open()
-        end,
-        desc = "DAP REPL",
-      },
-      {
-        "<Leader>bl",
-        function()
-          require("dap").run_last()
-        end,
-        desc = "DAP run last",
-      },
-      {
-        "<Leader>bw",
-        function()
-          require("dapui").float_element("watches")
-        end,
-        mode = { "n", "v" },
-        desc = "DAP watches",
-      },
-      {
-        "<Leader>bh",
-        function()
-          require("dap.ui.widgets").hover()
-        end,
-        mode = { "n", "v" },
-        desc = "DAP hover",
-      },
-      {
-        "<Leader>bp",
-        function()
-          require("dap.ui.widgets").preview()
-        end,
-        mode = { "n", "v" },
-        desc = "DAP preview",
-      },
-      {
-        "<Leader>bf",
-        function()
-          local widgets = require("dap.ui.widgets")
-          widgets.centered_float(widgets.frames)
-        end,
-        desc = "DAP frames",
-      },
-      {
-        "<Leader>bs",
-        function()
-          local widgets = require("dap.ui.widgets")
-          widgets.centered_float(widgets.scopes)
-        end,
-        desc = "DAP scopes",
-      },
-      {
-        "<Leader>bu",
-        function()
-          require("dapui").toggle()
-        end,
-        desc = "DAP UI toggle",
-      },
-    },
+    -- DAP keymaps are centralized in es.keymaps
   },
 }

@@ -66,12 +66,10 @@ function! s:change_dir_to_buffer() abort
 endfunction
 
 " Keymaps
+" Note: <Leader>cd, <Leader>t, and <Leader>g removed to avoid conflicts with Neovim keymaps
 nnoremap <Leader>n :new<CR>
-nnoremap <Leader>t :tabnew<CR>
-nnoremap <Leader>g :G \| only<CR>
 vnoremap <Leader>s y/<C-R>"<CR><S-N>cgn
 nnoremap <Leader>a :b#<CR>
-nnoremap <Leader>cd :call <SID>change_dir_to_buffer()<CR>
 nnoremap <Leader>k :let @/ = ""<CR>
 nnoremap <M-.> <C-w>5>
 nnoremap <M-,> <C-w>5<

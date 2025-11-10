@@ -17,49 +17,13 @@ local servers = {
   "yamlls",
 }
 
-local function diagnostics_keymaps()
-  local opts = { noremap = true, silent = true }
-  vim.keymap.set("n", "<Leader>do", vim.diagnostic.open_float, opts)
-  vim.keymap.set("n", "<Leader>dl", vim.diagnostic.setloclist, opts)
-  vim.keymap.set("n", "<Leader>ds", vim.diagnostic.show, opts)
-  vim.keymap.set("n", "<Leader>dh", vim.diagnostic.hide, opts)
-end
+-- LSP keymaps are now centralized in es.keymaps
+-- This ensures they work even when LSP hasn't attached yet
 
 local function on_lsp_attach(event)
   local bufnr = event.buf
   vim.bo[bufnr].omnifunc = nil
-
-  local function map(lhs, rhs, desc)
-    vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
-  end
-
-  map("<Leader>lD", vim.lsp.buf.declaration, "LSP declaration")
-  map("<Leader>ld", vim.lsp.buf.definition, "LSP definition")
-  map("<Leader>lh", vim.lsp.buf.hover, "LSP hover")
-  map("<Leader>li", vim.lsp.buf.implementation, "LSP implementation")
-  map("<Leader>ls", vim.lsp.buf.signature_help, "Signature help")
-  map("<Leader>lf", vim.lsp.buf.format, "Format buffer")
-  map("<Leader>lw", vim.lsp.buf.add_workspace_folder, "Add workspace folder")
-  map("<Leader>lW", vim.lsp.buf.remove_workspace_folder, "Remove workspace folder")
-  map("<Leader>ll", function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, "List workspace folders")
-  map("<Leader>lt", vim.lsp.buf.type_definition, "Type definition")
-  map("<Leader>ln", vim.lsp.buf.rename, "Rename symbol")
-  map("<Leader>la", vim.lsp.buf.code_action, "Code action")
-  map("<Leader>lA", "<Cmd>LspTypescriptSourceAction<CR>", "TypeScript source action")
-  map("<Leader>lr", vim.lsp.buf.references, "References")
-  map("<Leader>=", function()
-    vim.lsp.buf.format({ async = true })
-  end, "Async format")
-
-  map("<Leader>lI", function()
-    local inlay = vim.lsp.inlay_hint
-    if inlay and inlay.is_enabled and inlay.enable then
-      local enabled = inlay.is_enabled(bufnr)
-      inlay.enable(not enabled, { bufnr = bufnr })
-    end
-  end, "Toggle inlay hints")
+  -- Buffer-local keymaps are handled in es.keymaps
 end
 
 return {
@@ -121,7 +85,6 @@ return {
     },
     event = { "BufNewFile", "BufReadPre" },
     config = function()
-      diagnostics_keymaps()
       vim.diagnostic.config({
         float = { border = "single" },
       })

@@ -17,7 +17,6 @@ set mouse=a
 set signcolumn=yes
 set background=dark
 set foldlevelstart=99
-set foldmethod=syntax
 set splitbelow
 set splitright
 set listchars=tab:»·,eol:↲,nbsp:␣,extends:…,precedes:<,trail:·,space:␣
@@ -93,6 +92,14 @@ endif
 " Filetype-specific tweaks
 augroup es_shared_ft
   autocmd!
-  autocmd FileType javascript,javascriptreact,lua,python setlocal foldmethod=indent
-  autocmd FileType go,rust,c,typescript,typescriptreact setlocal foldmethod=syntax
 augroup END
+
+" Vim-specific folding
+if !has('nvim')
+  set foldmethod=syntax
+  augroup es_shared_ft_fold
+    autocmd!
+    autocmd FileType javascript,javascriptreact,lua,python setlocal foldmethod=indent
+    autocmd FileType go,rust,c,typescript,typescriptreact setlocal foldmethod=syntax
+  augroup END
+endif

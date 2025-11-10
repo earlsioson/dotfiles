@@ -41,7 +41,6 @@ return {
     },
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      
       -- Use modern vim.lsp.config API for Neovim 0.11+
       vim.lsp.config("lua_ls", {
         capabilities = capabilities,

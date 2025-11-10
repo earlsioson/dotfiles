@@ -180,8 +180,6 @@ map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git hunk tex
 
 map("n", "<Leader>xx", vim.diagnostic.open_float, { desc = "Diagnostic float" })
 map("n", "<Leader>xl", vim.diagnostic.setloclist, { desc = "Diagnostic loclist" })
-map("n", "<Leader>xs", vim.diagnostic.show, { desc = "Diagnostic show" })
-map("n", "<Leader>xh", vim.diagnostic.hide, { desc = "Diagnostic hide" })
 
 -- ============================================================================
 -- Flash Navigation

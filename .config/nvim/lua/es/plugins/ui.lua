@@ -1,3 +1,6 @@
+local HEIGHT_RATIO = 1
+local WIDTH_RATIO = 1
+
 return {
   {
     "folke/tokyonight.nvim",
@@ -15,43 +18,35 @@ return {
   {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    cmd = {
-      "NvimTreeToggle",
-      "NvimTreeOpen",
-      "NvimTreeClose",
-      "NvimTreeFocus",
-      "NvimTreeFindFile",
+    opts = {
+      view = {
+        float = {
+          enable = true,
+          open_win_config = function()
+            local screen_w = vim.opt.columns:get()
+            local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
+            local window_w = screen_w * WIDTH_RATIO
+            local window_h = screen_h * HEIGHT_RATIO
+            local window_w_int = math.floor(window_w)
+            local window_h_int = math.floor(window_h)
+            local center_x = (screen_w - window_w) / 2
+            local center_y = ((vim.opt.lines:get() - window_h) / 2)
+            - vim.opt.cmdheight:get()
+            return {
+              border = 'rounded',
+              relative = 'editor',
+              row = center_y,
+              col = center_x,
+              width = window_w_int,
+              height = window_h_int,
+            }
+          end,
+        },
+        width = function()
+          return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
+        end,
+      },
     },
-    opts = function()
-      local api = require("nvim-tree.api")
-      local function on_attach(bufnr)
-        api.config.mappings.default_on_attach(bufnr)
-        vim.keymap.del("n", "<C-k>", { buffer = bufnr })
-        vim.keymap.set("n", "<M-i>", api.node.show_info_popup, {
-          desc = "nvim-tree: Info",
-          buffer = bufnr,
-          noremap = true,
-          silent = true,
-          nowait = true,
-        })
-      end
-
-      return {
-        on_attach = on_attach,
-        live_filter = {
-          prefix = "[FILTER]: ",
-          always_show_folders = false,
-        },
-        renderer = {
-          symlink_destination = false,
-        },
-        view = {
-          relativenumber = true,
-          width = 40,
-        },
-      }
-    end,
-    -- NvimTree keymaps are centralized in es.keymaps
   },
   {
     "stevearc/oil.nvim",

@@ -204,8 +204,6 @@ LSP diagnostic management.
 | --- | --- |
 | `<Leader>xx` | Diagnostic float |
 | `<Leader>xl` | Diagnostic loclist |
-| `<Leader>xs` | Diagnostic show |
-| `<Leader>xh` | Diagnostic hide |
 
 #### Flash navigation
 Quick jump navigation (preserves vim defaults for `s`/`S`).

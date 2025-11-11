@@ -68,7 +68,7 @@ endfunction
 " Keymaps
 " Note: <Leader>cd, <Leader>t, and <Leader>g removed to avoid conflicts with Neovim keymaps
 nnoremap <Leader>n :new<CR>
-vnoremap <Leader>s y/<C-R>"<CR><S-N>cgn
+vnoremap <Leader>r y/<C-R>"<CR><S-N>cgn
 nnoremap <Leader>a :b#<CR>
 nnoremap <Leader>k :let @/ = ""<CR>
 nnoremap <M-.> <C-w>5>

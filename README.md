@@ -90,66 +90,77 @@ When launching Neovim you'll see the Mason installer and Tree-sitter setup run a
 >
 > Plugins auto-load from `.config/nvim/lua/es/plugins/*.lua` via lazy.nvim. Tree-sitter uses `prefer_git = true` to download pre-built parsers. Mason auto-installs DAP adapters (`debugpy`, `delve`, `codelldb`, `js-debug-adapter`) on first launch.
 >
-> The configuration follows modern Neovim 0.10+ idioms with proper lazy loading, uses `vim.uv` for async operations, and centralizes settings for maintainability.
+> The configuration follows modern Neovim 0.11+ idioms with proper lazy loading, uses `vim.uv` for async operations, and centralizes settings for maintainability.
 
 ### Keymaps
-All Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.
+All Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Buffer-local keymaps (like gitsigns) are defined in keymaps.lua as exported functions and called from plugin on_attach callbacks. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.
 
-The keymap system follows a consistent mnemonic namespace:
-- **Vim conventions** (1-key, no leader): Standard vim/LSP mappings like `gd`, `K`, `]d`, `[d`
-- **`<Leader>c*`** = "code" operations (LSP actions)
-- **`<Leader>d*`** = "debug" operations (DAP debugger)
-- **`<Leader>f*`** = "find" operations (Telescope with ripgrep/fd)
-- **`<Leader>g*`** = "git" operations (fugitive + gitsigns)
-- **`<Leader>n*`** = "nvimtree" operations (file tree navigation)
-- **`<Leader>x*`** = diagnostics ("fix" operations)
+The keymap system follows a consistent namespace that mirrors the Neovim API:
+- **`<Leader>l*`** = LSP operations (mirrors `vim.lsp.buf.*` API)
+- **`<Leader>d*`** = Diagnostic operations (mirrors `vim.diagnostic.*` API, navigation uses `]d`/`[d` defaults)
+- **`<Leader>b*`** = Debug/breakpoint operations (DAP)
+- **`<Leader>f*`** = Find operations (Telescope with ripgrep/fd)
+- **`<Leader>h*`** = Hunk operations (gitsigns, buffer-local in git files)
+- **`<Leader>t*`** = Toggle operations (gitsigns)
+- **`<Leader>g*`** = Git operations (Fugitive)
+- **`<Leader>n*`** = NvimTree operations (file tree navigation)
 
-#### Vim conventions (no leader)
+#### Neovim 0.11 defaults (no leader)
 | Shortcut | Action |
 | --- | --- |
-| `gd` | Go to definition |
-| `gD` | Go to declaration |
-| `gr` | Go to references |
-| `gi` | Go to implementation |
-| `K` | Hover documentation |
 | `]d` / `[d` | Next/previous diagnostic |
-| `]c` / `[c` | Next/previous git hunk |
+| `]D` / `[D` | First/last diagnostic |
 
-#### Code operations (`<Leader>c*`)
-LSP actions for modifying, analyzing, and navigating code.
+#### LSP operations (`<Leader>l*`)
+Keymaps mirror `vim.lsp.buf.*` API methods for easy memorization.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>ca` | Code action |
-| `<Leader>cr` | Code rename |
-| `<Leader>cf` | Code format |
-| `<Leader>cs` | Code signature help |
-| `<Leader>ct` | Code type definition |
-| `<Leader>ci` | Code inlay hints (toggle) |
-| `<Leader>cx` | Code context jump (treesitter) |
-| `<Leader>cT` | Copilot toggle |
+| `<Leader>la` | Code action |
+| `<Leader>lc` | Incoming calls |
+| `<Leader>lC` | Outgoing calls |
+| `<Leader>ld` | Definition |
+| `<Leader>lD` | Declaration |
+| `<Leader>lf` | Format |
+| `<Leader>lh` | Hover |
+| `<Leader>li` | Implementation |
+| `<Leader>lo` | Document outline (symbols) |
+| `<Leader>lr` | References |
+| `<Leader>ln` | Rename |
+| `<Leader>ls` | Signature help |
+| `<Leader>lt` | Type definition |
+| `<Leader>lw` | Workspace symbols |
 
-#### Debug operations (`<Leader>d*`)
+#### Diagnostic operations (`<Leader>d*`)
+Keymaps mirror `vim.diagnostic.*` API methods. Navigation uses `]d`/`[d` defaults above.
+
+| Shortcut | Action |
+| --- | --- |
+| `<Leader>df` | Diagnostic float |
+| `<Leader>dl` | Diagnostic loclist |
+| `<Leader>dq` | Diagnostic quickfix |
+
+#### Debug operations (`<Leader>b*`)
 DAP debugger controls and inspection.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>dc` | Debug continue |
-| `<Leader>db` | Debug breakpoint (toggle) |
-| `<Leader>dB` | Debug breakpoint (conditional) |
-| `<Leader>ds` | Debug step over |
-| `<Leader>di` | Debug step into |
-| `<Leader>do` | Debug step out |
-| `<Leader>dt` | Debug terminate |
-| `<Leader>dr` | Debug REPL |
-| `<Leader>du` | Debug UI (toggle) |
-| `<Leader>dv` | Debug load vscode config |
-| `<Leader>dl` | Debug run last |
-| `<Leader>dk` | Debug kill all breakpoints |
-| `<Leader>dh` | Debug hover variables |
-| `<Leader>dw` | Debug watches |
-| `<Leader>df` | Debug frames |
-| `<Leader>dp` | Debug preview scopes |
+| `<Leader>bc` | Continue |
+| `<Leader>bb` | Breakpoint (toggle) |
+| `<Leader>bB` | Breakpoint (conditional) |
+| `<Leader>bs` | Step over |
+| `<Leader>bi` | Step into |
+| `<Leader>bo` | Step out |
+| `<Leader>bt` | Terminate |
+| `<Leader>br` | REPL |
+| `<Leader>bu` | UI (toggle) |
+| `<Leader>bv` | Load vscode config |
+| `<Leader>bl` | Run last |
+| `<Leader>bk` | Kill all breakpoints |
+| `<Leader>bh` | Hover variables |
+| `<Leader>bw` | Watches |
+| `<Leader>bf` | Frames |
+| `<Leader>bp` | Preview scopes |
 
 #### Find operations (`<Leader>f*`)
 Telescope pickers using ripgrep for text search and fd for file finding.
@@ -169,23 +180,32 @@ Telescope pickers using ripgrep for text search and fd for file finding.
 | `<Leader>fE` | Find explorer all (no gitignore) |
 
 #### Git operations (`<Leader>g*`)
-Git operations via fugitive and gitsigns.
+Fugitive operations.
 
 | Shortcut | Action |
 | --- | --- |
 | `<Leader>gg` | Git status |
-| `<Leader>gs` | Git stage hunk |
-| `<Leader>gr` | Git reset hunk |
-| `<Leader>gS` | Git stage buffer |
-| `<Leader>gR` | Git reset buffer |
-| `<Leader>gu` | Git undo stage |
-| `<Leader>gp` | Git preview hunk |
-| `<Leader>gb` | Git blame line |
-| `<Leader>gt` | Git toggle blame |
-| `<Leader>gx` | Git toggle deleted |
-| `<Leader>gd` | Git diff |
-| `<Leader>gD` | Git diff against `~` |
-| `ih` (text object) | Git hunk text object |
+
+#### Hunk operations (`<Leader>h*` and `<Leader>t*`)
+Gitsigns operations (buffer-local, only in git files).
+
+| Shortcut | Action |
+| --- | --- |
+| `]c` / `[c` | Next/previous hunk |
+| `<Leader>hs` | Stage hunk |
+| `<Leader>hr` | Reset hunk |
+| `<Leader>hS` | Stage buffer |
+| `<Leader>hR` | Reset buffer |
+| `<Leader>hu` | Undo stage |
+| `<Leader>hp` | Preview hunk |
+| `<Leader>hi` | Preview hunk inline |
+| `<Leader>hb` | Blame line |
+| `<Leader>hd` | Diff |
+| `<Leader>hD` | Diff against `~` |
+| `<Leader>hq` / `<Leader>hQ` | Hunks to quickfix (current/all) |
+| `<Leader>tb` | Toggle blame |
+| `<Leader>tw` | Toggle word diff |
+| `ih` (text object) | Hunk text object |
 
 #### NvimTree (`<Leader>n*`)
 File tree navigation.
@@ -198,13 +218,6 @@ File tree navigation.
 | `<Leader>nc` | NvimTree close |
 | `<Leader>np` | NvimTree open parent directory |
 
-#### Diagnostics (`<Leader>x*`)
-LSP diagnostic management.
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>xx` | Diagnostic float |
-| `<Leader>xl` | Diagnostic loclist |
 
 #### Flash navigation
 Quick jump navigation (preserves vim defaults for `s`/`S`).
@@ -222,6 +235,7 @@ Quick jump navigation (preserves vim defaults for `s`/`S`).
 | --- | --- |
 | `-` | Oil parent directory |
 | `<Leader>mp` | Markdown preview |
+| `<Leader>ct` | Copilot toggle |
 
 #### Shared keymaps (`.vim/common.vim`)
 These work in both Vim and Neovim.
@@ -231,7 +245,7 @@ These work in both Vim and Neovim.
 | `<Leader>y` | Yank to system clipboard (normal/visual) |
 | `<Leader>n` | New split |
 | `<Leader>a` | Alternate buffer |
-| `<Leader>s` (visual) | Search selection for quick change |
+| `<Leader>r` (visual) | Search selection for quick replace |
 | `<Leader>k` | Clear last search highlight |
 | `<M-.>`, `<M-,>`, `<M-'>`, `<M-;>` | Resize windows |
 | `z0` | Set foldlevel to 99 (show all folds) |

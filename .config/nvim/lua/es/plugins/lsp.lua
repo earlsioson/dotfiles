@@ -1,3 +1,6 @@
+-- LSP servers managed by Mason
+-- Individual server configurations live in ~/.config/nvim/lsp/*.lua
+-- and are auto-discovered by Neovim 0.11's vim.lsp.config
 local servers = {
   "cssls",
   "docker_compose_language_service",
@@ -17,15 +20,6 @@ local servers = {
   "yamlls",
 }
 
--- LSP keymaps are now centralized in es.keymaps
--- This ensures they work even when LSP hasn't attached yet
-
-local function on_lsp_attach(event)
-  local bufnr = event.buf
-  vim.bo[bufnr].omnifunc = nil
-  -- Buffer-local keymaps are handled in es.keymaps
-end
-
 return {
   {
     "williamboman/mason.nvim",
@@ -37,41 +31,8 @@ return {
     dependencies = {
       "williamboman/mason.nvim",
       "neovim/nvim-lspconfig",
-      "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      -- Use modern vim.lsp.config API for Neovim 0.11+
-      vim.lsp.config("lua_ls", {
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            runtime = {
-              version = "LuaJIT",
-            },
-            diagnostics = {
-              globals = { "vim" },
-            },
-            workspace = {
-              library = vim.api.nvim_get_runtime_file("", true),
-              checkThirdParty = false,
-            },
-            telemetry = {
-              enable = false,
-            },
-          },
-        },
-      })
-
-      -- Configure other servers to use vim.lsp.config as well
-      for _, server in ipairs(servers) do
-        if server ~= "lua_ls" then
-          vim.lsp.config(server, {
-            capabilities = capabilities,
-          })
-        end
-      end
-
       require("mason-lspconfig").setup({
         ensure_installed = servers,
       })
@@ -85,7 +46,7 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      -- Set default border for all floating windows
+      -- Configure LSP floating window appearance
       local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
       function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
         opts = opts or {}
@@ -95,14 +56,17 @@ return {
         return orig_util_open_floating_preview(contents, syntax, opts, ...)
       end
 
+      -- Configure diagnostic floating window appearance
       vim.diagnostic.config({
         float = { border = "rounded" },
       })
 
-      vim.api.nvim_create_autocmd("LspAttach", {
-        group = vim.api.nvim_create_augroup("es_lsp_attach", { clear = true }),
-        callback = on_lsp_attach,
-      })
+      -- Enable LSP servers with completion capabilities
+      -- Server-specific config is auto-discovered from lsp/*.lua files
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      for _, server in ipairs(servers) do
+        vim.lsp.enable(server)
+      end
     end,
   },
 }

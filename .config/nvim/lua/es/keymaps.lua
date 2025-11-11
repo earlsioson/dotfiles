@@ -4,81 +4,122 @@
 -- All Neovim keymaps in one place for easy reference and learning
 -- Shared vim/neovim keymaps live in ~/.vim/common.vim
 
+local M = {}
 local map = vim.keymap.set
 
 -- ============================================================================
--- Vim Conventions (Built-in, no leader required)
+-- Gitsigns Keymaps (exported for on_attach callback)
 -- ============================================================================
--- Standard vim/LSP conventions that reduce cognitive load
-
--- LSP Navigation
-map("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-map("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
-map("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
-map("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
-map("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
-
--- Navigation (vim-unimpaired style)
-map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
--- ]c and [c for git hunks are defined in git plugin
-
--- ============================================================================
--- Code Operations (<Leader>c* = "code")
--- ============================================================================
--- Actions for modifying, analyzing, and navigating code
-
-map("n", "<Leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
-map("n", "<Leader>cr", vim.lsp.buf.rename, { desc = "Code rename" })
-map("n", "<Leader>cf", vim.lsp.buf.format, { desc = "Code format" })
-map("n", "<Leader>cs", vim.lsp.buf.signature_help, { desc = "Code signature help" })
-map("n", "<Leader>ct", vim.lsp.buf.type_definition, { desc = "Code type definition" })
-
-map("n", "<Leader>ci", function()
-  local inlay = vim.lsp.inlay_hint
-  if inlay and inlay.is_enabled and inlay.enable then
-    local bufnr = vim.api.nvim_get_current_buf()
-    local enabled = inlay.is_enabled({ bufnr = bufnr })
-    inlay.enable(not enabled, { bufnr = bufnr })
+-- These keymaps are buffer-local and only active in git-tracked files
+M.setup_gitsigns_keymaps = function(gs, bufnr)
+  local function map(mode, l, r, opts)
+    opts = opts or {}
+    opts.buffer = bufnr
+    vim.keymap.set(mode, l, r, opts)
   end
-end, { desc = "Code inlay hints (toggle)" })
 
-map("n", "<Leader>cx", function()
-  require("treesitter-context").go_to_context()
-end, { desc = "Code context jump (treesitter)" })
+  -- Navigation
+  map('n', ']c', function()
+    if vim.wo.diff then
+      vim.cmd.normal({']c', bang = true})
+    else
+      gs.nav_hunk('next')
+    end
+  end)
 
-map("n", "<Leader>cX", "<Cmd>TSContextToggle<CR>", { desc = "Code context toggle (treesitter)" })
+  map('n', '[c', function()
+    if vim.wo.diff then
+      vim.cmd.normal({'[c', bang = true})
+    else
+      gs.nav_hunk('prev')
+    end
+  end)
+
+  -- Actions
+  map('n', '<leader>hs', gs.stage_hunk)
+  map('n', '<leader>hr', gs.reset_hunk)
+  map('v', '<leader>hs', function() gs.stage_hunk({vim.fn.line('.'), vim.fn.line('v')}) end)
+  map('v', '<leader>hr', function() gs.reset_hunk({vim.fn.line('.'), vim.fn.line('v')}) end)
+  map('n', '<leader>hS', gs.stage_buffer)
+  map('n', '<leader>hR', gs.reset_buffer)
+  map('n', '<leader>hu', gs.undo_stage_hunk)
+  map('n', '<leader>hp', gs.preview_hunk)
+  map('n', '<leader>hi', gs.preview_hunk_inline)
+  map('n', '<leader>hb', function() gs.blame_line({full = true}) end)
+  map('n', '<leader>hd', gs.diffthis)
+  map('n', '<leader>hD', function() gs.diffthis('~') end)
+  map('n', '<leader>hQ', function() gs.setqflist('all') end)
+  map('n', '<leader>hq', gs.setqflist)
+
+  -- Toggles
+  map('n', '<leader>tb', gs.toggle_current_line_blame)
+  map('n', '<leader>tw', gs.toggle_word_diff)
+
+  -- Text object
+  map({'o', 'x'}, 'ih', gs.select_hunk)
+end
 
 -- ============================================================================
--- Debug Operations (<Leader>d* = "debug")
+-- LSP Operations (<Leader>l* = "lsp")
+-- ============================================================================
+-- Keymaps mirror vim.lsp.buf.* API for easy memorization
+-- Diagnostics use ]d/[d (Neovim 0.11 defaults) for navigation
+
+map("n", "<Leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
+map("n", "<Leader>lc", vim.lsp.buf.incoming_calls, { desc = "LSP incoming calls" })
+map("n", "<Leader>lC", vim.lsp.buf.outgoing_calls, { desc = "LSP outgoing calls" })
+map("n", "<Leader>ld", vim.lsp.buf.definition, { desc = "LSP definition" })
+map("n", "<Leader>lD", vim.lsp.buf.declaration, { desc = "LSP declaration" })
+map("n", "<Leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
+map("n", "<Leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
+map("n", "<Leader>li", vim.lsp.buf.implementation, { desc = "LSP implementation" })
+map("n", "<Leader>lo", vim.lsp.buf.document_symbol, { desc = "LSP document outline" })
+map("n", "<Leader>lr", vim.lsp.buf.references, { desc = "LSP references" })
+map("n", "<Leader>ln", vim.lsp.buf.rename, { desc = "LSP rename" })
+map("n", "<Leader>ls", vim.lsp.buf.signature_help, { desc = "LSP signature help" })
+map("n", "<Leader>lt", vim.lsp.buf.type_definition, { desc = "LSP type definition" })
+map("n", "<Leader>lw", vim.lsp.buf.workspace_symbol, { desc = "LSP workspace symbols" })
+
+-- ============================================================================
+-- Diagnostic Operations (<Leader>d* = "diagnostics")
+-- ============================================================================
+-- Keymaps mirror vim.diagnostic.* API for easy memorization
+-- Navigation uses ]d/[d (Neovim 0.11 defaults)
+
+map("n", "<Leader>df", vim.diagnostic.open_float, { desc = "Diagnostic float" })
+map("n", "<Leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostic loclist" })
+map("n", "<Leader>dq", vim.diagnostic.setqflist, { desc = "Diagnostic quickfix" })
+
+-- ============================================================================
+-- Debug Operations (<Leader>b* = "debug/break")
 -- ============================================================================
 -- DAP debugger controls
 
-map("n", "<Leader>dc", function() require("dap").continue() end, { desc = "Debug continue" })
-map("n", "<Leader>db", function() require("dap").toggle_breakpoint() end, { desc = "Debug breakpoint (toggle)" })
-map("n", "<Leader>dB", function()
+map("n", "<Leader>bc", function() require("dap").continue() end, { desc = "Debug continue" })
+map("n", "<Leader>bb", function() require("dap").toggle_breakpoint() end, { desc = "Debug breakpoint (toggle)" })
+map("n", "<Leader>bB", function()
   require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
 end, { desc = "Debug breakpoint (conditional)" })
-map("n", "<Leader>ds", function() require("dap").step_over() end, { desc = "Debug step over" })
-map("n", "<Leader>di", function() require("dap").step_into() end, { desc = "Debug step into" })
-map("n", "<Leader>do", function() require("dap").step_out() end, { desc = "Debug step out" })
-map("n", "<Leader>dt", function() require("dap").terminate() end, { desc = "Debug terminate" })
-map("n", "<Leader>dr", function() require("dap").repl.open() end, { desc = "Debug REPL" })
-map("n", "<Leader>du", function() require("dapui").toggle() end, { desc = "Debug UI (toggle)" })
-map("n", "<Leader>dv", function()
+map("n", "<Leader>bs", function() require("dap").step_over() end, { desc = "Debug step over" })
+map("n", "<Leader>bi", function() require("dap").step_into() end, { desc = "Debug step into" })
+map("n", "<Leader>bo", function() require("dap").step_out() end, { desc = "Debug step out" })
+map("n", "<Leader>bt", function() require("dap").terminate() end, { desc = "Debug terminate" })
+map("n", "<Leader>br", function() require("dap").repl.open() end, { desc = "Debug REPL" })
+map("n", "<Leader>bu", function() require("dapui").toggle() end, { desc = "Debug UI (toggle)" })
+map("n", "<Leader>bv", function()
   require("dap.ext.vscode").load_launchjs(nil, { lldb = { "c", "cpp", "rust", "zig" } })
 end, { desc = "Debug load vscode config" })
-map("n", "<Leader>dl", function() require("dap").run_last() end, { desc = "Debug run last" })
-map("n", "<Leader>dk", function() require("dap").clear_breakpoints() end, { desc = "Debug kill all breakpoints" })
+map("n", "<Leader>bl", function() require("dap").run_last() end, { desc = "Debug run last" })
+map("n", "<Leader>bk", function() require("dap").clear_breakpoints() end, { desc = "Debug kill all breakpoints" })
 
 -- Debug inspection
-map({ "n", "v" }, "<Leader>dh", function() require("dap.ui.widgets").hover() end, { desc = "Debug hover variables" })
-map({ "n", "v" }, "<Leader>dw", function() require("dapui").float_element("watches") end, { desc = "Debug watches" })
-map("n", "<Leader>df", function()
+map({ "n", "v" }, "<Leader>bh", function() require("dap.ui.widgets").hover() end, { desc = "Debug hover variables" })
+map({ "n", "v" }, "<Leader>bw", function() require("dapui").float_element("watches") end, { desc = "Debug watches" })
+map("n", "<Leader>bf", function()
   local widgets = require("dap.ui.widgets")
   widgets.centered_float(widgets.frames)
 end, { desc = "Debug frames" })
-map("n", "<Leader>dp", function()
+map("n", "<Leader>bp", function()
   local widgets = require("dap.ui.widgets")
   widgets.centered_float(widgets.scopes)
 end, { desc = "Debug preview scopes" })
@@ -130,58 +171,11 @@ map("n", "<Leader>fE", "<Cmd>Telescope file_browser respect_gitignore=false<CR>"
 -- ============================================================================
 -- Git Operations (<Leader>g* = "git")
 -- ============================================================================
--- Git operations via fugitive and gitsigns
+-- Gitsigns keymaps (<Leader>h*, <Leader>t*, ]c, [c, ih) are defined in
+-- plugins/gitsigns.lua on_attach callback (buffer-local, only in git files)
 
 -- Fugitive
 map("n", "<Leader>gg", "<Cmd>G | only<CR>", { desc = "Git status" })
-
--- Gitsigns hunks
-map("n", "<Leader>gs", function() require("gitsigns").stage_hunk() end, { desc = "Git stage hunk" })
-map("n", "<Leader>gr", function() require("gitsigns").reset_hunk() end, { desc = "Git reset hunk" })
-map("v", "<Leader>gs", function()
-  require("gitsigns").stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-end, { desc = "Git stage hunk (visual)" })
-map("v", "<Leader>gr", function()
-  require("gitsigns").reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-end, { desc = "Git reset hunk (visual)" })
-map("n", "<Leader>gS", function() require("gitsigns").stage_buffer() end, { desc = "Git stage buffer" })
-map("n", "<Leader>gR", function() require("gitsigns").reset_buffer() end, { desc = "Git reset buffer" })
-map("n", "<Leader>gu", function() require("gitsigns").undo_stage_hunk() end, { desc = "Git undo stage" })
-map("n", "<Leader>gp", function() require("gitsigns").preview_hunk() end, { desc = "Git preview hunk" })
-map("n", "<Leader>gb", function()
-  require("gitsigns").blame_line({ full = true })
-end, { desc = "Git blame line" })
-map("n", "<Leader>gt", function() require("gitsigns").toggle_current_line_blame() end, { desc = "Git toggle blame" })
-map("n", "<Leader>gx", function() require("gitsigns").toggle_deleted() end, { desc = "Git toggle deleted" })
-map("n", "<Leader>gd", function() require("gitsigns").diffthis() end, { desc = "Git diff" })
-map("n", "<Leader>gD", function() require("gitsigns").diffthis("~") end, { desc = "Git diff against ~" })
-
--- Hunk navigation (vim-unimpaired style)
-map("n", "]c", function()
-  if vim.wo.diff then
-    vim.cmd.normal({ args = "]c", bang = true })
-  else
-    require("gitsigns").nav_hunk("next")
-  end
-end, { desc = "Next git hunk" })
-map("n", "[c", function()
-  if vim.wo.diff then
-    vim.cmd.normal({ args = "[c", bang = true })
-  else
-    require("gitsigns").nav_hunk("prev")
-  end
-end, { desc = "Previous git hunk" })
-
--- Hunk text object
-map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git hunk text object" })
-
--- ============================================================================
--- Diagnostics (<Leader>x* = "fix")
--- ============================================================================
--- LSP diagnostic management
-
-map("n", "<Leader>xx", vim.diagnostic.open_float, { desc = "Diagnostic float" })
-map("n", "<Leader>xl", vim.diagnostic.setloclist, { desc = "Diagnostic loclist" })
 
 -- ============================================================================
 -- Flash Navigation
@@ -234,4 +228,6 @@ map("n", "-", "<CMD>Oil<CR>", { desc = "Oil parent directory" })
 map("n", "<Leader>mp", "<Cmd>Glow<CR>", { desc = "Markdown preview" })
 
 -- Copilot
-map("n", "<Leader>cT", "<Cmd>Copilot toggle<CR>", { desc = "Copilot toggle" })
+map("n", "<Leader>ct", "<Cmd>Copilot toggle<CR>", { desc = "Copilot toggle" })
+
+return M

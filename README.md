@@ -164,6 +164,7 @@ DAP debugger controls and inspection.
 
 #### Find operations (`<Leader>f*`)
 Telescope pickers using ripgrep for text search and fd for file finding.
+Hidden file search (`<Leader>fh`) and the directory picker that feeds Oil (`<Leader>fD`) share the same fd exclude list in `.config/nvim/lua/es/keymaps.lua`, so you can tweak which build artifacts or vendor dirs stay hidden in one place.
 
 | Shortcut | Action |
 | --- | --- |
@@ -173,6 +174,7 @@ Telescope pickers using ripgrep for text search and fd for file finding.
 | `<Leader>fg` | Find git files |
 | `<Leader>fo` | Find oldfiles (recent) |
 | `<Leader>fh` | Find hidden files |
+| `<Leader>fD` | Browse directories (Oil) |
 | `<Leader>fw` | Find workspace symbols |
 | `<Leader>fd` | Find document symbols |
 | `<Leader>fk` | Find keymaps |
@@ -214,7 +216,6 @@ File tree navigation.
 | --- | --- |
 | `<Leader>nt` | NvimTree toggle |
 | `<Leader>nf` | NvimTree find file |
-| `<Leader>no` | NvimTree open dir |
 | `<Leader>nc` | NvimTree close |
 | `<Leader>np` | NvimTree open parent directory |
 

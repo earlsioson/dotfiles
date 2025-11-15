@@ -130,6 +130,33 @@ end, { desc = "Debug preview scopes" })
 -- Telescope pickers for finding files, text, and symbols
 -- Uses ripgrep for text search and fd for file finding
 
+local fd_excludes = {
+  "node_modules",
+  ".git",
+  "target",        -- Rust build dir
+  "dist",          -- Common build output
+  "build",         -- Common build output
+  ".next",         -- Next.js
+  "__pycache__",   -- Python cache
+  ".pytest_cache", -- pytest
+  ".venv",         -- Python venv
+  "venv",          -- Python venv
+}
+
+local function fd_command(node_type)
+  local args = { "fd" }
+  if node_type then
+    table.insert(args, "--type")
+    table.insert(args, node_type)
+  end
+  vim.list_extend(args, { "--hidden", "--no-ignore" })
+  for _, pattern in ipairs(fd_excludes) do
+    vim.list_extend(args, { "--exclude", pattern })
+  end
+  table.insert(args, "--strip-cwd-prefix")
+  return args
+end
+
 map("n", "<Leader>ff", "<Cmd>Telescope find_files follow=true hidden=false<CR>", { desc = "Find files" })
 map("n", "<Leader>fr", function()
   require("telescope").extensions.live_grep_args.live_grep_args()
@@ -141,20 +168,7 @@ map("n", "<Leader>fh", function()
   require("telescope.builtin").find_files({
     hidden = true,
     no_ignore = true,
-    find_command = { 
-      "fd", "--type", "f", "--hidden", "--no-ignore", 
-      "--exclude", "node_modules",
-      "--exclude", ".git",
-      "--exclude", "target",        -- Rust build dir
-      "--exclude", "dist",          -- Common build output
-      "--exclude", "build",         -- Common build output
-      "--exclude", ".next",         -- Next.js
-      "--exclude", "__pycache__",   -- Python cache
-      "--exclude", ".pytest_cache", -- pytest
-      "--exclude", ".venv",         -- Python venv
-      "--exclude", "venv",          -- Python venv
-      "--strip-cwd-prefix" 
-    }
+    find_command = fd_command("f"),
   })
 end, { desc = "Find hidden files (including gitignored)" })
 map("n", "<Leader>fw", "<Cmd>Telescope lsp_dynamic_workspace_symbols<CR>", { desc = "Find workspace symbols" })
@@ -167,6 +181,33 @@ map("n", "<Leader>fe", function()
 end, { desc = "Find explorer (file browser)" })
 map("n", "<Leader>fE", "<Cmd>Telescope file_browser respect_gitignore=false<CR>",
   { desc = "Find explorer all (no gitignore)" })
+
+map("n", "<Leader>fD", function()
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+  local oil = require("oil")
+  local cwd = vim.fn.getcwd()
+
+  require("telescope.builtin").find_files({
+    prompt_title = "Directories",
+    cwd = cwd,
+    hidden = true,
+    no_ignore = true,
+    follow = true,
+    find_command = fd_command("d"),
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if selection then
+          local path = selection.path or selection.value
+          oil.open(path or cwd)
+        end
+      end)
+      return true
+    end,
+  })
+end, { desc = "Oil open directory (finder)" })
 
 -- ============================================================================
 -- Git Operations (<Leader>g* = "git")
@@ -189,28 +230,6 @@ map("n", "<Leader>gg", "<Cmd>G | only<CR>", { desc = "Git status" })
 
 map("n", "<Leader>nt", "<Cmd>NvimTreeToggle<CR>", { desc = "NvimTree toggle" })
 map("n", "<Leader>nf", "<Cmd>NvimTreeFindFile<CR>", { desc = "NvimTree find file" })
-map("n", "<Leader>no", function()
-  local actions = require("telescope.actions")
-  local action_state = require("telescope.actions.state")
-
-  require("telescope").extensions.file_browser.file_browser({
-    path = vim.fn.getcwd(),
-    cwd = vim.fn.getcwd(),
-    files = false,  -- Only show directories
-    depth = false,  -- Show all depths
-    attach_mappings = function(prompt_bufnr, map)
-      actions.select_default:replace(function()
-        local selection = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        if selection then
-          local path = selection.path or selection.value
-          require("nvim-tree.api").tree.open({ path = path })
-        end
-      end)
-      return true
-    end,
-  })
-end, { desc = "NvimTree open directory (browser)" })
 map("n", "<Leader>nc", "<Cmd>NvimTreeClose<CR>", { desc = "NvimTree close" })
 map("n", "<Leader>np", function()
   local parent_dir = vim.fn.expand("%:p:h")

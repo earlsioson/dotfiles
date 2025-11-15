@@ -1,6 +1,5 @@
 local HEIGHT_RATIO = 1
 local WIDTH_RATIO = 1
-
 return {
   {
     "folke/tokyonight.nvim",
@@ -22,6 +21,7 @@ return {
       view = {
         float = {
           enable = true,
+          quit_on_focus_loss = false,
           open_win_config = function()
             local screen_w = vim.opt.columns:get()
             local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
@@ -51,7 +51,19 @@ return {
   {
     "stevearc/oil.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {},
+    opts = {
+      columns = {
+        "icon",
+        { "permissions", highlight = "Comment" },
+        "size",
+        "mtime",
+        "preview",
+      },
+      preview_win = {
+        update_on_cursor_moved = true,
+        preview_method = "fast_scratch",
+      },
+    },
     -- Oil keymaps are centralized in es.keymaps
   },
   {

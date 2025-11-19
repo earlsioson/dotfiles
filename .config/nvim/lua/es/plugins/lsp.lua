@@ -9,6 +9,7 @@ local servers = {
   "html",
   "jsonls",
   "lua_ls",
+  "markdown_oxide",
   "oxlint",
   "pyright",
   "ruff",

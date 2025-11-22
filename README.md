@@ -80,15 +80,15 @@ When launching Neovim you'll see the Mason installer and Tree-sitter setup run a
 | Formatting | `stevearc/conform.nvim` |
 | LSP | `neovim/nvim-lspconfig`, `williamboman/mason.nvim`, `williamboman/mason-lspconfig.nvim`, `jay-babu/mason-nvim-dap.nvim` |
 | Treesitter | `nvim-treesitter/nvim-treesitter`, `nvim-treesitter/nvim-treesitter-context` |
-| Completion | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lua`, `hrsh7th/cmp-nvim-lsp`, `hrsh7th/cmp-nvim-lsp-signature-help`, `saadparwaiz1/cmp_luasnip`, `L3MON4D3/LuaSnip` |
+| Completion | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lua`, `hrsh7th/cmp-nvim-lsp`, `hrsh7th/cmp-nvim-lsp-signature-help` |
 | Debugging | `mfussenegger/nvim-dap`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |
 | Telescope | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
 | UI | `nvim-tree/nvim-web-devicons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
-| Navigation | `folke/flash.nvim` |
-| Productivity | `zbirenbaum/copilot.lua`, `zbirenbaum/copilot-cmp`, `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim` |
+| Navigation | `folke/flash.nvim`, `ggandor/flit.nvim`, `ggandor/lightspeed.nvim` |
+| Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `wellle/targets.vim`, `kana/vim-textobj-user`, `echasnovski/mini.ai`, `LuanVSO/nvim-regexplacement`, `andymass/vim-matchup`, `Augment.vim` |
 | Language Extras | `nordtheme/vim`, `dracula/vim`, `fatih/vim-go`, `terrastruct/d2-vim` |
 
-> Classic Vim still loads `github/copilot.vim` + `airblade/vim-gitgutter`; Neovim uses the Lua-native Copilot/cmp stack and gitsigns.
+
 >
 > Plugins auto-load from `.config/nvim/lua/es/plugins/*.lua` via lazy.nvim. Tree-sitter uses `prefer_git = true` to download pre-built parsers. Mason auto-installs DAP adapters (`debugpy`, `delve`, `codelldb`, `js-debug-adapter`) on first launch.
 >
@@ -259,8 +259,6 @@ These work in both Vim and Neovim.
 #### nvim-cmp completion
 | Shortcut | Action |
 | --- | --- |
-| `<C-b>` / `<C-f>` | Scroll docs |
-| `<C-Space>` | Trigger completion |
-| `<C-e>` | Abort completion |
-| `<CR>` | Confirm selection |
-| `<Tab>` / `<S-Tab>` | Cycle items / move through snippets |
+| `<Tab>` | Accepts the Augment (Gray Text) suggestion. |
+| `<CR>` | Accepts the LSP (Popup Menu) selection. |
+| `<C-n>` / `<C-p>` | Navigates up and down the LSP menu. |

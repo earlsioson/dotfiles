@@ -258,7 +258,4 @@ map("n", "-", "<CMD>Oil<CR>", { desc = "Oil parent directory" })
 -- Markdown preview
 map("n", "<Leader>mp", "<Cmd>Glow<CR>", { desc = "Markdown preview" })
 
--- Copilot
-map("n", "<Leader>ct", "<Cmd>Copilot toggle<CR>", { desc = "Copilot toggle" })
-
 return M

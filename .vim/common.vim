@@ -25,6 +25,22 @@ set autowrite
 set diffopt+=iwhite
 set completeopt=menu,menuone,noselect
 
+" Search behavior
+set ignorecase
+set smartcase
+set nohlsearch
+set incsearch
+
+" Scrolling behavior
+set scrolloff=8
+set sidescrolloff=8
+
+" Backspace behavior
+set backspace=indent,eol,start
+
+" Cursor line highlighting
+set cursorline
+
 if has('termguicolors')
   set termguicolors
 endif

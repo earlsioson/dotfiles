@@ -1,11 +1,11 @@
+-- Zero config lean idiomatic Augment setup
 return {
   "augmentcode/augment.vim",
-  event = "InsertEnter",
   cmd = "Augment",
   init = function()
+    -- Only essential configuration - dynamic workspace detection
     vim.g.augment_workspace_folders = {
-      '/Users/earl/dev/rolflaw/repos/silvertek',
-      '/Users/earl/dev/repos/portfolio'
+      vim.fn.getcwd(), -- Current working directory
     }
   end,
 }

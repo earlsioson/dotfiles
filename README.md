@@ -77,6 +77,7 @@ When launching Neovim you'll see the Mason installer and Tree-sitter setup run a
 ### Plugin stack
 | Category | Plugins |
 | --- | --- |
+| Formatting | `stevearc/conform.nvim` |
 | LSP | `neovim/nvim-lspconfig`, `williamboman/mason.nvim`, `williamboman/mason-lspconfig.nvim`, `jay-babu/mason-nvim-dap.nvim` |
 | Treesitter | `nvim-treesitter/nvim-treesitter`, `nvim-treesitter/nvim-treesitter-context` |
 | Completion | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lua`, `hrsh7th/cmp-nvim-lsp`, `hrsh7th/cmp-nvim-lsp-signature-help`, `saadparwaiz1/cmp_luasnip`, `L3MON4D3/LuaSnip` |
@@ -122,7 +123,7 @@ Keymaps mirror `vim.lsp.buf.*` API methods for easy memorization.
 | `<Leader>lC` | Outgoing calls |
 | `<Leader>ld` | Definition |
 | `<Leader>lD` | Declaration |
-| `<Leader>lf` | Format |
+| `<Leader>lf` | Format (conform) |
 | `<Leader>lh` | Hover |
 | `<Leader>li` | Implementation |
 | `<Leader>lo` | Document outline (symbols) |

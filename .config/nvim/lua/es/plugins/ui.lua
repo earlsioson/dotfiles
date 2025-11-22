@@ -17,6 +17,7 @@ return {
   {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = { "NvimTreeToggle", "NvimTreeFindFile", "NvimTreeClose", "NvimTreeOpen", "NvimTreeFocus" },
     opts = {
       actions = {
         open_file = {
@@ -64,6 +65,7 @@ return {
   {
     "stevearc/oil.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "Oil",
     opts = {
       columns = {
         "icon",
@@ -81,6 +83,7 @@ return {
   },
   {
     "stevearc/dressing.nvim",
+    event = "VeryLazy",
     opts = {
       input = {
         relative = "editor",

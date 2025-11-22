@@ -23,6 +23,7 @@ local servers = {
 return {
   {
     "williamboman/mason.nvim",
+    cmd = "Mason",
     build = ":MasonUpdate",
     config = true,
   },
@@ -40,6 +41,7 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",

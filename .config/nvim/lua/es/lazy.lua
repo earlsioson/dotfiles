@@ -18,7 +18,7 @@ end
 
 lazy.setup("es.plugins", {
   defaults = {
-    lazy = false,
+    lazy = true,
   },
   install = {
     colorscheme = { "tokyonight", "tokyonight-night" },

@@ -16,13 +16,14 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 - [Neovim Configuration](#neovim-configuration)
   - [Plugin stack](#plugin-stack)
   - [Keymaps](#keymaps)
-    - [Vim conventions](#vim-conventions-no-leader)
-    - [Code operations](#code-operations-leaderc)
-    - [Debug operations](#debug-operations-leaderd)
+    - [Neovim defaults](#neovim-011-defaults-no-leader)
+    - [LSP operations](#lsp-operations-leaderl)
+    - [Diagnostic operations](#diagnostic-operations-leaderd)
+    - [Debug operations](#debug-operations-leaderb)
     - [Find operations](#find-operations-leaderf)
     - [Git operations](#git-operations-leaderg)
+    - [Hunk operations](#hunk-operations-leaderh-and-leadert)
     - [NvimTree](#nvimtree-leadern)
-    - [Diagnostics](#diagnostics-leaderx)
     - [Flash navigation](#flash-navigation)
     - [Other mappings](#other-mappings)
     - [Shared keymaps](#shared-keymaps-vimcommonvim)
@@ -93,7 +94,7 @@ When launching Neovim you'll see the Mason installer and Tree-sitter setup run a
 > The configuration follows modern Neovim 0.11+ idioms with proper lazy loading, uses `vim.uv` for async operations, and centralizes settings for maintainability.
 
 ### Keymaps
-All Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Buffer-local keymaps (like gitsigns) are defined in keymaps.lua as exported functions and called from plugin on_attach callbacks. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.
+Most Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Buffer-local keymaps (like gitsigns) are defined in keymaps.lua as exported functions and called from plugin on_attach callbacks. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.
 
 The keymap system follows a consistent namespace that mirrors the Neovim API:
 - **`<Leader>l*`** = LSP operations (mirrors `vim.lsp.buf.*` API)

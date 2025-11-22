@@ -65,20 +65,28 @@ end
 -- Keymaps mirror vim.lsp.buf.* API for easy memorization
 -- Diagnostics use ]d/[d (Neovim 0.11 defaults) for navigation
 
-map("n", "<Leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
-map("n", "<Leader>lc", vim.lsp.buf.incoming_calls, { desc = "LSP incoming calls" })
-map("n", "<Leader>lC", vim.lsp.buf.outgoing_calls, { desc = "LSP outgoing calls" })
-map("n", "<Leader>ld", vim.lsp.buf.definition, { desc = "LSP definition" })
-map("n", "<Leader>lD", vim.lsp.buf.declaration, { desc = "LSP declaration" })
-map("n", "<Leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
-map("n", "<Leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
-map("n", "<Leader>li", vim.lsp.buf.implementation, { desc = "LSP implementation" })
-map("n", "<Leader>lo", vim.lsp.buf.document_symbol, { desc = "LSP document outline" })
-map("n", "<Leader>lr", vim.lsp.buf.references, { desc = "LSP references" })
-map("n", "<Leader>ln", vim.lsp.buf.rename, { desc = "LSP rename" })
-map("n", "<Leader>ls", vim.lsp.buf.signature_help, { desc = "LSP signature help" })
-map("n", "<Leader>lt", vim.lsp.buf.type_definition, { desc = "LSP type definition" })
-map("n", "<Leader>lw", vim.lsp.buf.workspace_symbol, { desc = "LSP workspace symbols" })
+M.setup_lsp_keymaps = function(bufnr)
+  local function map(mode, l, r, opts)
+    opts = opts or {}
+    opts.buffer = bufnr
+    vim.keymap.set(mode, l, r, opts)
+  end
+
+  map("n", "<Leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
+  map("n", "<Leader>lc", vim.lsp.buf.incoming_calls, { desc = "LSP incoming calls" })
+  map("n", "<Leader>lC", vim.lsp.buf.outgoing_calls, { desc = "LSP outgoing calls" })
+  map("n", "<Leader>ld", vim.lsp.buf.definition, { desc = "LSP definition" })
+  map("n", "<Leader>lD", vim.lsp.buf.declaration, { desc = "LSP declaration" })
+  map("n", "<Leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
+  map("n", "<Leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
+  map("n", "<Leader>li", vim.lsp.buf.implementation, { desc = "LSP implementation" })
+  map("n", "<Leader>lo", vim.lsp.buf.document_symbol, { desc = "LSP document outline" })
+  map("n", "<Leader>lr", vim.lsp.buf.references, { desc = "LSP references" })
+  map("n", "<Leader>ln", vim.lsp.buf.rename, { desc = "LSP rename" })
+  map("n", "<Leader>ls", vim.lsp.buf.signature_help, { desc = "LSP signature help" })
+  map("n", "<Leader>lt", vim.lsp.buf.type_definition, { desc = "LSP type definition" })
+  map("n", "<Leader>lw", vim.lsp.buf.workspace_symbol, { desc = "LSP workspace symbols" })
+end
 
 -- ============================================================================
 -- Diagnostic Operations (<Leader>d* = "diagnostics")
@@ -229,7 +237,9 @@ map("n", "<Leader>gg", "<Cmd>G | only<CR>", { desc = "Git status" })
 -- File tree navigation
 
 map("n", "<Leader>nt", "<Cmd>NvimTreeToggle<CR>", { desc = "NvimTree toggle" })
-map("n", "<Leader>nf", "<Cmd>NvimTreeFindFile<CR>", { desc = "NvimTree find file" })
+map("n", "<Leader>nf", function()
+  require("nvim-tree.api").tree.find_file({ buf = vim.api.nvim_get_current_buf(), open = true, focus = true })
+end, { desc = "NvimTree find file" })
 map("n", "<Leader>nc", "<Cmd>NvimTreeClose<CR>", { desc = "NvimTree close" })
 map("n", "<Leader>np", function()
   local parent_dir = vim.fn.expand("%:p:h")

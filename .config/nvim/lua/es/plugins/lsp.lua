@@ -1,6 +1,6 @@
 -- LSP servers managed by Mason
--- Individual server configurations live in ~/.config/nvim/lsp/*.lua
--- and are auto-discovered by Neovim 0.11's vim.lsp.config
+-- Individual server configurations live in ~/.config/nvim/lua/es/lsp/*.lua
+-- and are loaded by this file.
 local servers = {
   "cssls",
   "docker_compose_language_service",
@@ -9,7 +9,6 @@ local servers = {
   "html",
   "jsonls",
   "lua_ls",
-  "markdown_oxide",
   "oxlint",
   "pyright",
   "ruff",
@@ -62,10 +61,31 @@ return {
         float = { border = "rounded" },
       })
 
+      -- Setup keymaps on LspAttach
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("es_lsp_attach", { clear = true }),
+        callback = function(args)
+          require("es.keymaps").setup_lsp_keymaps(args.buf)
+        end,
+      })
+
       -- Enable LSP servers with completion capabilities
-      -- Server-specific config is auto-discovered from lsp/*.lua files
+      -- Server-specific config is loaded from lua/es/lsp/*.lua files
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
       for _, server in ipairs(servers) do
+        local opts = {
+          capabilities = capabilities,
+        }
+
+        -- Try to load server-specific config
+        local ok, settings = pcall(require, "es.lsp." .. server)
+        if ok and type(settings) == "table" then
+          opts = vim.tbl_deep_extend("force", opts, settings)
+        end
+
+        -- Modern 0.11+ configuration
+        vim.lsp.config[server] = opts
         vim.lsp.enable(server)
       end
     end,

@@ -18,6 +18,19 @@ return {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
+      actions = {
+        open_file = {
+          quit_on_open = true,
+          window_picker = { enable = false },
+        },
+      },
+      sync_root_with_cwd = true,
+      update_focused_file = {
+        enable = true,
+        update_root = {
+          enable = true,
+        },
+      },
       view = {
         float = {
           enable = true,

@@ -12,5 +12,9 @@ return {
   },
   { "terrastruct/d2-vim" },
   { "nordtheme/vim" },
-  { "dracula/vim", name = "dracula" },
+  { "dracula/vim",       name = "dracula" },
+  {
+    "github/copilot.vim",
+    cmd = { "Copilot" }
+  }
 }

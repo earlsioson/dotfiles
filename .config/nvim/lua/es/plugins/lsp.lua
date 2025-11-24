@@ -2,6 +2,7 @@
 -- Individual server configurations live in ~/.config/nvim/lua/es/lsp/*.lua
 -- and are loaded by this file.
 local servers = {
+  "biome",
   "cssls",
   "docker_compose_language_service",
   "dockerls",
@@ -9,7 +10,7 @@ local servers = {
   "html",
   "jsonls",
   "lua_ls",
-  "oxlint",
+
   "pyright",
   "ruff",
   "rust_analyzer",
@@ -23,12 +24,13 @@ local servers = {
 return {
   {
     "williamboman/mason.nvim",
-    cmd = "Mason",
     build = ":MasonUpdate",
+    cmd = "Mason",
     config = true,
   },
   {
     "williamboman/mason-lspconfig.nvim",
+    event = "VeryLazy",
     dependencies = {
       "williamboman/mason.nvim",
       "neovim/nvim-lspconfig",

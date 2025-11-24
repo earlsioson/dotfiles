@@ -23,7 +23,7 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
     - [Find operations](#find-operations-leaderf)
     - [Git operations](#git-operations-leaderg)
     - [Hunk operations](#hunk-operations-leaderh-and-leadert)
-    - [NvimTree](#nvimtree-leadern)
+    - [NvimTree](#nvimtree-leadere)
     - [Flash navigation](#flash-navigation)
     - [Other mappings](#other-mappings)
     - [Shared keymaps](#shared-keymaps-vimcommonvim)
@@ -105,7 +105,7 @@ The keymap system follows a consistent namespace that mirrors the Neovim API:
 - **`<Leader>h*`** = Hunk operations (gitsigns, buffer-local in git files)
 - **`<Leader>t*`** = Toggle operations (gitsigns)
 - **`<Leader>g*`** = Git operations (Fugitive)
-- **`<Leader>n*`** = NvimTree operations (file tree navigation)
+- **`<Leader>e*`** = NvimTree operations (explorer/file tree navigation)
 
 #### Neovim 0.11 defaults (no leader)
 | Shortcut | Action |
@@ -211,15 +211,15 @@ Gitsigns operations (buffer-local, only in git files).
 | `<Leader>tw` | Toggle word diff |
 | `ih` (text object) | Hunk text object |
 
-#### NvimTree (`<Leader>n*`)
+#### NvimTree (`<Leader>e*`)
 File tree navigation.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>nt` | NvimTree toggle |
-| `<Leader>nf` | NvimTree find file |
-| `<Leader>nc` | NvimTree close |
-| `<Leader>np` | NvimTree open parent directory |
+| `<Leader>et` | NvimTree toggle |
+| `<Leader>ef` | NvimTree find file |
+| `<Leader>ec` | NvimTree close |
+| `<Leader>ep` | NvimTree open parent directory |
 
 
 #### Flash navigation

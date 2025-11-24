@@ -13,7 +13,7 @@ return {
         { "<leader>b", group = "Debug", icon = " " },
         { "<leader>d", group = "Diagnostics", icon = " " },
         { "<leader>h", group = "Git Hunks", icon = " " },
-        { "<leader>n", group = "NvimTree", icon = " " },
+        { "<leader>e", group = "Explorer", icon = " " },
         { "<leader>t", group = "Toggle", icon = " " },
         { "<leader>m", group = "Markdown", icon = " " },
 
@@ -90,10 +90,10 @@ return {
         { "<leader>tw", desc = "Toggle word diff" },
 
         -- NvimTree
-        { "<leader>nt", desc = "Toggle" },
-        { "<leader>nf", desc = "Find file" },
-        { "<leader>nc", desc = "Close" },
-        { "<leader>np", desc = "Open parent directory" },
+        { "<leader>et", desc = "Toggle" },
+        { "<leader>ef", desc = "Find file" },
+        { "<leader>ec", desc = "Close" },
+        { "<leader>ep", desc = "Open parent directory" },
 
         -- Markdown
         { "<leader>mp", desc = "Preview" },

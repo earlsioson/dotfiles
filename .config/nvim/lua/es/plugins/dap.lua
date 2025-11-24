@@ -1,15 +1,10 @@
 return {
   {
-    "jay-babu/mason-nvim-dap.nvim",
-    dependencies = { "williamboman/mason.nvim" },
-    opts = {
-      automatic_installation = true,
-      handlers = {},
-    },
-  },
-  {
     "mfussenegger/nvim-dap",
+    lazy = true,
     dependencies = {
+      "jay-babu/mason-nvim-dap.nvim",
+      "williamboman/mason.nvim",
       "rcarriga/nvim-dap-ui",
       "nvim-neotest/nvim-nio",
       "leoluz/nvim-dap-go",
@@ -23,6 +18,11 @@ return {
       local dap_go = require("dap-go")
       local dap_python = require("dap-python")
       local ext_vscode = require("dap.ext.vscode")
+
+      require("mason-nvim-dap").setup({
+        automatic_installation = true,
+        handlers = {},
+      })
 
       dap.adapters["pwa-node"] = {
         type = "server",

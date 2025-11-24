@@ -234,16 +234,16 @@ map("n", "<Leader>gg", "<Cmd>G | only<CR>", { desc = "Git status" })
 -- Flash keymaps are defined in the plugin spec for lazy loading
 
 -- ============================================================================
--- NvimTree (<Leader>n* = "nvimtree")
+-- NvimTree (<Leader>e* = "explorer")
 -- ============================================================================
 -- File tree navigation
 
-map("n", "<Leader>nt", "<Cmd>NvimTreeToggle<CR>", { desc = "NvimTree toggle" })
-map("n", "<Leader>nf", function()
+map("n", "<Leader>et", "<Cmd>NvimTreeToggle<CR>", { desc = "NvimTree toggle" })
+map("n", "<Leader>ef", function()
   require("nvim-tree.api").tree.find_file({ buf = vim.api.nvim_get_current_buf(), open = true, focus = true })
 end, { desc = "NvimTree find file" })
-map("n", "<Leader>nc", "<Cmd>NvimTreeClose<CR>", { desc = "NvimTree close" })
-map("n", "<Leader>np", function()
+map("n", "<Leader>ec", "<Cmd>NvimTreeClose<CR>", { desc = "NvimTree close" })
+map("n", "<Leader>ep", function()
   local parent_dir = vim.fn.expand("%:p:h")
   require("nvim-tree.api").tree.open({ path = parent_dir })
 end, { desc = "NvimTree open parent directory" })

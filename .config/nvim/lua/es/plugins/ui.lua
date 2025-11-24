@@ -13,10 +13,18 @@ return {
       vim.cmd.colorscheme("tokyonight-night")
     end,
   },
-  { "nvim-tree/nvim-web-devicons" },
+  {
+    "echasnovski/mini.icons",
+    version = false,
+    opts = {},
+    config = function(_, opts)
+      require("mini.icons").setup(opts)
+      require("mini.icons").mock_nvim_web_devicons()
+    end,
+  },
   {
     "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { "echasnovski/mini.icons" },
     cmd = { "NvimTreeToggle", "NvimTreeFindFile", "NvimTreeClose", "NvimTreeOpen", "NvimTreeFocus" },
     opts = {
       actions = {
@@ -64,7 +72,7 @@ return {
   },
   {
     "stevearc/oil.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { "echasnovski/mini.icons" },
     cmd = "Oil",
     opts = {
       columns = {
@@ -111,7 +119,7 @@ return {
   },
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { "echasnovski/mini.icons" },
     event = "VeryLazy",
     config = function()
       require("lualine").setup({

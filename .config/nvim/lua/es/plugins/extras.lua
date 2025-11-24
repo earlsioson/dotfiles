@@ -1,6 +1,6 @@
 return {
-  { "tpope/vim-surround" },
-  { "tpope/vim-unimpaired" },
+  { "tpope/vim-surround", event = "VeryLazy" },
+  { "tpope/vim-unimpaired", event = "VeryLazy" },
   {
     "tpope/vim-fugitive",
     cmd = { "Git", "G" },

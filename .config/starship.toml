@@ -43,6 +43,7 @@ disabled = false
 disabled = false
 
 [python]
+python_binary = ["./.venv/bin/python", "python3", "python"]
 disabled = false
 
 [rust]

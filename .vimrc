@@ -17,7 +17,6 @@ else
   Plug 'github/copilot.vim'
   Plug 'terrastruct/d2-vim'
   call plug#end()
-  colorscheme darkblue
 endif
 
 function! Tabline() abort

@@ -27,6 +27,7 @@ return {
 		opts = {
 			view = {
 				width = 50,
+				relativenumber = true,
 			},
 		},
 	},

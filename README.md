@@ -220,6 +220,7 @@ File tree navigation.
 | `<Leader>ef` | NvimTree find file |
 | `<Leader>ec` | NvimTree close |
 | `<Leader>ep` | NvimTree open parent directory |
+| `<Leader>eo` | NvimTree open Oil directory |
 
 
 #### Flash navigation

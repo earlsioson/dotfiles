@@ -255,6 +255,19 @@ end, { desc = "NvimTree open parent directory" })
 -- Oil
 map("n", "-", "<CMD>Oil<CR>", { desc = "Oil parent directory" })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "oil",
+  callback = function()
+    map("n", "<Leader>eo", function()
+      local dir = require("oil").get_current_dir(0)
+      if not dir then
+        return
+      end
+      require("nvim-tree.api").tree.open({ path = dir, focus = true })
+    end, { buffer = true, desc = "NvimTree open Oil directory" })
+  end,
+})
+
 -- Markdown preview
 map("n", "<Leader>mp", "<Cmd>Glow<CR>", { desc = "Markdown preview" })
 

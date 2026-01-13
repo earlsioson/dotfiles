@@ -11,6 +11,15 @@ return {
     config = function()
       local cmp = require("cmp")
 
+      -- Improve visibility of the completion menu
+      -- We use Pmenu for a more distinct background and a brighter border color
+      vim.api.nvim_set_hl(0, "CmpNormal", { link = "Pmenu" })
+      vim.api.nvim_set_hl(0, "CmpBorder", { fg = "#7aa2f7" }) -- TokyoNight blue
+      vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { fg = "#7e8294", bg = "NONE", strikethrough = true })
+      vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { fg = "#82aaff", bg = "NONE", bold = true })
+      vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { fg = "#82aaff", bg = "NONE", bold = true })
+      vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#c678dd", bg = "NONE", italic = true })
+
       cmp.setup({
         -- 1. Use Native Neovim Snippets (No LuaSnip required)
         snippet = {
@@ -21,8 +30,31 @@ return {
 
         -- 2. Visuals
         window = {
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered(),
+          completion = {
+            border = "rounded",
+            winhighlight = "Normal:CmpNormal,FloatBorder:CmpBorder,CursorLine:PmenuSel,Search:None",
+            side_padding = 1,
+            col_offset = -3, -- Align with the cursor better
+          },
+          documentation = {
+            border = "rounded",
+            winhighlight = "Normal:CmpNormal,FloatBorder:CmpBorder,CursorLine:PmenuSel,Search:None",
+          },
+        },
+
+        -- Formatting for a more "premium" look with icons
+        formatting = {
+          fields = { "kind", "abbr", "menu" },
+          format = function(entry, vim_item)
+            local icon, _, _ = require("mini.icons").get("lsp", vim_item.kind)
+            vim_item.kind = string.format("%s %s", icon, vim_item.kind)
+            vim_item.menu = ({
+              nvim_lsp = "[LSP]",
+              buffer = "[Buffer]",
+              path = "[Path]",
+            })[entry.source.name]
+            return vim_item
+          end,
         },
 
         -- 3. Mappings

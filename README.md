@@ -85,12 +85,12 @@ When launching Neovim you'll see the Mason installer and Tree-sitter setup run a
 | Telescope | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
 | UI | `nvim-tree/nvim-web-devicons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
 | Navigation | `folke/flash.nvim`, `ggandor/flit.nvim`, `ggandor/lightspeed.nvim` |
-| Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `wellle/targets.vim`, `kana/vim-textobj-user`, `echasnovski/mini.ai`, `LuanVSO/nvim-regexplacement`, `andymass/vim-matchup`, `Augment.vim` |
+| Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `wellle/targets.vim`, `kana/vim-textobj-user`, `echasnovski/mini.ai`, `LuanVSO/nvim-regexplacement`, `andymass/vim-matchup` |
 | Language Extras | `nordtheme/vim`, `dracula/vim`, `fatih/vim-go`, `terrastruct/d2-vim` |
 
 
->
-> Plugins auto-load from `.config/nvim/lua/es/plugins/*.lua` via lazy.nvim. Tree-sitter uses `prefer_git = true` to download pre-built parsers. Mason auto-installs DAP adapters (`debugpy`, `delve`, `codelldb`, `js-debug-adapter`) on first launch.
+> Both Vim and Neovim use `github/copilot.vim`. In Neovim, it is lazy-loaded and can be manually triggered via `:Copilot` if needed.
+ Plugins auto-load from `.config/nvim/lua/es/plugins/*.lua` via lazy.nvim. Tree-sitter uses `prefer_git = true` to download pre-built parsers. Mason auto-installs DAP adapters (`debugpy`, `delve`, `codelldb`, `js-debug-adapter`) on first launch.
 >
 > The configuration follows modern Neovim 0.11+ idioms with proper lazy loading, uses `vim.uv` for async operations, and centralizes settings for maintainability.
 
@@ -239,7 +239,6 @@ Quick jump navigation (preserves vim defaults for `s`/`S`).
 | --- | --- |
 | `-` | Oil parent directory |
 | `<Leader>mp` | Markdown preview |
-| `<Leader>ct` | Copilot toggle |
 
 #### Shared keymaps (`.vim/common.vim`)
 These work in both Vim and Neovim.
@@ -260,6 +259,5 @@ These work in both Vim and Neovim.
 #### nvim-cmp completion
 | Shortcut | Action |
 | --- | --- |
-| `<Tab>` | Accepts the Augment (Gray Text) suggestion. |
 | `<CR>` | Accepts the LSP (Popup Menu) selection. |
 | `<C-n>` / `<C-p>` | Navigates up and down the LSP menu. |

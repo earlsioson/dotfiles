@@ -70,9 +70,6 @@ return {
           -- Accept with Enter.
           -- 'select = true' means if you hit Enter without selecting, it picks the first one.
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
-
-          -- NOTICE: We removed <Tab>.
-          -- This allows Augment to use <Tab> for AI completion.
         }),
 
         -- 4. Sources (Cleaned up)

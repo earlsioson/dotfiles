@@ -8,7 +8,8 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
   - [Base editor prerequisites](#base-editor-prerequisites)
   - [Tree-sitter + Node.js toolchain](#tree-sitter--nodejs-toolchain)
   - [Python support for Neovim/DAP](#python-support-for-neovimdap)
-  - [Plugin bootstrap (lazy.nvim)](#plugin-bootstrap-lazynvim)
+  - [Plugin bootstrap (vimpack)](#plugin-bootstrap-vimpack)
+  - [Reset and reinstall](#reset-and-reinstall)
   - [Optional tooling](#optional-tooling)
 - [tmux Configuration](#tmux-configuration)
   - [Setup](#setup)
@@ -34,7 +35,13 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 ### Base editor prerequisites
 1. Install current releases of Vim and Neovim.
 2. Install a Nerd Font (I usually grab one from [nerdfonts.com](https://www.nerdfonts.com/font-downloads)).
-3. Copy `.vim/` into `$HOME/.vim`, `.config/nvim/` into `$HOME/.config/nvim`, and `.vimrc` into `$HOME/.vimrc`.
+3. Sync the tracked runtime files from this repo into `$HOME`, including:
+   - `.vim/` -> `~/.vim`
+   - `.vimrc` -> `~/.vimrc`
+   - `.config/nvim/` -> `~/.config/nvim`
+   - `.tmux.conf` -> `~/.tmux.conf`
+   - `.cargo/config` -> `~/.cargo/config`
+   - `.config/starship.toml` -> `~/.config/starship.toml`
 
 ### Tree-sitter + Node.js toolchain
 - Install Node.js so LSP servers and formatters can run under `node`.
@@ -48,8 +55,62 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 Use your preferred python package manager to create a virtualenv and install debugpy and pynvim.
 Update the Python path in `.config/nvim/lua/es/globals.lua` (`vim.g.python_host_path`) to point at your virtualenv's Python interpreter. This path is automatically used by `init.lua` and DAP, keeping the Python host and debugger in sync.
 
-### Plugin bootstrap (lazy.nvim)
-When launching Neovim you'll see the Mason installer and Tree-sitter setup run automatically.
+### Plugin bootstrap (vim.pack)
+Neovim 0.12 manages plugins with the native `vim.pack` package manager from `.config/nvim/lua/es/pack.lua`.
+On first launch, `vim.pack` installs plugins into Neovim's managed package directory and creates `~/.config/nvim/nvim-pack-lock.json`.
+Useful commands after startup:
+
+```vim
+:PackStatus
+:PackUpdate
+:Mason
+:TSUpdate
+```
+
+### Reset and reinstall
+If you want to wipe the tracked editor/shell config plus local Neovim state under `$HOME` and reinstall from this repo:
+
+1. Back up or remove the current config and runtime data.
+
+```bash
+mkdir -p ~/dotfiles-backup
+mv ~/.vim ~/.vimrc ~/.config/nvim ~/.tmux.conf ~/.cargo/config ~/.config/starship.toml \
+  ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim ~/dotfiles-backup/ 2>/dev/null
+```
+
+2. If you prefer deletion instead of backup for Neovim runtime state, this is also a valid clean reset:
+
+```bash
+rm -rf ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim
+```
+
+3. Reinstall the tracked config from this repo.
+
+```bash
+REPO_DIR=~/src/dotfiles
+mkdir -p ~/.config ~/.cargo
+cp -R "$REPO_DIR/.vim" ~/.vim
+cp "$REPO_DIR/.vimrc" ~/.vimrc
+cp -R "$REPO_DIR/.config/nvim" ~/.config/nvim
+cp "$REPO_DIR/.tmux.conf" ~/.tmux.conf
+cp "$REPO_DIR/.cargo/config" ~/.cargo/config
+cp "$REPO_DIR/.config/starship.toml" ~/.config/starship.toml
+```
+
+If you sync with `rsync --delete`, exclude Neovim's native package lockfile so the runtime package state is not reset on every sync:
+
+```bash
+rsync -av --delete \
+  --exclude plugin/packer_compiled.lua \
+  --exclude nvim-pack-lock.json \
+  "$REPO_DIR/.config/nvim/" ~/.config/nvim/
+```
+
+4. Start Neovim once so `vim.pack` can install plugins.
+
+```bash
+nvim
+```
 
 ### Optional tooling
 - Telescope pickers expect [`ripgrep`](https://github.com/BurntSushi/ripgrep) and [`fd`](https://github.com/sharkdp/fd) on `$PATH`.
@@ -80,19 +141,19 @@ When launching Neovim you'll see the Mason installer and Tree-sitter setup run a
 | Formatting | `stevearc/conform.nvim` |
 | LSP | `neovim/nvim-lspconfig`, `williamboman/mason.nvim`, `williamboman/mason-lspconfig.nvim`, `jay-babu/mason-nvim-dap.nvim` |
 | Treesitter | `nvim-treesitter/nvim-treesitter`, `nvim-treesitter/nvim-treesitter-context` |
-| Completion | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lua`, `hrsh7th/cmp-nvim-lsp`, `hrsh7th/cmp-nvim-lsp-signature-help` |
+| Completion | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lsp` |
 | Debugging | `mfussenegger/nvim-dap`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |
 | Telescope | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
-| UI | `nvim-tree/nvim-web-devicons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
-| Navigation | `folke/flash.nvim`, `ggandor/flit.nvim`, `ggandor/lightspeed.nvim` |
-| Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `wellle/targets.vim`, `kana/vim-textobj-user`, `echasnovski/mini.ai`, `LuanVSO/nvim-regexplacement`, `andymass/vim-matchup` |
+| UI | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
+| Navigation | `folke/flash.nvim` |
+| Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `github/copilot.vim` |
 | Language Extras | `nordtheme/vim`, `dracula/vim`, `fatih/vim-go`, `terrastruct/d2-vim` |
 
 
-> Both Vim and Neovim use `github/copilot.vim`. In Neovim, it is lazy-loaded and can be manually triggered via `:Copilot` if needed.
- Plugins auto-load from `.config/nvim/lua/es/plugins/*.lua` via lazy.nvim. Tree-sitter uses `prefer_git = true` to download pre-built parsers. Mason auto-installs DAP adapters (`debugpy`, `delve`, `codelldb`, `js-debug-adapter`) on first launch.
+> Both Vim and Neovim use `github/copilot.vim`.
+> Neovim plugins are registered explicitly in `.config/nvim/lua/es/pack.lua` via `vim.pack.add()` and configured from `.config/nvim/lua/es/plugins/*.lua`. Tree-sitter uses `prefer_git = true`, and `PackChanged` hooks run post-install steps like `:TSUpdate`, `:MasonUpdate`, `:GoUpdateBinaries`, and `make` for `telescope-fzf-native.nvim` when applicable.
 >
-> The configuration follows modern Neovim 0.11+ idioms with proper lazy loading, uses `vim.uv` for async operations, and centralizes settings for maintainability.
+> The configuration follows modern Neovim 0.12 idioms with the native package manager and centralized Lua setup modules.
 
 ### Keymaps
 Most Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Buffer-local keymaps (like gitsigns) are defined in keymaps.lua as exported functions and called from plugin on_attach callbacks. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.

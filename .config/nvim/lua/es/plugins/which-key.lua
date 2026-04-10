@@ -1,11 +1,10 @@
-return {
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    opts = {
-      preset = "modern",
-      delay = 300,
-      spec = {
+local M = {}
+
+function M.setup()
+  require("which-key").setup({
+    preset = "modern",
+    delay = 300,
+    spec = {
         -- Main leader groups
         { "<leader>l", group = "LSP", icon = " " },
         { "<leader>f", group = "Find", icon = "🔍" },
@@ -115,10 +114,7 @@ return {
         { "<leader><leader>t", desc = "Small terminal" },
         { "<leader><leader>x", desc = "Execute current file" },
       },
-    },
-    config = function(_, opts)
-      local wk = require("which-key")
-      wk.setup(opts)
-    end,
-  },
-}
+  })
+end
+
+return M

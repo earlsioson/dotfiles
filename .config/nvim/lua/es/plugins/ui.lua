@@ -102,6 +102,10 @@ return {
 		cmd = "Glow",
 		opts = {
 			border = "rounded",
+			width = 9999,
+			height = 9999,
+			width_ratio = 0.95,
+			height_ratio = 0.9,
 		},
 		-- Glow keymaps are centralized in es.keymaps
 	},

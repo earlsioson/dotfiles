@@ -101,7 +101,6 @@ If you sync with `rsync --delete`, exclude Neovim's native package lockfile so t
 
 ```bash
 rsync -av --delete \
-  --exclude plugin/packer_compiled.lua \
   --exclude nvim-pack-lock.json \
   "$REPO_DIR/.config/nvim/" ~/.config/nvim/
 ```
@@ -151,7 +150,7 @@ nvim
 
 
 > Both Vim and Neovim use `github/copilot.vim`.
-> Neovim plugins are registered explicitly in `.config/nvim/lua/es/pack.lua` via `vim.pack.add()` and configured from `.config/nvim/lua/es/plugins/*.lua`. Tree-sitter uses `prefer_git = true`, and `PackChanged` hooks run post-install steps like `:TSUpdate`, `:MasonUpdate`, `:GoUpdateBinaries`, and `make` for `telescope-fzf-native.nvim` when applicable.
+> Neovim plugins are registered explicitly in `.config/nvim/lua/es/pack.lua` via `vim.pack.add()` and configured from `.config/nvim/lua/es/plugins/*.lua`. Feature loading is split between startup modules and autocommand-triggered modules in `pack.lua`, and `PackChanged` hooks run post-install steps like `:TSUpdate`, `:MasonUpdate`, `:GoUpdateBinaries`, and `make` for `telescope-fzf-native.nvim` when applicable.
 >
 > The configuration follows modern Neovim 0.12 idioms with the native package manager and centralized Lua setup modules.
 

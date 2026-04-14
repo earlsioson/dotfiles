@@ -67,6 +67,7 @@ local feature_defs = {
       "dashboard-nvim",
       "which-key.nvim",
       "flash.nvim",
+      "mason.nvim",
       "nvim-treesitter",
       "nvim-treesitter-context",
       "vim-surround",
@@ -78,6 +79,7 @@ local feature_defs = {
       require("es.plugins.ui").setup()
       require("es.plugins.which-key").setup()
       require("es.plugins.flash").setup()
+      require("es.plugins.mason").setup()
       require("es.plugins.treesitter").setup()
     end,
   },
@@ -261,7 +263,6 @@ M.load("startup")
 vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
   once = true,
   callback = function()
-    M.load("lsp")
     M.load("gitsigns")
   end,
 })

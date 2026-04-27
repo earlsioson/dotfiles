@@ -64,8 +64,11 @@ Useful commands after startup:
 :PackStatus
 :PackUpdate
 :Mason
+:LspBootstrap
 :TSUpdate
 ```
+
+Run `:LspBootstrap` on a fresh machine to load the lazy LSP feature and install the configured Mason LSP dependencies. Normal editing loads LSP automatically when a file is opened or created.
 
 ### Reset and reinstall
 If you want to wipe the tracked editor/shell config plus local Neovim state under `$HOME` and reinstall from this repo:
@@ -110,6 +113,8 @@ rsync -av --delete \
 ```bash
 nvim
 ```
+
+Then run `:LspBootstrap` from Neovim to install the configured Mason LSP dependencies. Restart Neovim afterward if the first launch installed missing plugins.
 
 ### Optional tooling
 - Telescope pickers expect [`ripgrep`](https://github.com/BurntSushi/ripgrep) and [`fd`](https://github.com/sharkdp/fd) on `$PATH`.

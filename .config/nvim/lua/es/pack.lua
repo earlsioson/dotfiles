@@ -263,6 +263,7 @@ M.load("startup")
 vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
   once = true,
   callback = function()
+    M.load("lsp")
     M.load("gitsigns")
   end,
 })
@@ -299,6 +300,10 @@ vim.api.nvim_create_user_command("PackStatus", function()
   register_all_for_update()
   vim.pack.update(nil, { offline = true })
 end, { desc = "Inspect vim.pack-managed plugins" })
+
+vim.api.nvim_create_user_command("LspBootstrap", function()
+  M.load("lsp")
+end, { desc = "Install and enable configured LSP dependencies" })
 
 if needs_restart then
   vim.schedule(function()

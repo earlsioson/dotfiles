@@ -53,6 +53,7 @@ local specs = {
   { name = "nordtheme", src = gh("nordtheme/vim") },
   { name = "dracula", src = gh("dracula/vim") },
   { name = "copilot.vim", src = gh("github/copilot.vim") },
+  { name = "sidekick.nvim", src = gh("folke/sidekick.nvim") },
 }
 
 local feature_defs = {
@@ -112,6 +113,12 @@ local feature_defs = {
     setup = function()
       require("es.plugins.formatting").setup()
       require("es.plugins.lsp").setup()
+    end,
+  },
+  ai = {
+    plugins = { "sidekick.nvim" },
+    setup = function()
+      require("es.plugins.sidekick").setup()
     end,
   },
   cmp = {

@@ -15,6 +15,7 @@ function M.setup()
         { "<leader>e", group = "Explorer", icon = " " },
         { "<leader>t", group = "Toggle", icon = " " },
         { "<leader>m", group = "Markdown", icon = " " },
+        { "<leader>A", group = "AI", icon = " " },
 
         -- LSP operations
         { "<leader>la", desc = "Code action" },
@@ -83,6 +84,16 @@ function M.setup()
         { "<leader>df", desc = "Float" },
         { "<leader>dl", desc = "Location list" },
         { "<leader>dq", desc = "Quickfix" },
+
+        -- AI operations
+        { "<leader>Aa", desc = "Toggle CLI" },
+        { "<leader>Ad", desc = "Detach CLI" },
+        { "<leader>Af", desc = "Focus" },
+        { "<leader>AF", desc = "Send file" },
+        { "<leader>Ap", desc = "Prompt" },
+        { "<leader>As", desc = "Select CLI" },
+        { "<leader>At", desc = "Send this" },
+        { "<leader>Av", desc = "Send selection" },
 
         -- Toggle operations
         { "<leader>tb", desc = "Toggle current line blame" },

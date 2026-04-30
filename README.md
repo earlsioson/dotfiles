@@ -20,6 +20,7 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
     - [Neovim defaults](#neovim-011-defaults-no-leader)
     - [LSP operations](#lsp-operations-leaderl)
     - [Diagnostic operations](#diagnostic-operations-leaderd)
+    - [AI operations](#ai-operations-leadera)
     - [Debug operations](#debug-operations-leaderb)
     - [Find operations](#find-operations-leaderf)
     - [Git operations](#git-operations-leaderg)
@@ -118,6 +119,8 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 
 ### Optional tooling
 - Telescope pickers expect [`ripgrep`](https://github.com/BurntSushi/ripgrep) and [`fd`](https://github.com/sharkdp/fd) on `$PATH`.
+- Sidekick can attach to installed local AI CLIs. Install the CLIs you want to use separately, then pick one from Neovim with `<Leader>As`.
+- Sidekick CLI sessions use tmux persistence when Neovim is running inside tmux.
 - Language-specific runtimes (Go, Python, etc.) should be installed before launching Mason or DAP adapters.
 - Git, tmux, and a POSIX shell are assumed.
 
@@ -150,11 +153,12 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 | Telescope | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
 | UI | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
 | Navigation | `folke/flash.nvim` |
-| Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `github/copilot.vim` |
+| Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `github/copilot.vim`, `folke/sidekick.nvim` |
 | Language Extras | `nordtheme/vim`, `dracula/vim`, `fatih/vim-go`, `terrastruct/d2-vim` |
 
 
 > Both Vim and Neovim use `github/copilot.vim`.
+> Sidekick is configured for local/terminal AI CLI workflows only. Copilot NES and the Copilot language server integration are disabled, and there is no `<Tab>` mapping for next-edit suggestions.
 > Neovim plugins are registered explicitly in `.config/nvim/lua/es/pack.lua` via `vim.pack.add()` and configured from `.config/nvim/lua/es/plugins/*.lua`. Feature loading is split between startup modules and autocommand-triggered modules in `pack.lua`, and `PackChanged` hooks run post-install steps like `:TSUpdate`, `:MasonUpdate`, `:GoUpdateBinaries`, and `make` for `telescope-fzf-native.nvim` when applicable.
 >
 > The configuration follows modern Neovim 0.12 idioms with the native package manager and centralized Lua setup modules.
@@ -166,6 +170,7 @@ The keymap system follows a consistent namespace that mirrors the Neovim API:
 - **`<Leader>l*`** = LSP operations (mirrors `vim.lsp.buf.*` API)
 - **`<Leader>d*`** = Diagnostic operations (mirrors `vim.diagnostic.*` API, navigation uses `]d`/`[d` defaults)
 - **`<Leader>b*`** = Debug/breakpoint operations (DAP)
+- **`<Leader>A*`** = AI CLI operations (Sidekick)
 - **`<Leader>f*`** = Find operations (Telescope with ripgrep/fd)
 - **`<Leader>h*`** = Hunk operations (gitsigns, buffer-local in git files)
 - **`<Leader>t*`** = Toggle operations (gitsigns)
@@ -206,6 +211,26 @@ Keymaps mirror `vim.diagnostic.*` API methods. Navigation uses `]d`/`[d` default
 | `<Leader>df` | Diagnostic float |
 | `<Leader>dl` | Diagnostic loclist |
 | `<Leader>dq` | Diagnostic quickfix |
+
+#### AI operations (`<Leader>A*`)
+Sidekick manages terminal sessions for installed AI CLIs. This config intentionally disables Copilot NES and does not enable Sidekick's Copilot language-server features.
+
+Typical flow:
+1. Use `<Leader>As` to choose an installed CLI.
+2. Use `<Leader>Aa` to open or hide the Sidekick terminal.
+3. Send context with `<Leader>At`, `<Leader>AF`, or visual `<Leader>Av`.
+4. Use `<Leader>Ap` when you want to type a one-off prompt with the current context.
+
+| Shortcut | Action |
+| --- | --- |
+| `<Leader>Aa` | Toggle Sidekick CLI |
+| `<Leader>Af` | Focus Sidekick CLI |
+| `<Leader>As` | Select an installed CLI |
+| `<Leader>Ad` | Detach/close Sidekick CLI |
+| `<Leader>At` | Send current context (`{this}`) |
+| `<Leader>AF` | Send current file (`{file}`) |
+| `<Leader>Av` | Send visual selection (`{selection}`) |
+| `<Leader>Ap` | Prompt Sidekick |
 
 #### Debug operations (`<Leader>b*`)
 DAP debugger controls and inspection.

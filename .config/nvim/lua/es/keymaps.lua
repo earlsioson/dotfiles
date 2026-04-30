@@ -105,6 +105,41 @@ map("n", "<Leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostic loclist" 
 map("n", "<Leader>dq", vim.diagnostic.setqflist, { desc = "Diagnostic quickfix" })
 
 -- ============================================================================
+-- AI Operations (<Leader>A* = "ai")
+-- ============================================================================
+-- Sidekick terminal sessions for local AI CLIs.
+
+local function sidekick_cli()
+  load_feature("ai")
+  return require("sidekick.cli")
+end
+
+map({ "n", "t", "i", "x" }, "<Leader>Af", function()
+  sidekick_cli().focus()
+end, { desc = "Sidekick focus" })
+map("n", "<Leader>Aa", function()
+  sidekick_cli().toggle()
+end, { desc = "Sidekick toggle CLI" })
+map("n", "<Leader>As", function()
+  sidekick_cli().select({ filter = { installed = true } })
+end, { desc = "Sidekick select CLI" })
+map("n", "<Leader>Ad", function()
+  sidekick_cli().close()
+end, { desc = "Sidekick detach CLI" })
+map({ "n", "x" }, "<Leader>At", function()
+  sidekick_cli().send({ msg = "{this}" })
+end, { desc = "Sidekick send this" })
+map("n", "<Leader>AF", function()
+  sidekick_cli().send({ msg = "{file}" })
+end, { desc = "Sidekick send file" })
+map("x", "<Leader>Av", function()
+  sidekick_cli().send({ msg = "{selection}" })
+end, { desc = "Sidekick send selection" })
+map({ "n", "x" }, "<Leader>Ap", function()
+  sidekick_cli().prompt()
+end, { desc = "Sidekick prompt" })
+
+-- ============================================================================
 -- Debug Operations (<Leader>b* = "debug/break")
 -- ============================================================================
 -- DAP debugger controls

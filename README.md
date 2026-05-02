@@ -16,6 +16,7 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
   - [tmux Keymaps](#tmux-keymaps)
 - [Neovim Configuration](#neovim-configuration)
   - [Plugin stack](#plugin-stack)
+  - [Sidekick NES](#sidekick-nes)
   - [Keymaps](#keymaps)
     - [Neovim defaults](#neovim-011-defaults-no-leader)
     - [LSP operations](#lsp-operations-leaderl)
@@ -66,6 +67,7 @@ Useful commands after startup:
 :PackUpdate
 :Mason
 :LspBootstrap
+:LspInfo
 :TSUpdate
 ```
 
@@ -121,6 +123,7 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 - Telescope pickers expect [`ripgrep`](https://github.com/BurntSushi/ripgrep) and [`fd`](https://github.com/sharkdp/fd) on `$PATH`.
 - Sidekick can attach to installed local AI CLIs. Install the CLIs you want to use separately, then pick one from Neovim with `<Leader>As`.
 - Sidekick CLI sessions use tmux persistence when Neovim is running inside tmux.
+- Sidekick NES requires a GitHub Copilot subscription or Copilot Free access.
 - Language-specific runtimes (Go, Python, etc.) should be installed before launching Mason or DAP adapters.
 - Git, tmux, and a POSIX shell are assumed.
 
@@ -153,15 +156,36 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 | Telescope | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
 | UI | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
 | Navigation | `folke/flash.nvim` |
-| Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `github/copilot.vim`, `folke/sidekick.nvim` |
+| Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `folke/sidekick.nvim` |
 | Language Extras | `nordtheme/vim`, `dracula/vim`, `fatih/vim-go`, `terrastruct/d2-vim` |
 
 
-> Both Vim and Neovim use `github/copilot.vim`.
-> Sidekick is configured for local/terminal AI CLI workflows only. Copilot NES and the Copilot language server integration are disabled, and there is no `<Tab>` mapping for next-edit suggestions.
 > Neovim plugins are registered explicitly in `.config/nvim/lua/es/pack.lua` via `vim.pack.add()` and configured from `.config/nvim/lua/es/plugins/*.lua`. Feature loading is split between startup modules and autocommand-triggered modules in `pack.lua`, and `PackChanged` hooks run post-install steps like `:TSUpdate`, `:MasonUpdate`, `:GoUpdateBinaries`, and `make` for `telescope-fzf-native.nvim` when applicable.
 >
-> The configuration follows modern Neovim 0.12 idioms with the native package manager and centralized Lua setup modules.
+> The configuration follows modern Neovim 0.12 idioms with the native package manager, built-in LSP client, and centralized Lua setup modules.
+
+### Sidekick NES
+Sidekick's Next Edit Suggestions use the Copilot language server for larger edit suggestions after you pause, leave insert mode, or modify text in normal mode. Vim still uses `github/copilot.vim` from `.vimrc`; Neovim uses Sidekick with the native `copilot` LSP config so only one Copilot LSP client runs.
+
+After deploying the Neovim config:
+1. Start Neovim and run `:LspBootstrap` so Mason installs the configured LSP servers.
+2. Restart Neovim if this was the first plugin/LSP bootstrap.
+3. Open a file inside a git-backed project and run `:checkhealth sidekick`.
+4. If prompted, run `:LspCopilotSignIn` and complete the GitHub device flow.
+
+The normal install path is `:LspBootstrap`. The LSP config name is `copilot`, but Mason's package name is `copilot-language-server`; search for the package name in `:Mason`.
+
+If bootstrap did not install it, run the Mason package install directly:
+
+```vim
+:MasonInstall copilot-language-server
+```
+
+Usage:
+- Type normally, pause, or leave insert mode to let NES request suggestions.
+- Press `<Tab>` to jump to the suggested edit or apply it. If no NES action is available, `<Tab>` falls back to native inline completion and then to a normal tab.
+- Run `:Sidekick nes update` to request a suggestion manually.
+- Run `:Sidekick nes toggle` if you want to temporarily disable or re-enable NES.
 
 ### Keymaps
 Most Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Buffer-local keymaps (like gitsigns) are defined in keymaps.lua as exported functions and called from plugin on_attach callbacks. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.
@@ -213,7 +237,7 @@ Keymaps mirror `vim.diagnostic.*` API methods. Navigation uses `]d`/`[d` default
 | `<Leader>dq` | Diagnostic quickfix |
 
 #### AI operations (`<Leader>A*`)
-Sidekick manages terminal sessions for installed AI CLIs. This config intentionally disables Copilot NES and does not enable Sidekick's Copilot language-server features.
+Sidekick manages terminal sessions for installed AI CLIs. NES setup and usage are covered in the Sidekick NES section above.
 
 Typical flow:
 1. Use `<Leader>As` to choose an installed CLI.

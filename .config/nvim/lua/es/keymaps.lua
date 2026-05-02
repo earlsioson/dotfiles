@@ -114,6 +114,20 @@ local function sidekick_cli()
   return require("sidekick.cli")
 end
 
+map({ "i", "n" }, "<Tab>", function()
+  load_feature("ai")
+
+  if require("sidekick").nes_jump_or_apply() then
+    return
+  end
+
+  if vim.lsp.inline_completion and vim.lsp.inline_completion.get() then
+    return
+  end
+
+  return "<Tab>"
+end, { expr = true, desc = "Goto/apply next edit suggestion" })
+
 map({ "n", "t", "i", "x" }, "<Leader>Af", function()
   sidekick_cli().focus()
 end, { desc = "Sidekick focus" })

@@ -3,6 +3,7 @@
 -- and are loaded by this file.
 local servers = {
   "biome",
+  "copilot",
   "cssls",
   "docker_compose_language_service",
   "dockerls",
@@ -45,6 +46,12 @@ function M.setup()
     group = vim.api.nvim_create_augroup("es_lsp_attach", { clear = true }),
     callback = function(args)
       require("es.keymaps").setup_lsp_keymaps(args.buf)
+
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      local inline_method = vim.lsp.protocol.Methods.textDocument_inlineCompletion
+      if client and vim.lsp.inline_completion and inline_method and client:supports_method(inline_method, args.buf) then
+        vim.lsp.inline_completion.enable(true, { bufnr = args.buf })
+      end
     end,
   })
 

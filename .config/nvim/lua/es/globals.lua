@@ -1,6 +1,8 @@
 -- Python host path - centralized for reuse across config
 vim.g.python_host_path = vim.fn.expand("~/dev/repos/dotfiles/.venv/bin/python")
 
+vim.g.copilot_no_tab_map = true
+
 -- Lua compatibility: ensure unpack is available globally across all Lua versions
 -- Lua 5.1/LuaJIT: unpack is global
 -- Lua 5.2+: moved to table.unpack

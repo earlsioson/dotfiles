@@ -74,7 +74,6 @@ local feature_defs = {
       "vim-surround",
       "vim-unimpaired",
       "vim-fugitive",
-      "copilot.vim",
     },
     setup = function()
       require("es.plugins.ui").setup()
@@ -271,6 +270,7 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
   once = true,
   callback = function()
     M.load("lsp")
+    M.load("ai")
     M.load("gitsigns")
   end,
 })
@@ -311,6 +311,11 @@ end, { desc = "Inspect vim.pack-managed plugins" })
 vim.api.nvim_create_user_command("LspBootstrap", function()
   M.load("lsp")
 end, { desc = "Install and enable configured LSP dependencies" })
+
+vim.api.nvim_create_user_command("LspInfo", function()
+  M.load("lsp")
+  vim.cmd("checkhealth vim.lsp")
+end, { desc = "Inspect active LSP clients and configured servers" })
 
 if needs_restart then
   vim.schedule(function()

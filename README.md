@@ -14,6 +14,7 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 - [tmux Configuration](#tmux-configuration)
   - [Setup](#setup)
   - [tmux Keymaps](#tmux-keymaps)
+- [Vim Configuration](#vim-configuration)
 - [Neovim Configuration](#neovim-configuration)
   - [Plugin stack](#plugin-stack)
   - [Sidekick NES](#sidekick-nes)
@@ -143,6 +144,21 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 | `S-Left` / `S-Right` | Resize pane 10 cells horizontally. |
 | `S-Up` / `S-Down` | Resize pane 10 cells vertically. |
 
+## Vim Configuration
+
+Vim uses `.vimrc` plus the shared settings and mappings in `.vim/common.vim`. Plugins are managed by vim-plug from `.vimrc`, separate from Neovim's native `vim.pack` setup.
+
+The Vim plugin set is intentionally smaller:
+- `tpope/vim-surround`
+- `tpope/vim-unimpaired`
+- `tpope/vim-fugitive`
+- `airblade/vim-gitgutter`
+- `fatih/vim-go`
+- `github/copilot.vim`
+- `terrastruct/d2-vim`
+
+Vim keeps using `github/copilot.vim` for Copilot. Neovim does not load `github/copilot.vim`; it uses Sidekick with the native `copilot` LSP config instead. Shared mappings live in `.vim/common.vim`, while Neovim-only mappings live in `.config/nvim/lua/es/keymaps.lua`.
+
 ## Neovim Configuration
 
 ### Plugin stack
@@ -154,10 +170,10 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 | Completion | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lsp` |
 | Debugging | `mfussenegger/nvim-dap`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |
 | Telescope | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
-| UI | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `stevearc/dressing.nvim`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
+| UI | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
 | Navigation | `folke/flash.nvim` |
 | Productivity | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `folke/sidekick.nvim` |
-| Language Extras | `nordtheme/vim`, `dracula/vim`, `fatih/vim-go`, `terrastruct/d2-vim` |
+| Language Extras | `fatih/vim-go`, `terrastruct/d2-vim` |
 
 
 > Neovim plugins are registered explicitly in `.config/nvim/lua/es/pack.lua` via `vim.pack.add()` and configured from `.config/nvim/lua/es/plugins/*.lua`. Feature loading is split between startup modules and autocommand-triggered modules in `pack.lua`, and `PackChanged` hooks run post-install steps like `:TSUpdate`, `:MasonUpdate`, `:GoUpdateBinaries`, and `make` for `telescope-fzf-native.nvim` when applicable.

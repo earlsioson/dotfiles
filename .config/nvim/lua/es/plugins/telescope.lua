@@ -18,16 +18,7 @@ function M.setup()
 
   telescope.setup({
     defaults = {
-      prompt_prefix = "🔍 ",
       file_ignore_patterns = { "node_modules" },
-      layout_config = {
-        width = 0.99,
-      },
-      preview = {
-        treesitter = {
-          disable = { "javascript" },
-        },
-      },
       vimgrep_arguments = {
         "rg",
         "--no-heading",

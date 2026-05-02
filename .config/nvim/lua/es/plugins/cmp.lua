@@ -3,30 +3,11 @@ local M = {}
 function M.setup()
   local cmp = require("cmp")
 
-  vim.api.nvim_set_hl(0, "CmpNormal", { link = "Pmenu" })
-  vim.api.nvim_set_hl(0, "CmpBorder", { fg = "#7aa2f7" })
-  vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { fg = "#7e8294", bg = "NONE", strikethrough = true })
-  vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { fg = "#82aaff", bg = "NONE", bold = true })
-  vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { fg = "#82aaff", bg = "NONE", bold = true })
-  vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#c678dd", bg = "NONE", italic = true })
-
   cmp.setup({
     snippet = {
       expand = function(args)
         vim.snippet.expand(args.body)
       end,
-    },
-    window = {
-      completion = {
-        border = "rounded",
-        winhighlight = "Normal:CmpNormal,FloatBorder:CmpBorder,CursorLine:PmenuSel,Search:None",
-        side_padding = 1,
-        col_offset = -3,
-      },
-      documentation = {
-        border = "rounded",
-        winhighlight = "Normal:CmpNormal,FloatBorder:CmpBorder,CursorLine:PmenuSel,Search:None",
-      },
     },
     formatting = {
       fields = { "kind", "abbr", "menu" },

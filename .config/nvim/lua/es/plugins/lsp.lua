@@ -1,6 +1,5 @@
 -- LSP servers managed by Mason
--- Individual server configurations live in ~/.config/nvim/lua/es/lsp/*.lua
--- and are loaded by this file.
+-- Optional server-specific overrides live in ~/.config/nvim/lua/es/lsp/*.lua.
 local servers = {
   "biome",
   "copilot",

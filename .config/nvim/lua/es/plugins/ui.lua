@@ -9,26 +9,6 @@ function M.setup()
   require("mini.icons").setup({})
   require("mini.icons").mock_nvim_web_devicons()
 
-  require("dressing").setup({
-    input = {
-      relative = "editor",
-      min_width = 0.9,
-      win_options = {
-        winblend = 0,
-      },
-    },
-    select = {
-      backend = { "builtin" },
-      builtin = {
-        relative = "editor",
-        min_width = 0.99,
-        win_options = {
-          winblend = 0,
-        },
-      },
-    },
-  })
-
   require("nvim-autopairs").setup({})
 
   require("lualine").setup({

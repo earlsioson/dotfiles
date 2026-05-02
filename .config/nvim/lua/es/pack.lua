@@ -12,7 +12,6 @@ local specs_by_name = {}
 local specs = {
   { name = "tokyonight.nvim", src = gh("folke/tokyonight.nvim") },
   { name = "mini.icons", src = gh("echasnovski/mini.icons") },
-  { name = "dressing.nvim", src = gh("stevearc/dressing.nvim") },
   { name = "nvim-autopairs", src = gh("windwp/nvim-autopairs") },
   { name = "lualine.nvim", src = gh("nvim-lualine/lualine.nvim") },
   { name = "glow.nvim", src = gh("ellisonleao/glow.nvim") },
@@ -50,9 +49,6 @@ local specs = {
   { name = "vim-fugitive", src = gh("tpope/vim-fugitive") },
   { name = "vim-go", src = gh("fatih/vim-go") },
   { name = "d2-vim", src = gh("terrastruct/d2-vim") },
-  { name = "nordtheme", src = gh("nordtheme/vim") },
-  { name = "dracula", src = gh("dracula/vim") },
-  { name = "copilot.vim", src = gh("github/copilot.vim") },
   { name = "sidekick.nvim", src = gh("folke/sidekick.nvim") },
 }
 
@@ -61,7 +57,6 @@ local feature_defs = {
     plugins = {
       "tokyonight.nvim",
       "mini.icons",
-      "dressing.nvim",
       "nvim-autopairs",
       "lualine.nvim",
       "neoscroll.nvim",

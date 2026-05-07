@@ -19,5 +19,5 @@ vim.keymap.set('n', '<leader><leader>x',
     vim.cmd([[w]])
     vim.cmd([[luafile %]])
   end,
-  { noremap = true, silent = true }
+  { silent = true, desc = "Source current Lua file" }
 )

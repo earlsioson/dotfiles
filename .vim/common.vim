@@ -91,13 +91,13 @@ nnoremap <M-.> <C-w>5>
 nnoremap <M-,> <C-w>5<
 nnoremap <M-'> <C-w>+
 nnoremap <M-;> <C-w>-
-nnoremap z0 :set foldlevel=99<CR>
-nnoremap z1 :set foldlevel=1<CR>
-nnoremap z2 :set foldlevel=2<CR>
-nnoremap z3 :set foldlevel=3<CR>
-nnoremap z4 :set foldlevel=4<CR>
-nnoremap z5 :set foldlevel=5<CR>
-nnoremap z6 :set foldlevel=6<CR>
+nnoremap z0 :setlocal foldlevel=99<CR>zx
+nnoremap z1 :setlocal foldlevel=1<CR>zx
+nnoremap z2 :setlocal foldlevel=2<CR>zx
+nnoremap z3 :setlocal foldlevel=3<CR>zx
+nnoremap z4 :setlocal foldlevel=4<CR>zx
+nnoremap z5 :setlocal foldlevel=5<CR>zx
+nnoremap z6 :setlocal foldlevel=6<CR>zx
 vnoremap <Leader>y "+y
 nnoremap <Leader>y "+y
 nnoremap <silent> <Leader><Leader>t :call <SID>small_terminal()<CR>

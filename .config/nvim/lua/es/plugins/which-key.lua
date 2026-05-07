@@ -5,7 +5,7 @@ function M.setup()
     preset = "modern",
     delay = 300,
     spec = {
-      { "<leader>l", group = "LSP" },
+      { "<leader>l", group = "LSP Extras" },
       { "<leader>f", group = "Find" },
       { "<leader>g", group = "Git" },
       { "<leader>b", group = "Debug" },

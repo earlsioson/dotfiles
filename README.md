@@ -19,8 +19,8 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
   - [Plugin stack](#plugin-stack)
   - [Sidekick NES](#sidekick-nes)
   - [Keymaps](#keymaps)
-    - [Neovim defaults](#neovim-011-defaults-no-leader)
-    - [LSP operations](#lsp-operations-leaderl)
+    - [Neovim defaults](#neovim-012-defaults-no-leader)
+    - [LSP extras](#lsp-extras-leaderl)
     - [Diagnostic operations](#diagnostic-operations-leaderd)
     - [AI operations](#ai-operations-leadera)
     - [Debug operations](#debug-operations-leaderb)
@@ -206,45 +206,56 @@ Usage:
 ### Keymaps
 Most Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Buffer-local keymaps (like gitsigns) are defined in keymaps.lua as exported functions and called from plugin on_attach callbacks. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.
 
-The keymap system follows a consistent namespace that mirrors the Neovim API:
-- **`<Leader>l*`** = LSP operations (mirrors `vim.lsp.buf.*` API)
-- **`<Leader>d*`** = Diagnostic operations (mirrors `vim.diagnostic.*` API, navigation uses `]d`/`[d` defaults)
+The keymap system starts with Neovim defaults and adds leader mappings only where they reduce workflow friction:
+- **Built-in LSP keys** = first-choice LSP grammar (`K`, `CTRL-]`, `gra`, `gri`, `grn`, `grr`, `grt`, `gO`)
+- **Built-in diagnostic keys** = diagnostic navigation (`]d`, `[d`, `]D`, `[D`)
+- **`<Leader>l*`** = supplemental LSP actions without strong default mappings
+- **`<Leader>d*`** = Diagnostic list/float operations
 - **`<Leader>b*`** = Debug/breakpoint operations (DAP)
 - **`<Leader>A*`** = AI CLI operations (Sidekick)
 - **`<Leader>f*`** = Find operations (Telescope with ripgrep/fd)
 - **`<Leader>h*`** = Hunk operations (gitsigns, buffer-local in git files)
 - **`<Leader>t*`** = Toggle operations (gitsigns)
 - **`<Leader>g*`** = Git operations (Fugitive)
-- **`<Leader>e*`** = NvimTree operations (explorer/file tree navigation)
+- **`<Leader>e*`** = Explorer operations (NvimTree/Oil navigation)
 
-#### Neovim 0.11 defaults (no leader)
+Mental model:
+- `g...` is Vim's extended "go/do" namespace.
+- `gr...` is Neovim's LSP-related symbol action namespace.
+- `[x` / `]x` means previous/next thing of type `x`.
+- `[` points backward, previous, or first; `]` points forward, next, or last.
+- `d` steps through diagnostics; `D` jumps to the diagnostic boundary.
+- `K` keeps its classic "keyword help" role through LSP hover.
+- `CTRL-]` keeps its classic tag-jump role through LSP definition.
+
+#### Neovim 0.12 defaults (no leader)
 | Shortcut | Action |
 | --- | --- |
+| `K` | Hover |
+| `CTRL-]` | Definition through LSP tagfunc |
+| `gra` | Code action |
+| `gri` | Implementation |
+| `grn` | Rename |
+| `grr` | References |
+| `grt` | Type definition |
+| `gO` | Document symbols |
+| `<C-s>` (insert) | Signature help |
 | `]d` / `[d` | Next/previous diagnostic |
 | `]D` / `[D` | First/last diagnostic |
 
-#### LSP operations (`<Leader>l*`)
-Keymaps mirror `vim.lsp.buf.*` API methods for easy memorization.
+#### LSP extras (`<Leader>l*`)
+These are buffer-local LSP mappings that supplement Neovim 0.12 defaults instead of duplicating them.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>la` | Code action |
 | `<Leader>lc` | Incoming calls |
 | `<Leader>lC` | Outgoing calls |
-| `<Leader>ld` | Definition |
 | `<Leader>lD` | Declaration |
 | `<Leader>lf` | Format (conform) |
-| `<Leader>lh` | Hover |
-| `<Leader>li` | Implementation |
-| `<Leader>lo` | Document outline (symbols) |
-| `<Leader>lr` | References |
-| `<Leader>ln` | Rename |
-| `<Leader>ls` | Signature help |
-| `<Leader>lt` | Type definition |
 | `<Leader>lw` | Workspace symbols |
 
 #### Diagnostic operations (`<Leader>d*`)
-Keymaps mirror `vim.diagnostic.*` API methods. Navigation uses `]d`/`[d` defaults above.
+Diagnostic list and float helpers. Navigation uses Neovim defaults above.
 
 | Shortcut | Action |
 | --- | --- |
@@ -312,6 +323,7 @@ Hidden file search (`<Leader>fh`) and the directory picker that feeds Oil (`<Lea
 | `<Leader>fk` | Find keymaps |
 | `<Leader>fe` | Find explorer (file browser) |
 | `<Leader>fE` | Find explorer all (no gitignore) |
+| `<M-d>` (buffers picker) | Delete selected buffer and keep picker open |
 
 #### Git operations (`<Leader>g*`)
 Fugitive operations.
@@ -368,7 +380,10 @@ Quick jump navigation (preserves vim defaults for `s`/`S`).
 | Shortcut | Action |
 | --- | --- |
 | `-` | Oil parent directory |
-| `<Leader>mp` | Markdown preview |
+| `<Leader>mp` | Markdown preview (returns focus to source buffer so fold keys still apply there) |
+| `<Leader><Leader>x` | Save and source current Lua file |
+| `z0` | Set window-local foldlevel to 99 and recompute folds |
+| `z1` - `z6` | Set window-local foldlevel 1-6 and recompute folds |
 
 #### Shared keymaps (`.vim/common.vim`)
 These work in both Vim and Neovim.
@@ -381,13 +396,15 @@ These work in both Vim and Neovim.
 | `<Leader>r` (visual) | Search selection for quick replace |
 | `<Leader>k` | Clear last search highlight |
 | `<M-.>`, `<M-,>`, `<M-'>`, `<M-;>` | Resize windows |
-| `z0` | Set foldlevel to 99 (show all folds) |
-| `z1` - `z6` | Set foldlevel 1-6 (useful for Markdown heading hierarchy) |
+| `z0` | Set local foldlevel to 99 and refresh folds in Vim |
+| `z1` - `z6` | Set local foldlevel 1-6 and refresh folds in Vim |
 | `<Leader><Leader>t` | Open bottom terminal helper |
 | `<Leader><Esc>` | Exit terminal-mode |
 
 #### nvim-cmp completion
 | Shortcut | Action |
 | --- | --- |
-| `<CR>` | Accepts the LSP (Popup Menu) selection. |
-| `<C-n>` / `<C-p>` | Navigates up and down the LSP menu. |
+| `<CR>` | Confirm selected completion item |
+| `<C-n>` / `<C-p>` | Navigate completion menu |
+| `<C-Space>` | Open completion menu |
+| `<C-b>` / `<C-f>` | Scroll completion docs; jump previous/next snippet placeholder when a snippet is active |

@@ -50,13 +50,13 @@ function M.setup()
     if vim.snippet.active({ direction = 1 }) then
       return vim.snippet.jump(1)
     end
-  end, { silent = true })
+  end, { silent = true, desc = "Snippet jump next" })
 
   vim.keymap.set({ "i", "s" }, "<C-b>", function()
     if vim.snippet.active({ direction = -1 }) then
       return vim.snippet.jump(-1)
     end
-  end, { silent = true })
+  end, { silent = true, desc = "Snippet jump previous" })
 end
 
 return M

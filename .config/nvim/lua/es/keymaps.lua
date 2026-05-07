@@ -23,51 +23,62 @@ M.setup_gitsigns_keymaps = function(gs, bufnr)
   end
 
   -- Navigation
-  map('n', ']c', function()
+  map("n", "]c", function()
     if vim.wo.diff then
-      vim.cmd.normal({']c', bang = true})
+      vim.cmd.normal({ "]c", bang = true })
     else
-      gs.nav_hunk('next')
+      gs.nav_hunk("next")
     end
-  end)
+  end, { desc = "Git hunk next" })
 
-  map('n', '[c', function()
+  map("n", "[c", function()
     if vim.wo.diff then
-      vim.cmd.normal({'[c', bang = true})
+      vim.cmd.normal({ "[c", bang = true })
     else
-      gs.nav_hunk('prev')
+      gs.nav_hunk("prev")
     end
-  end)
+  end, { desc = "Git hunk previous" })
 
   -- Actions
-  map('n', '<leader>hs', gs.stage_hunk)
-  map('n', '<leader>hr', gs.reset_hunk)
-  map('v', '<leader>hs', function() gs.stage_hunk({vim.fn.line('.'), vim.fn.line('v')}) end)
-  map('v', '<leader>hr', function() gs.reset_hunk({vim.fn.line('.'), vim.fn.line('v')}) end)
-  map('n', '<leader>hS', gs.stage_buffer)
-  map('n', '<leader>hR', gs.reset_buffer)
-  map('n', '<leader>hu', gs.undo_stage_hunk)
-  map('n', '<leader>hp', gs.preview_hunk)
-  map('n', '<leader>hi', gs.preview_hunk_inline)
-  map('n', '<leader>hb', function() gs.blame_line({full = true}) end)
-  map('n', '<leader>hd', gs.diffthis)
-  map('n', '<leader>hD', function() gs.diffthis('~') end)
-  map('n', '<leader>hQ', function() gs.setqflist('all') end)
-  map('n', '<leader>hq', gs.setqflist)
+  map("n", "<leader>hs", gs.stage_hunk, { desc = "Git hunk stage" })
+  map("n", "<leader>hr", gs.reset_hunk, { desc = "Git hunk reset" })
+  map("v", "<leader>hs", function()
+    gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+  end, { desc = "Git hunk stage selection" })
+  map("v", "<leader>hr", function()
+    gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+  end, { desc = "Git hunk reset selection" })
+  map("n", "<leader>hS", gs.stage_buffer, { desc = "Git buffer stage" })
+  map("n", "<leader>hR", gs.reset_buffer, { desc = "Git buffer reset" })
+  map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Git hunk unstage" })
+  map("n", "<leader>hp", gs.preview_hunk, { desc = "Git hunk preview" })
+  map("n", "<leader>hi", gs.preview_hunk_inline, { desc = "Git hunk preview inline" })
+  map("n", "<leader>hb", function()
+    gs.blame_line({ full = true })
+  end, { desc = "Git blame line" })
+  map("n", "<leader>hd", gs.diffthis, { desc = "Git diff buffer" })
+  map("n", "<leader>hD", function()
+    gs.diffthis("~")
+  end, { desc = "Git diff buffer against ~" })
+  map("n", "<leader>hQ", function()
+    gs.setqflist("all")
+  end, { desc = "Git hunks quickfix all" })
+  map("n", "<leader>hq", gs.setqflist, { desc = "Git hunks quickfix" })
 
   -- Toggles
-  map('n', '<leader>tb', gs.toggle_current_line_blame)
-  map('n', '<leader>tw', gs.toggle_word_diff)
+  map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "Toggle git blame line" })
+  map("n", "<leader>tw", gs.toggle_word_diff, { desc = "Toggle git word diff" })
 
   -- Text object
-  map({'o', 'x'}, 'ih', gs.select_hunk)
+  map({ "o", "x" }, "ih", gs.select_hunk, { desc = "Git hunk text object" })
 end
 
 -- ============================================================================
--- LSP Operations (<Leader>l* = "lsp")
+-- LSP Extras (<Leader>l* = "lsp")
 -- ============================================================================
--- Keymaps mirror vim.lsp.buf.* API for easy memorization
--- Diagnostics use ]d/[d (Neovim 0.11 defaults) for navigation
+-- Prefer Neovim 0.12 defaults first:
+-- K, CTRL-], gra, gri, grn, grr, grt, gO, i_CTRL-S, ]d, [d.
+-- Leader mappings here cover useful LSP actions without strong defaults.
 
 M.setup_lsp_keymaps = function(bufnr)
   local function map(mode, l, r, opts)
@@ -76,33 +87,45 @@ M.setup_lsp_keymaps = function(bufnr)
     vim.keymap.set(mode, l, r, opts)
   end
 
-  map("n", "<Leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
   map("n", "<Leader>lc", vim.lsp.buf.incoming_calls, { desc = "LSP incoming calls" })
   map("n", "<Leader>lC", vim.lsp.buf.outgoing_calls, { desc = "LSP outgoing calls" })
-  map("n", "<Leader>ld", vim.lsp.buf.definition, { desc = "LSP definition" })
   map("n", "<Leader>lD", vim.lsp.buf.declaration, { desc = "LSP declaration" })
   map("n", "<Leader>lf", function()
     require("conform").format({ async = true, lsp_fallback = true })
   end, { desc = "LSP format (conform)" })
-  map("n", "<Leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
-  map("n", "<Leader>li", vim.lsp.buf.implementation, { desc = "LSP implementation" })
-  map("n", "<Leader>lo", vim.lsp.buf.document_symbol, { desc = "LSP document outline" })
-  map("n", "<Leader>lr", vim.lsp.buf.references, { desc = "LSP references" })
-  map("n", "<Leader>ln", vim.lsp.buf.rename, { desc = "LSP rename" })
-  map("n", "<Leader>ls", vim.lsp.buf.signature_help, { desc = "LSP signature help" })
-  map("n", "<Leader>lt", vim.lsp.buf.type_definition, { desc = "LSP type definition" })
   map("n", "<Leader>lw", vim.lsp.buf.workspace_symbol, { desc = "LSP workspace symbols" })
 end
 
 -- ============================================================================
 -- Diagnostic Operations (<Leader>d* = "diagnostics")
 -- ============================================================================
--- Keymaps mirror vim.diagnostic.* API for easy memorization
--- Navigation uses ]d/[d (Neovim 0.11 defaults)
+-- Diagnostic list and float helpers.
+-- Navigation uses Neovim defaults: ]d, [d, ]D, [D.
 
 map("n", "<Leader>df", vim.diagnostic.open_float, { desc = "Diagnostic float" })
 map("n", "<Leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostic loclist" })
 map("n", "<Leader>dq", vim.diagnostic.setqflist, { desc = "Diagnostic quickfix" })
+
+-- ============================================================================
+-- Fold Levels
+-- ============================================================================
+-- Override the shared Vim mappings so Neovim can refresh expr/treesitter folds
+-- without reopening the fold under the cursor.
+
+local function set_foldlevel(level)
+  return function()
+    vim.wo.foldenable = true
+    vim.wo.foldlevel = level
+    vim.cmd.normal({ "zX", bang = true })
+  end
+end
+
+for level = 0, 6 do
+  local foldlevel = level == 0 and 99 or level
+  map("n", "z" .. level, set_foldlevel(foldlevel), {
+    desc = ("Set foldlevel=%d"):format(foldlevel),
+  })
+end
 
 -- ============================================================================
 -- AI Operations (<Leader>A* = "ai")
@@ -406,7 +429,27 @@ vim.api.nvim_create_autocmd("FileType", {
 
 map("n", "<Leader>mp", function()
   load_feature("explorer")
+  local source_win = vim.api.nvim_get_current_win()
+  local source_buf = vim.api.nvim_get_current_buf()
+
   vim.cmd.Glow()
+
+  local function refocus_source()
+    if vim.api.nvim_win_is_valid(source_win) and vim.api.nvim_win_get_buf(source_win) == source_buf then
+      vim.api.nvim_set_current_win(source_win)
+      return
+    end
+
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+      if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == source_buf then
+        vim.api.nvim_set_current_win(win)
+        return
+      end
+    end
+  end
+
+  vim.schedule(refocus_source)
+  vim.defer_fn(refocus_source, 50)
 end, { desc = "Markdown preview" })
 
 return M

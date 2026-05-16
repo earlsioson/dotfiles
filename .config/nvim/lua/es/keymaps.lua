@@ -429,28 +429,64 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 map("n", "<Leader>mp", function()
-  load_feature("explorer")
-  local source_win = vim.api.nvim_get_current_win()
-  local source_buf = vim.api.nvim_get_current_buf()
-
-  require("glow").execute({ fargs = {}, bang = false })
-
-  local function refocus_source()
-    if vim.api.nvim_win_is_valid(source_win) and vim.api.nvim_win_get_buf(source_win) == source_buf then
-      vim.api.nvim_set_current_win(source_win)
-      return
-    end
-
-    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-      if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == source_buf then
-        vim.api.nvim_set_current_win(win)
-        return
-      end
-    end
+  if vim.fn.executable("glow") ~= 1 then
+    vim.notify("glow is not installed or is not on PATH", vim.log.levels.ERROR)
+    return
   end
 
-  vim.schedule(refocus_source)
-  vim.defer_fn(refocus_source, 50)
+  local temp_file = vim.fn.tempname() .. ".md"
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+  local ok, err = pcall(vim.fn.writefile, lines, temp_file)
+  if not ok then
+    vim.notify(("Unable to write markdown preview: %s"):format(err), vim.log.levels.ERROR)
+    return
+  end
+
+  local width = math.max(80, math.floor(vim.o.columns * 0.95))
+  local height = math.max(20, math.floor(vim.o.lines * 0.9))
+  width = math.max(1, math.min(width, vim.o.columns - 4))
+  height = math.max(1, math.min(height, vim.o.lines - vim.o.cmdheight - 4))
+
+  local buf = vim.api.nvim_create_buf(false, true)
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = width,
+    height = height,
+    row = math.floor((vim.o.lines - height) / 2),
+    col = math.floor((vim.o.columns - width) / 2),
+    border = "rounded",
+    style = "minimal",
+    title = " Markdown Preview ",
+    title_pos = "center",
+  })
+
+  vim.bo[buf].bufhidden = "wipe"
+  vim.wo[win].number = false
+  vim.wo[win].relativenumber = false
+  vim.wo[win].signcolumn = "no"
+
+  local function cleanup()
+    if vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_close(win, true)
+    end
+    pcall(vim.uv.fs_unlink, temp_file)
+  end
+
+  local job_id = vim.fn.jobstart({ "glow", "--tui", temp_file }, {
+    term = true,
+    on_exit = function()
+      vim.schedule(cleanup)
+    end,
+  })
+  if job_id <= 0 then
+    cleanup()
+    vim.notify("Unable to start glow markdown preview", vim.log.levels.ERROR)
+    return
+  end
+
+  map("n", "q", cleanup, { buffer = buf, nowait = true, desc = "Close markdown preview" })
+  vim.cmd.startinsert()
 end, { desc = "Markdown preview" })
 
 return M

@@ -11,6 +11,11 @@ local function load_feature(name)
   require("es.pack").load(name)
 end
 
+local function nvim_tree()
+  load_feature("explorer")
+  return require("nvim-tree.api")
+end
+
 -- ============================================================================
 -- Gitsigns Keymaps (exported for on_attach callback)
 -- ============================================================================
@@ -388,21 +393,17 @@ map("n", "<Leader>gg", "<Cmd>G | only<CR>", { desc = "Git status" })
 -- File tree navigation
 
 map("n", "<Leader>et", function()
-  load_feature("explorer")
-  vim.cmd.NvimTreeToggle()
+  nvim_tree().tree.toggle({ focus = true })
 end, { desc = "NvimTree toggle" })
 map("n", "<Leader>ef", function()
-  load_feature("explorer")
-  require("nvim-tree.api").tree.find_file({ buf = vim.api.nvim_get_current_buf(), open = true, focus = true })
+  nvim_tree().tree.find_file({ buf = vim.api.nvim_get_current_buf(), open = true, focus = true })
 end, { desc = "NvimTree find file" })
 map("n", "<Leader>ec", function()
-  load_feature("explorer")
-  vim.cmd.NvimTreeClose()
+  nvim_tree().tree.close()
 end, { desc = "NvimTree close" })
 map("n", "<Leader>ep", function()
-  load_feature("explorer")
   local parent_dir = vim.fn.expand("%:p:h")
-  require("nvim-tree.api").tree.open({ path = parent_dir })
+  nvim_tree().tree.open({ path = parent_dir })
 end, { desc = "NvimTree open parent directory" })
 
 -- ============================================================================
@@ -411,7 +412,7 @@ end, { desc = "NvimTree open parent directory" })
 
 map("n", "-", function()
   load_feature("explorer")
-  vim.cmd.Oil()
+  require("oil").open()
 end, { desc = "Oil parent directory" })
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -432,7 +433,7 @@ map("n", "<Leader>mp", function()
   local source_win = vim.api.nvim_get_current_win()
   local source_buf = vim.api.nvim_get_current_buf()
 
-  vim.cmd.Glow()
+  require("glow").execute({ fargs = {}, bang = false })
 
   local function refocus_source()
     if vim.api.nvim_win_is_valid(source_win) and vim.api.nvim_win_get_buf(source_win) == source_buf then

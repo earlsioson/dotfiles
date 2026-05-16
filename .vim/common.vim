@@ -17,7 +17,7 @@ set mouse=a
 set signcolumn=yes
 set background=dark
 set foldlevelstart=99
-set foldcolumn=1
+set foldcolumn=0
 set splitbelow
 set splitright
 set listchars=tab:»·,eol:↲,nbsp:␣,extends:…,precedes:<,trail:·,space:␣

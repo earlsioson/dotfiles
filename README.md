@@ -3,42 +3,44 @@
 ## Overview
 Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 
+## Philosophy
+This repo is default-first. Vim and Neovim should start from their current native behavior, then add only the preferences and workflow shortcuts that are worth carrying between machines.
+
+The editor configs intentionally follow each tool's own idioms:
+- Vim uses Vimscript, `defaults.vim`, and native packages under `~/.vim/pack`.
+- Neovim uses Lua, `vim.pack`, built-in LSP defaults, and small feature modules.
+- Shared behavior lives in `.vim/common.vim`; tool-specific behavior stays in `.vimrc` or `.config/nvim/`.
+
+Generated runtime state does not belong in this repo. Plugin checkouts, caches, Neovim package locks, Mason installs, and local tool state are recreated in `$HOME`.
+
 ## Table of Contents
+- [Philosophy](#philosophy)
 - [Quick Start](#quick-start)
   - [Base editor prerequisites](#base-editor-prerequisites)
   - [Tree-sitter + Node.js toolchain](#tree-sitter--nodejs-toolchain)
   - [Python support for Neovim/DAP](#python-support-for-neovimdap)
-  - [Plugin bootstrap (vimpack)](#plugin-bootstrap-vimpack)
+  - [Plugin management](#plugin-management)
   - [Reset and reinstall](#reset-and-reinstall)
   - [Optional tooling](#optional-tooling)
 - [tmux Configuration](#tmux-configuration)
   - [Setup](#setup)
   - [tmux Keymaps](#tmux-keymaps)
 - [Vim Configuration](#vim-configuration)
+  - [Vim baseline](#vim-baseline)
+  - [Vim package commands](#vim-package-commands)
+  - [Vim package inspection](#vim-package-inspection)
 - [Neovim Configuration](#neovim-configuration)
   - [Plugin stack](#plugin-stack)
   - [Sidekick NES](#sidekick-nes)
   - [Keymaps](#keymaps)
-    - [Neovim defaults](#neovim-012-defaults-no-leader)
-    - [LSP extras](#lsp-extras-leaderl)
-    - [Diagnostic operations](#diagnostic-operations-leaderd)
-    - [AI operations](#ai-operations-leadera)
-    - [Debug operations](#debug-operations-leaderb)
-    - [Find operations](#find-operations-leaderf)
-    - [Git operations](#git-operations-leaderg)
-    - [Hunk operations](#hunk-operations-leaderh-and-leadert)
-    - [NvimTree](#nvimtree-leadere)
-    - [Flash navigation](#flash-navigation)
-    - [Other mappings](#other-mappings)
-    - [Shared keymaps](#shared-keymaps-vimcommonvim)
-    - [nvim-cmp completion](#nvim-cmp-completion)
 
 ## Quick Start
 
 ### Base editor prerequisites
 1. Install current releases of Vim and Neovim.
-2. Install a Nerd Font (I usually grab one from [nerdfonts.com](https://www.nerdfonts.com/font-downloads)).
-3. Sync the tracked runtime files from this repo into `$HOME`, including:
+2. Install `just`, Git, tmux, and a POSIX shell.
+3. Install a Nerd Font if you want the Neovim UI icons to render cleanly.
+4. Sync the tracked runtime files from this repo into `$HOME`, including:
    - `.vim/` -> `~/.vim`
    - `.vimrc` -> `~/.vimrc`
    - `.config/nvim/` -> `~/.config/nvim`
@@ -58,9 +60,20 @@ Personal configuration for Neovim, Vim, tmux, and assorted CLI tools.
 Use your preferred python package manager to create a virtualenv and install debugpy and pynvim.
 Update the Python path in `.config/nvim/lua/es/globals.lua` (`vim.g.python_host_path`) to point at your virtualenv's Python interpreter. This path is automatically used by `init.lua` and DAP, keeping the Python host and debugger in sync.
 
-### Plugin bootstrap (vim.pack)
-Neovim 0.12 manages plugins with the native `vim.pack` package manager from `.config/nvim/lua/es/pack.lua`.
-On first launch, `vim.pack` installs plugins into Neovim's managed package directory and creates `~/.config/nvim/nvim-pack-lock.json`.
+### Plugin management
+Vim and Neovim both use native package mechanisms, but they install differently.
+
+Vim loads native packages from `~/.vim/pack/plugins/start`. Vim does not clone or update Git repositories, so the repo `justfile` handles that external step:
+
+```bash
+just vim-plugins-install
+just vim-plugins-update
+just vim-go-binaries
+```
+
+Set `VIM_PACK_ROOT` to install somewhere other than `~/.vim/pack/plugins`.
+
+Neovim 0.12 manages plugins with `vim.pack` from `.config/nvim/lua/es/pack.lua`. On first launch, `vim.pack` installs plugins into Neovim's managed package directory and creates `~/.config/nvim/nvim-pack-lock.json`.
 Useful commands after startup:
 
 ```vim
@@ -75,19 +88,31 @@ Useful commands after startup:
 Run `:LspBootstrap` on a fresh machine to load the lazy LSP feature and install the configured Mason LSP dependencies. Normal editing loads LSP automatically when a file is opened or created.
 
 ### Reset and reinstall
-If you want to wipe the tracked editor/shell config plus local Neovim state under `$HOME` and reinstall from this repo:
+If you want to wipe the tracked editor/shell config plus local runtime state under `$HOME` and reinstall from this repo:
 
 1. Back up or remove the current config and runtime data.
 
 ```bash
 mkdir -p ~/dotfiles-backup
-mv ~/.vim ~/.vimrc ~/.config/nvim ~/.tmux.conf ~/.cargo/config ~/.config/starship.toml \
+mv ~/.vim ~/.vimrc ~/.config/vim ~/.tmux.conf ~/.cargo/config ~/.config/starship.toml \
   ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim ~/dotfiles-backup/ 2>/dev/null
+mv ~/.config/nvim ~/dotfiles-backup/ 2>/dev/null
 ```
 
-2. If you prefer deletion instead of backup for Neovim runtime state, this is also a valid clean reset:
+For Vim-only cleanup, the relevant paths are:
+
+```text
+~/.vim
+~/.vimrc
+~/.config/vim
+```
+
+Vim does not use Neovim's `~/.local/share/nvim`, `~/.local/state/nvim`, or `~/.cache/nvim` paths.
+
+2. If you prefer deletion instead of backup for generated editor runtime state:
 
 ```bash
+rm -rf ~/.vim ~/.vimrc ~/.config/vim
 rm -rf ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim
 ```
 
@@ -112,9 +137,10 @@ rsync -av --delete \
   "$REPO_DIR/.config/nvim/" ~/.config/nvim/
 ```
 
-4. Start Neovim once so `vim.pack` can install plugins.
+4. Install Vim packages and start Neovim once so `vim.pack` can install Neovim plugins.
 
 ```bash
+just vim-plugins-install
 nvim
 ```
 
@@ -126,7 +152,7 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 - Sidekick CLI sessions use tmux persistence when Neovim is running inside tmux.
 - Sidekick NES requires a GitHub Copilot subscription or Copilot Free access.
 - Language-specific runtimes (Go, Python, etc.) should be installed before launching Mason or DAP adapters.
-- Git, tmux, and a POSIX shell are assumed.
+- Go tooling for Vim is installed with `just vim-go-binaries` after `just vim-plugins-install`.
 
 ## tmux Configuration
 
@@ -146,7 +172,15 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 
 ## Vim Configuration
 
-Vim uses `.vimrc` plus the shared settings and mappings in `.vim/common.vim`. Plugins are managed by vim-plug from `.vimrc`, separate from Neovim's native `vim.pack` setup.
+Vim uses `.vimrc` plus shared settings and mappings from `.vim/common.vim`. `.vimrc` loads Vim's `defaults.vim` for modern stock behavior, then layers this repo's choices on top.
+
+Plugins load through Vim's native package directories:
+
+```text
+~/.vim/pack/plugins/start/{plugin}
+```
+
+The `justfile` clones and updates those Git repositories because Vim native packages handle loading, not installation.
 
 The Vim plugin set is intentionally smaller:
 - `tpope/vim-surround`
@@ -157,7 +191,58 @@ The Vim plugin set is intentionally smaller:
 - `github/copilot.vim`
 - `terrastruct/d2-vim`
 
-Vim keeps using `github/copilot.vim` for Copilot. Neovim does not load `github/copilot.vim`; it uses Sidekick with the native `copilot` LSP config instead. Shared mappings live in `.vim/common.vim`, while Neovim-only mappings live in `.config/nvim/lua/es/keymaps.lua`.
+Vim keeps using `github/copilot.vim` for Copilot. Neovim does not load `github/copilot.vim`; it uses Sidekick with the native `copilot` LSP config instead. Shared mappings live in `.vim/common.vim`; Neovim-only mappings live in `.config/nvim/lua/es/keymaps.lua`.
+
+### Vim baseline
+The Vim baseline is intentionally close to stock modern Vim:
+- `.vimrc` loads `defaults.vim` when running Vim.
+- `.vim/common.vim` sets personal editing preferences like line numbers, two-space indentation, dark background, split direction, search behavior, shared keymaps, and fold helpers.
+- `cursorline` is left off.
+- No named Vim colorscheme is set. `set background=dark` lets Vim's default highlights render against the terminal or tmux palette.
+- Plugins load from native packages.
+
+Useful checks inside Vim:
+
+```vim
+:set background?
+:set cursorline?
+:echo exists("g:colors_name") ? g:colors_name : "none"
+```
+
+### Vim package commands
+Run these from the repo after syncing `.vim/` and `.vimrc` into `$HOME`:
+
+```bash
+just vim-plugins-install  # clone missing Vim packages
+just vim-plugins-update   # git pull --ff-only existing Vim packages
+just vim-go-binaries      # run vim-go's :GoUpdateBinaries
+```
+
+The default package root is `~/.vim/pack/plugins`. Override it with:
+
+```bash
+VIM_PACK_ROOT=/path/to/pack/plugins just vim-plugins-install
+```
+
+### Vim package inspection
+Vim does not have a built-in `:PackStatus` screen. Use stock Vim commands:
+
+```vim
+:scriptnames
+:set runtimepath?
+:set packpath?
+:echo globpath(&packpath, 'pack/*/start/vim-fugitive')
+```
+
+Useful help topics:
+
+```vim
+:help defaults.vim
+:help packages
+:help pack-add
+:help packpath
+:help scriptnames
+```
 
 ## Neovim Configuration
 
@@ -204,207 +289,4 @@ Usage:
 - Run `:Sidekick nes toggle` if you want to temporarily disable or re-enable NES.
 
 ### Keymaps
-Most Neovim keymaps are centralized in `.config/nvim/lua/es/keymaps.lua`. Buffer-local keymaps (like gitsigns) are defined in keymaps.lua as exported functions and called from plugin on_attach callbacks. Shared vim/neovim keymaps live in `.vim/common.vim`. Leader key is `<Space>`.
-
-The keymap system starts with Neovim defaults and adds leader mappings only where they reduce workflow friction:
-- **Built-in LSP keys** = first-choice LSP grammar (`K`, `CTRL-]`, `gra`, `gri`, `grn`, `grr`, `grt`, `gO`)
-- **Built-in diagnostic keys** = diagnostic navigation (`]d`, `[d`, `]D`, `[D`)
-- **`<Leader>l*`** = supplemental LSP actions without strong default mappings
-- **`<Leader>d*`** = Diagnostic list/float operations
-- **`<Leader>b*`** = Debug/breakpoint operations (DAP)
-- **`<Leader>A*`** = AI CLI operations (Sidekick)
-- **`<Leader>f*`** = Find operations (Telescope with ripgrep/fd)
-- **`<Leader>h*`** = Hunk operations (gitsigns, buffer-local in git files)
-- **`<Leader>t*`** = Toggle operations (gitsigns)
-- **`<Leader>g*`** = Git operations (Fugitive)
-- **`<Leader>e*`** = Explorer operations (NvimTree/Oil navigation)
-
-Mental model:
-- `g...` is Vim's extended "go/do" namespace.
-- `gr...` is Neovim's LSP-related symbol action namespace.
-- `[x` / `]x` means previous/next thing of type `x`.
-- `[` points backward, previous, or first; `]` points forward, next, or last.
-- `d` steps through diagnostics; `D` jumps to the diagnostic boundary.
-- `K` keeps its classic "keyword help" role through LSP hover.
-- `CTRL-]` keeps its classic tag-jump role through LSP definition.
-
-#### Neovim 0.12 defaults (no leader)
-| Shortcut | Action |
-| --- | --- |
-| `K` | Hover |
-| `CTRL-]` | Definition through LSP tagfunc |
-| `gra` | Code action |
-| `gri` | Implementation |
-| `grn` | Rename |
-| `grr` | References |
-| `grt` | Type definition |
-| `gO` | Document symbols |
-| `<C-s>` (insert) | Signature help |
-| `]d` / `[d` | Next/previous diagnostic |
-| `]D` / `[D` | First/last diagnostic |
-
-#### LSP extras (`<Leader>l*`)
-These are buffer-local LSP mappings that supplement Neovim 0.12 defaults instead of duplicating them.
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>lc` | Incoming calls |
-| `<Leader>lC` | Outgoing calls |
-| `<Leader>lD` | Declaration |
-| `<Leader>lf` | Format (conform) |
-| `<Leader>lw` | Workspace symbols |
-
-#### Diagnostic operations (`<Leader>d*`)
-Diagnostic list and float helpers. Navigation uses Neovim defaults above.
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>df` | Diagnostic float |
-| `<Leader>dl` | Diagnostic loclist |
-| `<Leader>dq` | Diagnostic quickfix |
-
-#### AI operations (`<Leader>A*`)
-Sidekick manages terminal sessions for installed AI CLIs. NES setup and usage are covered in the Sidekick NES section above.
-
-Typical flow:
-1. Use `<Leader>As` to choose an installed CLI.
-2. Use `<Leader>Aa` to open or hide the Sidekick terminal.
-3. Send context with `<Leader>At`, `<Leader>AF`, or visual `<Leader>Av`.
-4. Use `<Leader>Ap` when you want to type a one-off prompt with the current context.
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>Aa` | Toggle Sidekick CLI |
-| `<Leader>Af` | Focus Sidekick CLI |
-| `<Leader>As` | Select an installed CLI |
-| `<Leader>Ad` | Detach/close Sidekick CLI |
-| `<Leader>At` | Send current context (`{this}`) |
-| `<Leader>AF` | Send current file (`{file}`) |
-| `<Leader>Av` | Send visual selection (`{selection}`) |
-| `<Leader>Ap` | Prompt Sidekick |
-
-#### Debug operations (`<Leader>b*`)
-DAP debugger controls and inspection.
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>bc` | Continue |
-| `<Leader>bb` | Breakpoint (toggle) |
-| `<Leader>bB` | Breakpoint (conditional) |
-| `<Leader>bs` | Step over |
-| `<Leader>bi` | Step into |
-| `<Leader>bo` | Step out |
-| `<Leader>bt` | Terminate |
-| `<Leader>br` | REPL |
-| `<Leader>bu` | UI (toggle) |
-| `<Leader>bv` | Load vscode config |
-| `<Leader>bl` | Run last |
-| `<Leader>bk` | Kill all breakpoints |
-| `<Leader>bh` | Hover variables |
-| `<Leader>bw` | Watches |
-| `<Leader>bf` | Frames |
-| `<Leader>bp` | Preview scopes |
-
-#### Find operations (`<Leader>f*`)
-Telescope pickers using ripgrep for text search and fd for file finding.
-Hidden file search (`<Leader>fh`) and the directory picker that feeds Oil (`<Leader>fD`) share the same fd exclude list in `.config/nvim/lua/es/keymaps.lua`, so you can tweak which build artifacts or vendor dirs stay hidden in one place.
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>ff` | Find files |
-| `<Leader>fr` | Find with ripgrep (live grep) |
-| `<Leader>fb` | Find buffers |
-| `<Leader>fg` | Find git files |
-| `<Leader>fo` | Find oldfiles (recent) |
-| `<Leader>fh` | Find hidden files |
-| `<Leader>fD` | Browse directories (Oil) |
-| `<Leader>fw` | Find workspace symbols |
-| `<Leader>fd` | Find document symbols |
-| `<Leader>fk` | Find keymaps |
-| `<Leader>fe` | Find explorer (file browser) |
-| `<Leader>fE` | Find explorer all (no gitignore) |
-| `<M-d>` (buffers picker) | Delete selected buffer and keep picker open |
-
-#### Git operations (`<Leader>g*`)
-Fugitive operations.
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>gg` | Git status |
-
-#### Hunk operations (`<Leader>h*` and `<Leader>t*`)
-Gitsigns operations (buffer-local, only in git files).
-
-| Shortcut | Action |
-| --- | --- |
-| `]c` / `[c` | Next/previous hunk |
-| `<Leader>hs` | Stage hunk |
-| `<Leader>hr` | Reset hunk |
-| `<Leader>hS` | Stage buffer |
-| `<Leader>hR` | Reset buffer |
-| `<Leader>hu` | Undo stage |
-| `<Leader>hp` | Preview hunk |
-| `<Leader>hi` | Preview hunk inline |
-| `<Leader>hb` | Blame line |
-| `<Leader>hd` | Diff |
-| `<Leader>hD` | Diff against `~` |
-| `<Leader>hq` / `<Leader>hQ` | Hunks to quickfix (current/all) |
-| `<Leader>tb` | Toggle blame |
-| `<Leader>tw` | Toggle word diff |
-| `ih` (text object) | Hunk text object |
-
-#### NvimTree (`<Leader>e*`)
-File tree navigation.
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>et` | NvimTree toggle |
-| `<Leader>ef` | NvimTree find file |
-| `<Leader>ec` | NvimTree close |
-| `<Leader>ep` | NvimTree open parent directory |
-| `<Leader>eo` | NvimTree open Oil directory |
-
-
-#### Flash navigation
-Quick jump navigation (preserves vim defaults for `s`/`S`).
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>s` | Flash jump |
-| `<Leader>S` | Flash treesitter |
-| `r` (operator pending) | Flash remote |
-| `R` (operator/visual) | Flash treesitter search |
-| `<C-s>` (command mode) | Flash toggle search |
-
-#### Other mappings
-| Shortcut | Action |
-| --- | --- |
-| `-` | Oil parent directory |
-| `<Leader>mp` | Markdown preview (returns focus to source buffer so fold keys still apply there) |
-| `<Leader><Leader>x` | Save and source current Lua file |
-| `z0` | Set window-local foldlevel to 99 and recompute folds |
-| `z1` - `z6` | Set window-local foldlevel 1-6 and recompute folds |
-
-#### Shared keymaps (`.vim/common.vim`)
-These work in both Vim and Neovim.
-
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>y` | Yank to system clipboard (normal/visual) |
-| `<Leader>n` | New split |
-| `<Leader>a` | Alternate buffer |
-| `<Leader>r` (visual) | Search selection for quick replace |
-| `<Leader>k` | Clear last search highlight |
-| `<M-.>`, `<M-,>`, `<M-'>`, `<M-;>` | Resize windows |
-| `z0` | Set local foldlevel to 99 and refresh folds in Vim |
-| `z1` - `z6` | Set local foldlevel 1-6 and refresh folds in Vim |
-| `<Leader><Leader>t` | Open bottom terminal helper |
-| `<Leader><Esc>` | Exit terminal-mode |
-
-#### nvim-cmp completion
-| Shortcut | Action |
-| --- | --- |
-| `<CR>` | Confirm selected completion item |
-| `<C-n>` / `<C-p>` | Navigate completion menu |
-| `<C-Space>` | Open completion menu |
-| `<C-b>` / `<C-f>` | Scroll completion docs; jump previous/next snippet placeholder when a snippet is active |
+The detailed Vim and Neovim keymap reference lives in [docs/keymaps.md](docs/keymaps.md). Shared Vim/Neovim mappings are sourced from `.vim/common.vim`; Neovim-specific mappings are centralized in `.config/nvim/lua/es/keymaps.lua`.

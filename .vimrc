@@ -1,22 +1,16 @@
 let mapleader="\<Space>"
 let maplocalleader="\<Space>"
 
+if !has('nvim')
+  runtime defaults.vim
+endif
+
 if filereadable(expand('$HOME/.vim/common.vim'))
   execute 'source ' . fnameescape(expand('$HOME/.vim/common.vim'))
 endif
 
 if has('nvim')
   lua require('init')
-else
-  call plug#begin('~/.vim/plugged')
-  Plug 'tpope/vim-surround'
-  Plug 'tpope/vim-unimpaired'
-  Plug 'tpope/vim-fugitive'
-  Plug 'airblade/vim-gitgutter'
-  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-  Plug 'github/copilot.vim'
-  Plug 'terrastruct/d2-vim'
-  call plug#end()
 endif
 
 function! Tabline() abort

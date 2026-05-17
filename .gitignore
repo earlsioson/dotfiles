@@ -215,3 +215,6 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 .gemini-clipboard
+
+# Vim native packages cloned by just recipes.
+.vim/pack/

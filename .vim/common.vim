@@ -38,9 +38,6 @@ set sidescrolloff=8
 " Backspace behavior
 set backspace=indent,eol,start
 
-" Cursor line highlighting
-set cursorline
-
 if has('termguicolors')
   set termguicolors
 endif

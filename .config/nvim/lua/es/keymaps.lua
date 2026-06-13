@@ -466,17 +466,20 @@ map("n", "<Leader>mp", function()
   vim.wo[win].relativenumber = false
   vim.wo[win].signcolumn = "no"
 
+  local job_id
   local function cleanup()
+    if job_id and vim.fn.jobwait({ job_id }, 0)[1] == -1 then
+      vim.fn.jobstop(job_id)
+    end
     if vim.api.nvim_win_is_valid(win) then
       vim.api.nvim_win_close(win, true)
     end
     pcall(vim.uv.fs_unlink, temp_file)
   end
 
-  local job_id = vim.fn.jobstart({ "glow", "--tui", temp_file }, {
-    term = true,
+  job_id = vim.fn.termopen({ "glow", "--width", tostring(width), temp_file }, {
     on_exit = function()
-      vim.schedule(cleanup)
+      pcall(vim.uv.fs_unlink, temp_file)
     end,
   })
   if job_id <= 0 then
@@ -486,7 +489,6 @@ map("n", "<Leader>mp", function()
   end
 
   map("n", "q", cleanup, { buffer = buf, nowait = true, desc = "Close markdown preview" })
-  vim.cmd.startinsert()
 end, { desc = "Markdown preview" })
 
 return M

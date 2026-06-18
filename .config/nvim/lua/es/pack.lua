@@ -223,7 +223,14 @@ local function run_after_change(ev)
       pcall(vim.cmd, "TSUpdate")
     end,
     ["mason.nvim"] = function()
-      pcall(vim.cmd, "MasonUpdate")
+      if kind == "install" then
+        pcall(vim.cmd, "MasonUpdate")
+        return
+      end
+
+      vim.schedule(function()
+        vim.notify("mason.nvim updated; restart Neovim before running :MasonUpdate", vim.log.levels.INFO)
+      end)
     end,
     ["vim-go"] = function()
       pcall(vim.cmd, "GoUpdateBinaries")

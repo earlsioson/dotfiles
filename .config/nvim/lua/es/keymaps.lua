@@ -331,6 +331,10 @@ map("n", "<Leader>fk", function()
   load_feature("telescope")
   require("telescope.builtin").keymaps()
 end, { desc = "Find keymaps" })
+map("n", "<Leader>fs", function()
+  load_feature("telescope")
+  require("telescope.builtin").git_status()
+end, { desc = "Find git changed files (status)" })
 
 -- File browser
 map("n", "<Leader>fe", function()

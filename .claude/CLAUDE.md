@@ -207,7 +207,7 @@ Use `<Leader><Leader>x` (defined in `globals.lua`) to quickly save and reload th
 
 When moving from `~/.config/nvim` to this dotfiles repo, ensure absolute paths in `globals.lua` are updated:
 ```lua
-vim.g.python_host_path = vim.fn.expand("~/dev/repos/dotfiles/.venv/bin/python")
+vim.g.python_host_path = vim.fn.expand("~/path/to/dotfiles/.venv/bin/python")
 ```
 
 ### Add LSP Server
@@ -267,11 +267,11 @@ Install runtimes as needed: Go, Rust, Python, Node.js, etc.
 
 This repository contains the source dotfiles. Deploy to home directory:
 ```bash
-# Symlink or copy:
-ln -s ~/dev/repos/dotfiles/.config/nvim ~/.config/nvim
-ln -s ~/dev/repos/dotfiles/.vim ~/.vim
-ln -s ~/dev/repos/dotfiles/.vimrc ~/.vimrc
-ln -s ~/dev/repos/dotfiles/.tmux.conf ~/.tmux.conf
+# Symlink or copy (replace ~/path/to/dotfiles with your actual clone path):
+ln -s ~/path/to/dotfiles/.config/nvim ~/.config/nvim
+ln -s ~/path/to/dotfiles/.vim ~/.vim
+ln -s ~/path/to/dotfiles/.vimrc ~/.vimrc
+ln -s ~/path/to/dotfiles/.tmux.conf ~/.tmux.conf
 ```
 
 First launch will trigger Mason and Tree-sitter auto-installation.

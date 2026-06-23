@@ -1,5 +1,24 @@
 -- Python host path - centralized for reuse across config
-vim.g.python_host_path = vim.fn.expand("~/dev/repos/dotfiles/.venv/bin/python")
+-- Try to locate the python executable inside the dotfiles virtualenv dynamically.
+local function detect_python_path()
+  local candidates = {
+    -- Current resolved config path if symlinked
+    vim.fn.resolve(vim.fn.stdpath("config")) .. "/../../.venv/bin/python",
+    -- Common locations
+    "~/dev/repos/dotfiles/.venv/bin/python",
+    "~/src/dotfiles/.venv/bin/python",
+    "~/dotfiles/.venv/bin/python",
+  }
+  for _, p in ipairs(candidates) do
+    local path = vim.fn.expand(p)
+    if vim.fn.executable(path) == 1 then
+      return path
+    end
+  end
+  return vim.fn.expand("~/path/to/dotfiles/.venv/bin/python") -- placeholder fallback
+end
+
+vim.g.python_host_path = detect_python_path()
 
 vim.g.copilot_no_tab_map = true
 

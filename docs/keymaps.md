@@ -18,7 +18,7 @@ These work in both Vim and Neovim.
 | --- | --- |
 | `<Leader>y` | Yank to system clipboard (normal/visual) |
 | `<Leader>n` | New split |
-| `<Leader>a` | Alternate buffer |
+| `<Leader><Tab>` | Alternate buffer |
 | `<Leader>r` (visual) | Search selection for quick replace |
 | `<Leader>k` | Clear last search highlight |
 | `<M-.>`, `<M-,>`, `<M-'>`, `<M-;>` | Resize windows |
@@ -68,21 +68,21 @@ Diagnostic list and float helpers. Navigation uses Neovim defaults above.
 Sidekick manages terminal sessions for installed AI CLIs. NES setup and usage remain in the README.
 
 Typical flow:
-1. Use `<Leader>As` to choose an installed CLI.
-2. Use `<Leader>Aa` to open or hide the Sidekick terminal.
-3. Send context with `<Leader>At`, `<Leader>AF`, or visual `<Leader>Av`.
-4. Use `<Leader>Ap` for a one-off prompt with the current context.
+1. Use `<Leader>as` to choose an installed CLI.
+2. Use `<Leader>aa` to open or hide the Sidekick terminal.
+3. Send context with `<Leader>at`, `<Leader>aF`, or visual `<Leader>av`.
+4. Use `<Leader>ap` for a one-off prompt with the current context.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>Aa` | Toggle Sidekick CLI |
-| `<Leader>Af` | Focus Sidekick CLI |
-| `<Leader>As` | Select an installed CLI |
-| `<Leader>Ad` | Detach/close Sidekick CLI |
-| `<Leader>At` | Send current context (`{this}`) |
-| `<Leader>AF` | Send current file (`{file}`) |
-| `<Leader>Av` | Send visual selection (`{selection}`) |
-| `<Leader>Ap` | Prompt Sidekick |
+| `<Leader>aa` | Toggle Sidekick CLI |
+| `<Leader>af` | Focus Sidekick CLI |
+| `<Leader>as` | Select an installed CLI |
+| `<Leader>ad` | Detach/close Sidekick CLI |
+| `<Leader>at` | Send current context (`{this}`) |
+| `<Leader>aF` | Send current file (`{file}`) |
+| `<Leader>av` | Send visual selection (`{selection}`) |
+| `<Leader>ap` | Prompt Sidekick |
 
 ## Debugging
 DAP debugger controls and inspection.

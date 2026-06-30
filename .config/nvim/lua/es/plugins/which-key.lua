@@ -14,7 +14,7 @@ function M.setup()
       { "<leader>e", group = "Explorer" },
       { "<leader>t", group = "Toggle" },
       { "<leader>m", group = "Markdown" },
-      { "<leader>A", group = "AI" },
+      { "<leader>a", group = "AI" },
     },
   })
 end

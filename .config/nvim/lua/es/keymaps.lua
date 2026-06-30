@@ -133,7 +133,7 @@ for level = 0, 6 do
 end
 
 -- ============================================================================
--- AI Operations (<Leader>A* = "ai")
+-- AI Operations (<Leader>a* = "ai")
 -- ============================================================================
 -- Sidekick terminal sessions for local AI CLIs.
 
@@ -156,28 +156,28 @@ map({ "i", "n" }, "<Tab>", function()
   return "<Tab>"
 end, { expr = true, desc = "Goto/apply next edit suggestion" })
 
-map({ "n", "t", "i", "x" }, "<Leader>Af", function()
+map({ "n", "t", "i", "x" }, "<Leader>af", function()
   sidekick_cli().focus()
 end, { desc = "Sidekick focus" })
-map("n", "<Leader>Aa", function()
+map("n", "<Leader>aa", function()
   sidekick_cli().toggle()
 end, { desc = "Sidekick toggle CLI" })
-map("n", "<Leader>As", function()
+map("n", "<Leader>as", function()
   sidekick_cli().select({ filter = { installed = true } })
 end, { desc = "Sidekick select CLI" })
-map("n", "<Leader>Ad", function()
+map("n", "<Leader>ad", function()
   sidekick_cli().close()
 end, { desc = "Sidekick detach CLI" })
-map({ "n", "x" }, "<Leader>At", function()
+map({ "n", "x" }, "<Leader>at", function()
   sidekick_cli().send({ msg = "{this}" })
 end, { desc = "Sidekick send this" })
-map("n", "<Leader>AF", function()
+map("n", "<Leader>aF", function()
   sidekick_cli().send({ msg = "{file}" })
 end, { desc = "Sidekick send file" })
-map("x", "<Leader>Av", function()
+map("x", "<Leader>av", function()
   sidekick_cli().send({ msg = "{selection}" })
 end, { desc = "Sidekick send selection" })
-map({ "n", "x" }, "<Leader>Ap", function()
+map({ "n", "x" }, "<Leader>ap", function()
   sidekick_cli().prompt()
 end, { desc = "Sidekick prompt" })
 

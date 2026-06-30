@@ -148,7 +148,7 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 
 ### Optional tooling
 - Telescope pickers expect [`ripgrep`](https://github.com/BurntSushi/ripgrep) and [`fd`](https://github.com/sharkdp/fd) on `$PATH`.
-- Sidekick can attach to installed local AI CLIs. Install the CLIs you want to use separately, then pick one from Neovim with `<Leader>As`.
+- Sidekick can attach to installed local AI CLIs. Install the CLIs you want to use separately, then pick one from Neovim with `<Leader>as`.
 - Sidekick CLI sessions use tmux persistence when Neovim is running inside tmux.
 - Sidekick NES requires a GitHub Copilot subscription or Copilot Free access.
 - Language-specific runtimes (Go, Python, etc.) should be installed before launching Mason or DAP adapters.

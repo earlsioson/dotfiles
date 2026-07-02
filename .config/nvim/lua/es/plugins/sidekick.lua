@@ -1,7 +1,11 @@
 local M = {}
 
 function M.setup()
+  -- Load telescope feature so that sidekick has a valid picker.
+  require("es.pack").load("telescope")
+
   require("sidekick").setup({
+    picker = "telescope",
     cli = {
       mux = {
         -- Keep Sidekick CLI sessions persistent when Neovim runs inside tmux.
@@ -11,6 +15,11 @@ function M.setup()
       tools = {
         agy = {
           cmd = { "agy" },
+        },
+      },
+      win = {
+        keys = {
+          stopinsert = { "<leader><Esc>", "stopinsert", mode = "t", desc = "Exit terminal mode" },
         },
       },
     },

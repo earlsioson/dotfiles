@@ -1,17 +1,15 @@
 # Keymaps
 
-Leader key is `<Space>`. Shared Vim/Neovim mappings live in `.vim/common.vim`; Neovim-only mappings live in `.config/nvim/lua/es/keymaps.lua`.
+Leader key is `<Space>`. Shared Vim/Neovim mappings live in [common.vim](file:///Users/developer/dev/repos/dotfiles/.vim/common.vim); Neovim-only mappings live in [keymaps.lua](file:///Users/developer/dev/repos/dotfiles/.config/nvim/lua/es/keymaps.lua).
 
 ## Mental Model
 - `g...` is Vim's extended "go/do" namespace.
 - `gr...` is Neovim's LSP-related symbol action namespace.
-- `[x` / `]x` means previous/next thing of type `x`.
+- `[x` / `]x` means previous/next thing of type `x` (e.g., `[d` / `]d` for diagnostics, `[c` / `]c` for git hunks).
 - `[` points backward, previous, or first; `]` points forward, next, or last.
-- `d` steps through diagnostics; `D` jumps to the diagnostic boundary.
-- `K` keeps its classic "keyword help" role through LSP hover.
-- `CTRL-]` keeps its classic tag-jump role through LSP definition.
+- `K` and `CTRL-]` maintain their classic Vim help and tag jump roles, mapped directly to LSP hover and definition.
 
-## Shared Vim And Neovim
+## Shared Vim and Neovim
 These work in both Vim and Neovim.
 
 | Shortcut | Action |
@@ -22,8 +20,8 @@ These work in both Vim and Neovim.
 | `<Leader>r` (visual) | Search selection for quick replace |
 | `<Leader>k` | Clear last search highlight |
 | `<M-.>`, `<M-,>`, `<M-'>`, `<M-;>` | Resize windows |
-| `z0` | Set local foldlevel to 99 and refresh folds in Vim |
-| `z1` - `z6` | Set local foldlevel 1-6 and refresh folds in Vim |
+| `z0` | Set local foldlevel to 99 (refresh folds in Vim, recompute in Neovim) |
+| `z1` - `z6` | Set local foldlevel to 1-6 (refresh folds in Vim, recompute in Neovim) |
 | `<Leader><Leader>t` | Open bottom terminal helper |
 | `<Leader><Esc>` | Exit terminal-mode |
 
@@ -98,7 +96,7 @@ DAP debugger controls and inspection.
 | `<Leader>bt` | Terminate |
 | `<Leader>br` | REPL |
 | `<Leader>bu` | UI (toggle) |
-| `<Leader>bv` | Load vscode config |
+| `<Leader>bv` | Load VS Code config |
 | `<Leader>bl` | Run last |
 | `<Leader>bk` | Kill all breakpoints |
 | `<Leader>bh` | Hover variables |
@@ -107,7 +105,7 @@ DAP debugger controls and inspection.
 | `<Leader>bp` | Preview scopes |
 
 ## Find
-Telescope pickers use ripgrep for text search and fd for file finding. Hidden file search (`<Leader>fh`) and the directory picker that feeds Oil (`<Leader>fD`) share the same fd exclude list in `.config/nvim/lua/es/keymaps.lua`.
+Telescope pickers use ripgrep for text search and fd for file finding. Hidden file search (`<Leader>fh`) and the directory picker that feeds Oil (`<Leader>fD`) share the same fd exclude list in [keymaps.lua](file:///Users/developer/dev/repos/dotfiles/.config/nvim/lua/es/keymaps.lua).
 
 | Shortcut | Action |
 | --- | --- |
@@ -181,8 +179,6 @@ Quick jump navigation. These mappings preserve Vim defaults for `s` and `S`.
 | --- | --- |
 | `<Leader>mp` | Markdown preview |
 | `<Leader><Leader>x` | Save and source current Lua file |
-| `z0` | Set window-local foldlevel to 99 and recompute folds |
-| `z1` - `z6` | Set window-local foldlevel 1-6 and recompute folds |
 
 ## nvim-cmp
 | Shortcut | Action |

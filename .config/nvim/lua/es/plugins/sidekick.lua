@@ -8,6 +8,11 @@ function M.setup()
         enabled = vim.env.TMUX ~= nil,
         backend = "tmux",
       },
+      tools = {
+        agy = {
+          cmd = { "agy" },
+        },
+      },
     },
   })
 end

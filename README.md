@@ -162,6 +162,8 @@ Then run `:LspBootstrap` from Neovim to install the configured Mason LSP depende
 3. Start tmux and press `<prefix>I` (capital i) to install plugins via tpm.
 
 ### tmux Keymaps
+The prefix/leader key is set to `Ctrl-Space` (`C-Space`).
+
 | Shortcut | Action |
 | --- | --- |
 | `C-k` (no prefix) | Reset pane display and clear scrollback (`send-keys -R`, `C-l`, `clear-history`). |

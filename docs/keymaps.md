@@ -56,13 +56,13 @@ Diagnostic list and float helpers. Navigation uses Neovim defaults above.
 | `<Leader>dq` | Diagnostic quickfix |
 
 ## AI
-Sidekick manages terminal sessions for installed AI CLIs. NES setup and usage remain in the README.
+Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (NES) configurations are documented in the [README.md](file:///Users/developer/dev/repos/dotfiles/README.md).
 
-Typical flow:
-1. Use `<Leader>as` to choose an installed CLI.
-2. Use `<Leader>aa` to open or hide the Sidekick terminal.
-3. Send context with `<Leader>at`, `<Leader>aF`, or visual `<Leader>av`.
-4. Use `<Leader>ap` for a one-off prompt with the current context.
+### Workflow Capabilities
+* **Session Selection**: `<Leader>as` opens a selector for installed CLI clients.
+* **Terminal View**: `<Leader>aa` toggles visibility of the active Sidekick split window.
+* **Context Transmission**: Buffers, selections, or visual ranges can be piped to the session using `<Leader>at`, `<Leader>aF`, or visual `<Leader>av`.
+* **Inline Prompts**: `<Leader>ap` launches a prompt input box utilizing the active context.
 
 | Shortcut | Action |
 | --- | --- |

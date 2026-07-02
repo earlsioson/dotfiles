@@ -13,6 +13,7 @@ $rust\
 $zig\
 $mojo\
 $git_branch\
+$git_status\
 $directory\
 $line_break\
 $character\

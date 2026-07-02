@@ -2,13 +2,6 @@
 
 Leader key is `<Space>`. Shared Vim/Neovim mappings live in [common.vim](file:///Users/developer/dev/repos/dotfiles/.vim/common.vim); Neovim-only mappings live in [keymaps.lua](file:///Users/developer/dev/repos/dotfiles/.config/nvim/lua/es/keymaps.lua).
 
-## Mental Model
-- `g...` is Vim's extended "go/do" namespace.
-- `gr...` is Neovim's LSP-related symbol action namespace.
-- `[x` / `]x` means previous/next thing of type `x` (e.g., `[d` / `]d` for diagnostics, `[c` / `]c` for git hunks).
-- `[` points backward, previous, or first; `]` points forward, next, or last.
-- `K` and `CTRL-]` maintain their classic Vim help and tag jump roles, mapped directly to LSP hover and definition.
-
 ## Shared Vim and Neovim
 These work in both Vim and Neovim.
 

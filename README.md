@@ -36,6 +36,7 @@ The repository contains the following configurations mapping to standard paths i
   * System packages: `tree-sitter-cli`, `neovim` (installed globally via `npm install -g`).
 * **Python virtualenv**: Used for Neovim host and DAP support.
   * Required virtualenv packages: `pynvim`, `debugpy`.
+  * Instantiation: Created using `uv sync` from the repository root (defined via `pyproject.toml` and `uv.lock`).
   * Configuration: The path to this virtualenv's Python binary must be set in `es/globals.lua` (`vim.g.python_host_path`).
 * **Language-specific runtimes** (Go, Python, etc.) must be present on `$PATH` before configuring corresponding LSP servers or debug adapters.
 

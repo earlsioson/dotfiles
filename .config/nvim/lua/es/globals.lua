@@ -6,6 +6,7 @@ local function detect_python_path()
     vim.fn.resolve(vim.fn.stdpath("config")) .. "/../../.venv/bin/python",
     -- Common locations
     "~/dev/repos/dotfiles/.venv/bin/python",
+    "~/repos/dotfiles/.venv/bin/python",
     "~/src/dotfiles/.venv/bin/python",
     "~/dotfiles/.venv/bin/python",
   }

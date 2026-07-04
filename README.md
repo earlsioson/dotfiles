@@ -38,7 +38,7 @@ The repository contains the following configurations mapping to standard paths i
   * Required virtualenv packages: `pynvim`, `debugpy`.
   * Instantiation: Created using `uv sync` from the repository root (defined via `pyproject.toml` and `uv.lock`).
   * Configuration: The path to this virtualenv's Python binary must be set in `es/globals.lua` (`vim.g.python_host_path`).
-* **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff`, [astral installer](https://astral.sh/ruff/install.sh), or the af-workspace bootstrap (`~/.local/bin`). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
+* **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff` or the [astral installer](https://astral.sh/ruff/install.sh). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
 * **Language-specific runtimes** (Go, Python, etc.) must be present on `$PATH` before configuring corresponding LSP servers or debug adapters.
 
 ---
@@ -123,7 +123,7 @@ For reference during backups or troubleshooting, the configuration and generated
 | Category | Plugins |
 | --- | --- |
 | **Formatting** | `stevearc/conform.nvim` |
-| **LSP** | `neovim/nvim-lspconfig`, `williamboman/mason.nvim`, `williamboman/mason-lspconfig.nvim`, `jay-babu/mason-nvim-dap.nvim` |
+| **LSP** | `neovim/nvim-lspconfig`, `mason-org/mason.nvim`, `mason-org/mason-lspconfig.nvim`, `jay-babu/mason-nvim-dap.nvim` |
 | **Treesitter** | `nvim-treesitter/nvim-treesitter`, `nvim-treesitter/nvim-treesitter-context` |
 | **Completion** | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lsp` |
 | **Debugging** | `mfussenegger/nvim-dap`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |

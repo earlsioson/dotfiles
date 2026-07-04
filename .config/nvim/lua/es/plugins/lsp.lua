@@ -1,6 +1,8 @@
 -- LSP servers managed by Mason
 -- Optional server-specific overrides live in ~/.config/nvim/lua/es/lsp/*.lua.
-local servers = {
+-- Installed by Mason (npm/go/binary — none need pip/venv, so all work on
+-- Lightning studios where venv creation is blocked).
+local mason_servers = {
   "biome",
   "copilot",
   "cssls",
@@ -10,9 +12,7 @@ local servers = {
   "html",
   "jsonls",
   "lua_ls",
-
   "pyright",
-  "ruff",
   "rust_analyzer",
   "tailwindcss",
   "terraformls",
@@ -21,11 +21,23 @@ local servers = {
   "yamlls",
 }
 
+-- Provided outside Mason (static binary on PATH via ~/.local/bin, or uv) —
+-- Mason would pip/venv these, which Lightning blocks. Configured + enabled,
+-- but not ensure_installed.
+local external_servers = {
+  "ruff",
+}
+
+-- All servers get configured + enabled; only mason_servers get ensure_installed.
+local servers = {}
+vim.list_extend(servers, mason_servers)
+vim.list_extend(servers, external_servers)
+
 local M = {}
 
 function M.setup()
   require("mason-lspconfig").setup({
-    ensure_installed = servers,
+    ensure_installed = mason_servers,
   })
 
   local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview

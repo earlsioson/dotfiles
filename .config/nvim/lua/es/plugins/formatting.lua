@@ -16,6 +16,7 @@ function M.setup()
       json = { "biome" },
       markdown = { "rumdl" },
       ["markdown.mdx"] = { "rumdl" },
+      mojo = { "mojo_format" },
     },
     formatters = {
       biome = {

@@ -1,6 +1,6 @@
 # Keymaps
 
-Leader key is `<Space>`. Shared Vim/Neovim mappings live in [common.vim](file:///Users/developer/dev/repos/dotfiles/.vim/common.vim); Neovim-only mappings live in [keymaps.lua](file:///Users/developer/dev/repos/dotfiles/.config/nvim/lua/es/keymaps.lua).
+Leader key is `<Space>`. Shared Vim/Neovim mappings live in [common.vim](../.vim/common.vim); Neovim-only mappings live in [keymaps.lua](../.config/nvim/lua/es/keymaps.lua). tmux prefix is `C-Space`; configuration and custom bindings live in [.tmux.conf](../.tmux.conf).
 
 ## Shared Vim and Neovim
 These work in both Vim and Neovim.
@@ -56,7 +56,7 @@ Diagnostic list and float helpers. Navigation uses Neovim defaults above.
 | `<Leader>dq` | Diagnostic quickfix |
 
 ## AI
-Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (NES) configurations are documented in the [README.md](file:///Users/developer/dev/repos/dotfiles/README.md).
+Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (NES) configurations are documented in the [README.md](../README.md).
 
 ### Workflow Capabilities
 * **Session Selection**: `<Leader>as` opens a selector for installed CLI clients.
@@ -98,7 +98,7 @@ DAP debugger controls and inspection.
 | `<Leader>bp` | Preview scopes |
 
 ## Find
-Telescope pickers use ripgrep for text search and fd for file finding. Hidden file search (`<Leader>fh`) and the directory picker that feeds Oil (`<Leader>fD`) share the same fd exclude list in [keymaps.lua](file:///Users/developer/dev/repos/dotfiles/.config/nvim/lua/es/keymaps.lua).
+Telescope pickers use ripgrep for text search and fd for file finding. Hidden file search (`<Leader>fh`) and the directory picker that feeds Oil (`<Leader>fD`) share the same fd exclude list in [keymaps.lua](../.config/nvim/lua/es/keymaps.lua).
 
 | Shortcut | Action |
 | --- | --- |
@@ -112,6 +112,7 @@ Telescope pickers use ripgrep for text search and fd for file finding. Hidden fi
 | `<Leader>fw` | Find workspace symbols |
 | `<Leader>fd` | Find document symbols |
 | `<Leader>fk` | Find keymaps |
+| `<Leader>fs` | Find changed Git files (status) |
 | `<Leader>fe` | Find explorer (file browser) |
 | `<Leader>fE` | Find explorer all (no gitignore) |
 | `<M-d>` (buffers picker) | Delete selected buffer and keep picker open |
@@ -180,3 +181,14 @@ Quick jump navigation. These mappings preserve Vim defaults for `s` and `S`.
 | `<C-n>` / `<C-p>` | Navigate completion menu |
 | `<C-Space>` | Open completion menu |
 | `<C-b>` / `<C-f>` | Scroll completion docs; jump previous/next snippet placeholder when a snippet is active |
+
+## tmux
+Prefix is `C-Space`. Mappings are active session-wide.
+
+| Shortcut | Action |
+| --- | --- |
+| `C-k` (no prefix) | Reset pane display and clear scrollback (`send-keys -R`, `C-l`, `clear-history`) |
+| `<prefix>a` | Toggle synchronize-panes for current window |
+| `M-9` / `M-0` (no prefix) | Swap to previous/next window and focus it |
+| `S-Left` / `S-Right` | Resize pane 10 cells horizontally |
+| `S-Up` / `S-Down` | Resize pane 10 cells vertically |

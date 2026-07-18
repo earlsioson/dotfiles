@@ -9,7 +9,7 @@ opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 -- Neovim-specific enhancements
 opt.undofile = true              -- Persistent undo
 opt.updatetime = 250             -- Faster completion and diagnostics
-opt.timeoutlen = 300             -- Faster which-key popup (if added)
+opt.timeoutlen = 300             -- Faster which-key popup
 
 if vim.env.TMUX then
   vim.g.clipboard = {

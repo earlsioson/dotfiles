@@ -9,25 +9,26 @@ This repo is default-first. Vim and Neovim start from their native behavior, add
 The configurations follow each tool's idioms:
 - **Vim**: Uses Vimscript, `defaults.vim`, and native packages under `~/.vim/pack`.
 - **Neovim**: Uses Lua, `vim.pack` package management, built-in LSP defaults, and lazy-loaded feature modules.
-- **Shared Behavior**: Defined in [common.vim](file:///Users/developer/dev/repos/dotfiles/.vim/common.vim). Neovim-only additions live in [keymaps.lua](file:///Users/developer/dev/repos/dotfiles/.config/nvim/lua/es/keymaps.lua).
+- **Shared Behavior**: Defined in [common.vim](.vim/common.vim). Neovim-only additions live in [keymaps.lua](.config/nvim/lua/es/keymaps.lua).
 
 ## Configuration Layout
 The repository contains the following configurations mapping to standard paths in `$HOME`:
 
-* **`[common.vim](file:///Users/developer/dev/repos/dotfiles/.vim/common.vim)`** -> Shared settings (indentation, line numbers, search defaults, and core keymaps).
-* **`[.vimrc](file:///Users/developer/dev/repos/dotfiles/.vimrc)`** -> Vim baseline configuration.
-* **`[.vim/](file:///Users/developer/dev/repos/dotfiles/.vim)`** -> Vim native packages and runtime files.
-* **`[.config/nvim/](file:///Users/developer/dev/repos/dotfiles/.config/nvim)`** -> Neovim Lua environment (`init.lua`, package specs, options, and plugin setups).
-* **`[.tmux.conf](file:///Users/developer/dev/repos/dotfiles/.tmux.conf)`** -> tmux configuration (prefix set to `<C-Space>`, options, and TPM plugins).
-* **`[.cargo/config](file:///Users/developer/dev/repos/dotfiles/.cargo/config)`** -> Cargo options.
-* **`[.config/starship.toml](file:///Users/developer/dev/repos/dotfiles/.config/starship.toml)`** -> Starship prompt layout and modules.
+* **[common.vim](.vim/common.vim)** -> Shared settings (indentation, line numbers, search defaults, and core keymaps).
+* **[.vimrc](.vimrc)** -> Vim baseline configuration.
+* **[.vim/](.vim/)** -> Shared Vim runtime configuration. Installed native packages live under the runtime copy at `~/.vim/pack`.
+* **[.config/nvim/](.config/nvim/)** -> Neovim Lua environment (`init.lua`, package specs, options, and plugin setups).
+* **[.tmux.conf](.tmux.conf)** -> tmux configuration (prefix set to `<C-Space>`, options, and TPM plugins).
+* **[.cargo/config](.cargo/config)** -> Cargo options.
+* **[.config/starship.toml](.config/starship.toml)** -> Starship prompt layout and modules.
 
 ---
 
 ## Dependencies & Prerequisites
 
 ### System Requirements
-* Current releases of **Vim**, **Neovim** (>= 0.11.2), **Git**, **`just`**, **tmux**, and a POSIX shell.
+* Current releases of **Vim**, **Neovim** (>= 0.12), **Git**, **`just`**, **tmux**, **Bash**, and **`uv`**.
+* **ripgrep** (`rg`) and **fd** for Telescope search, plus **make** and a C toolchain for native plugin builds.
 * A **Nerd Font** (recommended for rendering Neovim UI icons).
 
 ### Language Toolchains & Runtimes
@@ -36,9 +37,11 @@ The repository contains the following configurations mapping to standard paths i
   * System packages: `tree-sitter-cli`, `neovim` (installed globally via `npm install -g`).
 * **Python virtualenv**: Used for Neovim host and DAP support.
   * Required virtualenv packages: `pynvim`, `debugpy`.
-  * Instantiation: Created using `uv sync` from the repository root (defined via `pyproject.toml` and `uv.lock`).
-  * Configuration: The path to this virtualenv's Python binary must be set in `es/globals.lua` (`vim.g.python_host_path`).
+  * Instantiation: Created using `uv sync --group dev` from the repository root (defined via `pyproject.toml` and `uv.lock`).
+  * Configuration: `es/globals.lua` discovers the repository virtualenv and assigns it to `vim.g.python_host_path`.
 * **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff` or the [astral installer](https://astral.sh/ruff/install.sh). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
+* **Formatter binaries**: `stylua`, `black`, `rumdl`, and `mojo_format` are used when formatting their corresponding filetypes. `isort` is installed by the development dependency group above.
+* **Glow**: The `glow` executable is required for the Markdown preview mapping.
 * **Language-specific runtimes** (Go, Python, etc.) must be present on `$PATH` before configuring corresponding LSP servers or debug adapters.
 
 ---
@@ -50,9 +53,14 @@ Vim uses native packages located in:
 ```text
 ~/.vim/pack/plugins/start/{plugin}
 ```
-The repository [justfile](file:///Users/developer/dev/repos/dotfiles/justfile) defines targets to manage these folders:
+The `vim_plugins` list in the repository [justfile](justfile) is the authoritative Vim plugin declaration. Vim automatically loads every package directory under `start`, so these plugins do not also need declarations in `.vimrc`. Removing a repository from `vim_plugins` makes its installed directory eligible for pruning on the next sync.
+
+The `justfile` defines targets to manage these folders:
 * `just vim-plugins-install`: Clones missing Vim package repositories.
 * `just vim-plugins-update`: Pulls latest changes (`git pull --ff-only`) for all existing Vim packages.
+* `just vim-plugins-prune`: Removes installed package directories that are no longer declared, after confirmation.
+* `just vim-plugins-sync`: Installs missing plugins, updates declared plugins, prunes undeclared plugins, and regenerates help tags.
+  For non-interactive automation, set `VIM_PLUGINS_PRUNE_FORCE=1` to acknowledge deletion of the listed stale directories.
 * `just vim-go-binaries`: Runs `:GoUpdateBinaries` to compile Vim-go dependencies.
 * **Installation Root**: Default is `~/.vim/pack/plugins`. Can be overridden with the `VIM_PACK_ROOT` environment variable.
 
@@ -74,7 +82,7 @@ For reference during backups or troubleshooting, the configuration and generated
 
 | Component | Configuration Source | Generated State / Cache (Safe to clear) |
 | --- | --- | --- |
-| **Vim** | `~/.vim`, `~/.vimrc` | None (Vim uses native packages) |
+| **Vim** | `~/.vim`, `~/.vimrc` | `~/.vim/pack/plugins/start` (managed plugin clones) |
 | **Neovim** | `~/.config/nvim` | `~/.local/share/nvim` (plugins/data)<br>`~/.local/state/nvim` (logs/undo)<br>`~/.cache/nvim` (caches) |
 | **tmux** | `~/.tmux.conf` | `~/.tmux/plugins` (TPM checkouts) |
 | **Cargo** | `~/.cargo/config` | None |
@@ -85,16 +93,6 @@ For reference during backups or troubleshooting, the configuration and generated
 ## tmux Configuration
 * **TPM Plugin Manager**: Manages plugin life cycle via [tpm](https://github.com/tmux-plugins/tpm).
 * **Prefix Key**: Configured to `Ctrl-Space` (`C-Space`).
-
-### tmux Keymaps
-
-| Shortcut | Action |
-| --- | --- |
-| `C-k` (no prefix) | Reset pane display and clear scrollback (`send-keys -R`, `C-l`, `clear-history`) |
-| `<prefix>a` | Toggle synchronize-panes for current window |
-| `M-9` / `M-0` (no prefix) | Swap to previous/next window and focus it |
-| `S-Left` / `S-Right` | Resize pane 10 cells horizontally |
-| `S-Up` / `S-Down` | Resize pane 10 cells vertically |
 
 ---
 
@@ -123,12 +121,12 @@ For reference during backups or troubleshooting, the configuration and generated
 | Category | Plugins |
 | --- | --- |
 | **Formatting** | `stevearc/conform.nvim` |
-| **LSP** | `neovim/nvim-lspconfig`, `mason-org/mason.nvim`, `mason-org/mason-lspconfig.nvim`, `jay-babu/mason-nvim-dap.nvim` |
+| **LSP** | `neovim/nvim-lspconfig`, `mason-org/mason.nvim`, `mason-org/mason-lspconfig.nvim` |
 | **Treesitter** | `nvim-treesitter/nvim-treesitter`, `nvim-treesitter/nvim-treesitter-context` |
 | **Completion** | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lsp` |
-| **Debugging** | `mfussenegger/nvim-dap`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |
+| **Debugging** | `mfussenegger/nvim-dap`, `jay-babu/mason-nvim-dap.nvim`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |
 | **Telescope** | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
-| **UI** | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim` |
+| **UI** | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim`, `folke/which-key.nvim` |
 | **Navigation** | `folke/flash.nvim` |
 | **Productivity** | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `folke/sidekick.nvim` |
 | **Language Extras** | `fatih/vim-go`, `terrastruct/d2-vim` |
@@ -141,12 +139,12 @@ Next Edit Suggestions (NES) use the `copilot` LSP client configuration.
 
 **Usage Mappings:**
 * **Auto-Trigger**: Pausing, typing, or leaving insert mode prompts automatic suggestions.
-* **`<Tab>`**: Applies active edit suggestion (falls back to native inline completion or standard tab).
+* **`<Tab>`**: Applies active edit suggestion (falls back to inline completion or standard tab).
 * **`:Sidekick nes update`**: Manually requests a suggestion at the cursor.
 * **`:Sidekick nes toggle`**: Disables or re-enables Next Edit Suggestions.
 
 ### Keymaps Reference
-Detailed Vim and Neovim keymaps are documented in:
-* **[docs/keymaps.md](file:///Users/developer/dev/repos/dotfiles/docs/keymaps.md)** (Full reference manual)
-* **[common.vim](file:///Users/developer/dev/repos/dotfiles/.vim/common.vim)** (Shared Vim/Neovim mappings)
-* **[keymaps.lua](file:///Users/developer/dev/repos/dotfiles/.config/nvim/lua/es/keymaps.lua)** (Neovim-only mappings)
+Detailed Vim, Neovim, and tmux keymaps are documented in:
+* **[docs/keymaps.md](docs/keymaps.md)** (Full reference manual)
+* **[common.vim](.vim/common.vim)** (Shared Vim/Neovim mappings)
+* **[keymaps.lua](.config/nvim/lua/es/keymaps.lua)** (Neovim-only mappings)

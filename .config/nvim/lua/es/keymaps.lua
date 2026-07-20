@@ -433,66 +433,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 map("n", "<Leader>mp", function()
-  if vim.fn.executable("glow") ~= 1 then
-    vim.notify("glow is not installed or is not on PATH", vim.log.levels.ERROR)
-    return
-  end
-
-  local temp_file = vim.fn.tempname() .. ".md"
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-  local ok, err = pcall(vim.fn.writefile, lines, temp_file)
-  if not ok then
-    vim.notify(("Unable to write markdown preview: %s"):format(err), vim.log.levels.ERROR)
-    return
-  end
-
-  local width = math.max(80, math.floor(vim.o.columns * 0.95))
-  local height = math.max(20, math.floor(vim.o.lines * 0.9))
-  width = math.max(1, math.min(width, vim.o.columns - 4))
-  height = math.max(1, math.min(height, vim.o.lines - vim.o.cmdheight - 4))
-
-  local buf = vim.api.nvim_create_buf(false, true)
-  local win = vim.api.nvim_open_win(buf, true, {
-    relative = "editor",
-    width = width,
-    height = height,
-    row = math.floor((vim.o.lines - height) / 2),
-    col = math.floor((vim.o.columns - width) / 2),
-    border = "rounded",
-    style = "minimal",
-    title = " Markdown Preview ",
-    title_pos = "center",
-  })
-
-  vim.bo[buf].bufhidden = "wipe"
-  vim.wo[win].number = false
-  vim.wo[win].relativenumber = false
-  vim.wo[win].signcolumn = "no"
-
-  local job_id
-  local function cleanup()
-    if job_id and vim.fn.jobwait({ job_id }, 0)[1] == -1 then
-      vim.fn.jobstop(job_id)
-    end
-    if vim.api.nvim_win_is_valid(win) then
-      vim.api.nvim_win_close(win, true)
-    end
-    pcall(vim.uv.fs_unlink, temp_file)
-  end
-
-  job_id = vim.fn.termopen({ "glow", "--width", tostring(width), temp_file }, {
-    on_exit = function()
-      pcall(vim.uv.fs_unlink, temp_file)
-    end,
-  })
-  if job_id <= 0 then
-    cleanup()
-    vim.notify("Unable to start glow markdown preview", vim.log.levels.ERROR)
-    return
-  end
-
-  map("n", "q", cleanup, { buffer = buf, nowait = true, desc = "Close markdown preview" })
+  require("es.markdown_preview").open()
 end, { desc = "Markdown preview" })
 
 return M

@@ -21,14 +21,6 @@ function M.setup()
       preview_method = "fast_scratch",
     },
   })
-
-  require("glow").setup({
-    border = "rounded",
-    width = 9999,
-    height = 9999,
-    width_ratio = 0.95,
-    height_ratio = 0.9,
-  })
 end
 
 return M

@@ -14,7 +14,6 @@ local specs = {
   { name = "mini.icons", src = gh("echasnovski/mini.icons") },
   { name = "nvim-autopairs", src = gh("windwp/nvim-autopairs") },
   { name = "lualine.nvim", src = gh("nvim-lualine/lualine.nvim") },
-  { name = "glow.nvim", src = gh("ellisonleao/glow.nvim") },
   { name = "neoscroll.nvim", src = gh("karb94/neoscroll.nvim") },
   { name = "dashboard-nvim", src = gh("nvimdev/dashboard-nvim") },
   { name = "nvim-tree.lua", src = gh("nvim-tree/nvim-tree.lua") },
@@ -79,7 +78,7 @@ local feature_defs = {
     end,
   },
   explorer = {
-    plugins = { "nvim-tree.lua", "oil.nvim", "glow.nvim" },
+    plugins = { "nvim-tree.lua", "oil.nvim" },
     setup = function()
       require("es.plugins.explorer").setup()
     end,

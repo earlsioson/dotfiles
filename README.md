@@ -35,8 +35,8 @@ The repository contains the following configurations mapping to standard paths i
 * **Node.js**: Required backend runtime for LSP servers and formatters.
 * **Tree-sitter CLI & Neovim npm helper**: Required for parser compilation.
   * System packages: `tree-sitter-cli`, `neovim` (installed globally via `npm install -g`).
-* **Python virtualenv**: Used for Neovim host and DAP support.
-  * Required virtualenv packages: `pynvim`, `debugpy`.
+* **Python virtualenv**: Used for Neovim host, DAP, and the Pyrepl Jupyter console and image runtime.
+  * Required packages are declared in `pyproject.toml`; project libraries such as Matplotlib do not belong in this environment.
   * Instantiation: Created using `uv sync --group dev` from the repository root (defined via `pyproject.toml` and `uv.lock`).
   * Configuration: `es/globals.lua` discovers the repository virtualenv and assigns it to `vim.g.python_host_path`.
 * **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff` or the [astral installer](https://astral.sh/ruff/install.sh). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
@@ -93,6 +93,7 @@ For reference during backups or troubleshooting, the configuration and generated
 ## tmux Configuration
 * **TPM Plugin Manager**: Manages plugin life cycle via [tpm](https://github.com/tmux-plugins/tpm).
 * **Prefix Key**: Configured to `Ctrl-Space` (`C-Space`).
+* **Graphics Passthrough**: `allow-passthrough` forwards wrapped Kitty graphics sequences to Ghostty for inline Pyrepl plots. Every tmux layer must enable it, including tmux running on an SSH host.
 
 ---
 
@@ -125,11 +126,44 @@ For reference during backups or troubleshooting, the configuration and generated
 | **Treesitter** | `nvim-treesitter/nvim-treesitter`, `nvim-treesitter/nvim-treesitter-context` |
 | **Completion** | `hrsh7th/nvim-cmp`, `hrsh7th/cmp-buffer`, `hrsh7th/cmp-path`, `hrsh7th/cmp-cmdline`, `hrsh7th/cmp-nvim-lsp` |
 | **Debugging** | `mfussenegger/nvim-dap`, `jay-babu/mason-nvim-dap.nvim`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |
+| **REPL** | `dangooddd/pyrepl.nvim` |
 | **Telescope** | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
 | **UI** | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim`, `folke/which-key.nvim` |
 | **Navigation** | `folke/flash.nvim` |
 | **Productivity** | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `folke/sidekick.nvim` |
 | **Language Extras** | `fatih/vim-go`, `terrastruct/d2-vim` |
+
+### Interactive REPLs
+Pyrepl provides a Jupyter console for Python buffers and displays plot output using its built-in Ghostty-compatible image provider. It loads after opening a `*.py` or `*.ipynb` file, so its commands are intentionally unavailable on dashboard-only startup.
+
+Python environment responsibilities remain separate:
+
+* The dotfiles `.venv` runs the Pyrepl console and image tooling.
+* Each project's `.venv` owns project libraries and runs code through a registered Jupyter kernel.
+* Pyright automatically uses the current workspace's `.venv` when one exists.
+* `:PyreplOpen` compares resolved interpreter paths and automatically opens the registered kernel backed by that same project `.venv`.
+
+Set up a uv project for Matplotlib-backed REPL work with:
+
+```sh
+uv add matplotlib
+uv add --dev ipykernel
+uv run python -m ipykernel install --user \
+  --name my-project \
+  --display-name "Python (my-project)"
+```
+
+* `:PyreplOpen`: Open the registered kernel whose interpreter matches the current project's `.venv`, or prompt when no match exists. Use `:PyreplOpen!` to always choose interactively.
+* `:PyreplToggle`: Show or hide the REPL.
+* `:PyreplToggleFocus`: Move between the source buffer and REPL.
+* `:PyreplSendBuffer`: Send the entire buffer.
+* `:PyreplSendCell`: Send the cell under the cursor; cells use `# %%` markers.
+* `:PyreplSendVisual`: Send the most recent visual selection.
+* `:PyreplOpenImageHistory`: Browse generated plots and other images.
+
+Run `uv sync --group dev` from the dotfiles repository to install the console and image dependencies. After syncing `.config/nvim/` into `~/.config/nvim/`, open a Python file and restart Neovim once if `vim.pack` installs Pyrepl during that session.
+
+Inline plots require a Kitty-graphics-capable terminal such as Ghostty. Through SSH, sync and load `.tmux.conf` on the remote host; every nested tmux layer must report `on` from `tmux show-options -gv allow-passthrough`. Jupytext is required only for notebook conversion.
 
 ### Sidekick & Copilot LSP Configuration
 Next Edit Suggestions (NES) use the `copilot` LSP client configuration.

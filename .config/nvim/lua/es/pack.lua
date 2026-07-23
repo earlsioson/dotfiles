@@ -49,6 +49,7 @@ local specs = {
   { name = "vim-go", src = gh("fatih/vim-go") },
   { name = "d2-vim", src = gh("terrastruct/d2-vim") },
   { name = "sidekick.nvim", src = gh("folke/sidekick.nvim") },
+  { name = "pyrepl.nvim", src = gh("dangooddd/pyrepl.nvim") },
 }
 
 local feature_defs = {
@@ -112,6 +113,12 @@ local feature_defs = {
     plugins = { "sidekick.nvim" },
     setup = function()
       require("es.plugins.sidekick").setup()
+    end,
+  },
+  repl = {
+    plugins = { "pyrepl.nvim", "nvim-treesitter" },
+    setup = function()
+      require("es.plugins.pyrepl").setup()
     end,
   },
   cmp = {
@@ -273,6 +280,14 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
     M.load("lsp")
     M.load("ai")
     M.load("gitsigns")
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+  pattern = { "*.py", "*.ipynb" },
+  once = true,
+  callback = function()
+    M.load("repl")
   end,
 })
 

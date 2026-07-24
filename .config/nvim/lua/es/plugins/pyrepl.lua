@@ -46,6 +46,17 @@ local function project_kernel()
   end
 end
 
+local function ensure_server()
+  if vim.v.servername == nil or vim.v.servername == "" then
+    local ok = pcall(vim.fn.serverstart)
+    if not ok or vim.v.servername == "" then
+      local tmpdir = (vim.uv and vim.uv.os_tmpdir()) or "/tmp"
+      local sock = vim.fs.joinpath(tmpdir, string.format("nvim_%d.sock", vim.fn.getpid()))
+      pcall(vim.fn.serverstart, sock)
+    end
+  end
+end
+
 function M.setup()
   local pyrepl = require("pyrepl").setup({
     python_path = vim.g.python_host_path,
@@ -53,6 +64,8 @@ function M.setup()
 
   vim.api.nvim_del_user_command("PyreplOpen")
   vim.api.nvim_create_user_command("PyreplOpen", function(opts)
+    ensure_server()
+
     if opts.bang then
       pyrepl.open_repl()
       return

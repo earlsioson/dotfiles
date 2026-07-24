@@ -174,6 +174,19 @@ Quick jump navigation. These mappings preserve Vim defaults for `s` and `S`.
 | `<Leader>mp` | Markdown preview |
 | `<Leader><Leader>x` | Save and source current Lua file |
 
+## Pyrepl
+Python REPL management and cell execution for Python (`*.py`) and notebook (`*.ipynb`) buffers.
+
+| Shortcut | Action |
+| --- | --- |
+| `<Leader>po` | Open Pyrepl (connects project `.venv` kernel) |
+| `<Leader>pt` | Toggle REPL window |
+| `<Leader>pf` | Toggle focus between editor and REPL |
+| `<Leader>pc` | Send cell (`# %%`) under cursor |
+| `<Leader>pb` | Send entire buffer |
+| `<Leader>pv` (visual) | Send visual selection |
+| `<Leader>pi` | Open image/plot history browser |
+
 ## nvim-cmp
 | Shortcut | Action |
 | --- | --- |

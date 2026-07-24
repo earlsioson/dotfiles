@@ -153,13 +153,13 @@ uv run python -m ipykernel install --user \
   --display-name "Python (my-project)"
 ```
 
-* `:PyreplOpen`: Open the registered kernel whose interpreter matches the current project's `.venv`, or prompt when no match exists. Use `:PyreplOpen!` to always choose interactively.
-* `:PyreplToggle`: Show or hide the REPL.
-* `:PyreplToggleFocus`: Move between the source buffer and REPL.
-* `:PyreplSendBuffer`: Send the entire buffer.
-* `:PyreplSendCell`: Send the cell under the cursor; cells use `# %%` markers.
-* `:PyreplSendVisual`: Send the most recent visual selection.
-* `:PyreplOpenImageHistory`: Browse generated plots and other images.
+* `:PyreplOpen` (`<Leader>po`): Open the registered kernel whose interpreter matches the current project's `.venv`, or prompt when no match exists. Use `:PyreplOpen!` to always choose interactively.
+* `:PyreplToggle` (`<Leader>pt`): Show or hide the REPL.
+* `:PyreplToggleFocus` (`<Leader>pf`): Move between the source buffer and REPL.
+* `:PyreplSendBuffer` (`<Leader>pb`): Send the entire buffer.
+* `:PyreplSendCell` (`<Leader>pc`): Send the cell under the cursor; cells use `# %%` markers.
+* `:PyreplSendVisual` (`<Leader>pv`): Send the most recent visual selection.
+* `:PyreplOpenImageHistory` (`<Leader>pi`): Browse generated plots and other images.
 
 Run `uv sync --group dev` from the dotfiles repository to install the console and image dependencies. After syncing `.config/nvim/` into `~/.config/nvim/`, open a Python file and restart Neovim once if `vim.pack` installs Pyrepl during that session.
 

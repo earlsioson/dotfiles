@@ -436,4 +436,38 @@ map("n", "<Leader>mp", function()
   require("es.markdown_preview").open()
 end, { desc = "Markdown preview" })
 
+-- ============================================================================
+-- Pyrepl Operations (<Leader>p* = "pyrepl")
+-- ============================================================================
+-- Python REPL management and cell execution
+
+map("n", "<Leader>po", function()
+  load_feature("repl")
+  vim.cmd("PyreplOpen")
+end, { desc = "Pyrepl open" })
+map("n", "<Leader>pt", function()
+  load_feature("repl")
+  vim.cmd("PyreplToggle")
+end, { desc = "Pyrepl toggle" })
+map("n", "<Leader>pf", function()
+  load_feature("repl")
+  vim.cmd("PyreplToggleFocus")
+end, { desc = "Pyrepl toggle focus" })
+map("n", "<Leader>pc", function()
+  load_feature("repl")
+  vim.cmd("PyreplSendCell")
+end, { desc = "Pyrepl send cell" })
+map("n", "<Leader>pb", function()
+  load_feature("repl")
+  vim.cmd("PyreplSendBuffer")
+end, { desc = "Pyrepl send buffer" })
+map("x", "<Leader>pv", function()
+  load_feature("repl")
+  vim.cmd("PyreplSendVisual")
+end, { desc = "Pyrepl send visual" })
+map("n", "<Leader>pi", function()
+  load_feature("repl")
+  vim.cmd("PyreplOpenImageHistory")
+end, { desc = "Pyrepl image history" })
+
 return M

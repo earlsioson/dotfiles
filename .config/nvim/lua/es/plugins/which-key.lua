@@ -15,6 +15,7 @@ function M.setup()
       { "<leader>t", group = "Toggle" },
       { "<leader>m", group = "Markdown" },
       { "<leader>a", group = "AI" },
+      { "<leader>p", group = "Pyrepl" },
     },
   })
 end

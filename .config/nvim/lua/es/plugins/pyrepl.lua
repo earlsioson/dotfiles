@@ -1,5 +1,12 @@
 local M = {}
 
+local deno_filetypes = {
+  javascript = true,
+  javascriptreact = true,
+  typescript = true,
+  typescriptreact = true,
+}
+
 local function project_python()
   local root = vim.fs.root(0, { "pyproject.toml", ".git" })
   if not root then
@@ -14,12 +21,7 @@ local function project_python()
   end
 end
 
-local function project_kernel()
-  local python_path = project_python()
-  if not python_path then
-    return nil
-  end
-
+local function kernels()
   local result = vim.system({
     vim.g.python_host_path,
     "-m",
@@ -37,7 +39,25 @@ local function project_kernel()
     return nil
   end
 
-  for name, kernel in pairs(decoded.kernelspecs or {}) do
+  return decoded.kernelspecs or {}
+end
+
+local function project_kernel()
+  local available_kernels = kernels()
+  if not available_kernels then
+    return nil
+  end
+
+  if deno_filetypes[vim.bo.filetype] and available_kernels.deno then
+    return "deno"
+  end
+
+  local python_path = project_python()
+  if not python_path then
+    return nil
+  end
+
+  for name, kernel in pairs(available_kernels) do
     local argv = kernel.spec and kernel.spec.argv
     local kernel_python = argv and argv[1]
     if kernel_python and vim.uv.fs_realpath(kernel_python) == python_path then
@@ -60,6 +80,12 @@ end
 function M.setup()
   local pyrepl = require("pyrepl").setup({
     python_path = vim.g.python_host_path,
+    cell_pattern = function()
+      if deno_filetypes[vim.bo.filetype] then
+        return "^// %%%%.*$"
+      end
+      return "^# %%%%.*$"
+    end,
   })
 
   vim.api.nvim_del_user_command("PyreplOpen")

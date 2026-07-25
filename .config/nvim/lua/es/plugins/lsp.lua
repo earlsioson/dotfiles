@@ -25,6 +25,7 @@ local mason_servers = {
 -- Mason would pip/venv these, which Lightning blocks. Configured + enabled,
 -- but not ensure_installed.
 local external_servers = {
+  "denols",
   "mojo",
   "ruff",
 }

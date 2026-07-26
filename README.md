@@ -39,10 +39,11 @@ The repository contains the following configurations mapping to standard paths i
   * Required packages are declared in `pyproject.toml`; project libraries such as Matplotlib do not belong in this environment.
   * Instantiation: Created using `uv sync --group dev` from the repository root (defined via `pyproject.toml` and `uv.lock`).
   * Configuration: `es/globals.lua` discovers the repository virtualenv and assigns it to `vim.g.python_host_path`.
+* **Deno**: TypeScript runtime, package manager, language server, and Pyrepl Jupyter kernel. Install the binary at `~/.local/bin/deno`, then register its built-in kernel once with `deno jupyter --install`.
 * **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff` or the [astral installer](https://astral.sh/ruff/install.sh). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
 * **Formatter binaries**: `stylua`, `black`, `rumdl`, and `mojo_format` are used when formatting their corresponding filetypes. `isort` is installed by the development dependency group above.
-* **Glow**: The `glow` executable is required for the Markdown preview mapping.
-* **Language-specific runtimes** (Go, Python, etc.) must be present on `$PATH` before configuring corresponding LSP servers or debug adapters.
+* **Pandoc**: Required by `<Leader>mp` to render Markdown as a temporary HTML document in the default browser.
+* **Language-specific runtimes** (Go, Python, Deno, etc.) must be present on `$PATH` before configuring corresponding LSP servers or debug adapters.
 
 ---
 
@@ -128,13 +129,15 @@ For reference during backups or troubleshooting, the configuration and generated
 | **Debugging** | `mfussenegger/nvim-dap`, `jay-babu/mason-nvim-dap.nvim`, `rcarriga/nvim-dap-ui`, `mfussenegger/nvim-dap-python`, `leoluz/nvim-dap-go`, `nvim-neotest/nvim-nio` |
 | **REPL** | `dangooddd/pyrepl.nvim` |
 | **Telescope** | `nvim-telescope/telescope.nvim`, `nvim-telescope/telescope-file-browser.nvim`, `nvim-telescope/telescope-live-grep-args.nvim`, `nvim-telescope/telescope-fzf-native.nvim` |
-| **UI** | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `ellisonleao/glow.nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim`, `folke/which-key.nvim` |
+| **UI** | `echasnovski/mini.icons`, `windwp/nvim-autopairs`, `folke/tokyonight.nvim`, `nvim-tree/nvim-tree.lua`, `nvim-lualine/lualine.nvim`, `nvimdev/dashboard-nvim`, `stevearc/oil.nvim`, `karb94/neoscroll.nvim`, `folke/which-key.nvim` |
 | **Navigation** | `folke/flash.nvim` |
 | **Productivity** | `tpope/vim-surround`, `tpope/vim-unimpaired`, `tpope/vim-fugitive`, `lewis6991/gitsigns.nvim`, `folke/sidekick.nvim` |
 | **Language Extras** | `fatih/vim-go`, `terrastruct/d2-vim` |
 
 ### Interactive REPLs
-Pyrepl provides a Jupyter console for Python buffers and displays plot output using its built-in Ghostty-compatible image provider. It loads after opening a `*.py` or `*.ipynb` file, so its commands are intentionally unavailable on dashboard-only startup.
+Pyrepl embeds `jupyter-console` for Python and TypeScript code. It can display plots and other rich image output using its built-in Ghostty-compatible image provider. Python and notebook buffers preload the feature; the `<Leader>p` mappings load it on demand from JavaScript and TypeScript buffers.
+
+#### Python projects
 
 Python environment responsibilities remain separate:
 
@@ -153,15 +156,42 @@ uv run python -m ipykernel install --user \
   --display-name "Python (my-project)"
 ```
 
-* `:PyreplOpen` (`<Leader>po`): Open the registered kernel whose interpreter matches the current project's `.venv`, or prompt when no match exists. Use `:PyreplOpen!` to always choose interactively.
+#### Deno projects
+
+Deno bundles its TypeScript runtime, package manager, language server, formatter, linter, test runner, and Jupyter kernel in one executable. The kernel is registered once per user rather than once per project:
+
+```sh
+uv sync --group dev
+source .venv/bin/activate
+deno jupyter --install
+```
+
+Create and use a project with:
+
+```sh
+deno init
+deno add zod
+deno run main.ts
+deno test
+```
+
+Projects use `deno.json` and `deno.lock`; they do not need a virtual environment or `ipykernel`. Start Neovim from the project root so the Jupyter kernel inherits the correct working directory. `denols` attaches automatically when it finds `deno.json`, `deno.jsonc`, or `deno.lock`, while non-Deno TypeScript projects continue to use `ts_ls`.
+
+The `deno jupyter` command currently prints an upstream warning that the subcommand is unstable. This refers to the Jupyter integration API and does not affect the stability of the Deno runtime or language server.
+
+#### Commands and mappings
+
+* `:PyreplOpen` (`<Leader>po`): Open Deno automatically for JavaScript/TypeScript; for Python, open the registered kernel whose interpreter matches the current project's `.venv`; otherwise prompt. Use `:PyreplOpen!` to always choose interactively.
 * `:PyreplToggle` (`<Leader>pt`): Show or hide the REPL.
 * `:PyreplToggleFocus` (`<Leader>pf`): Move between the source buffer and REPL.
 * `:PyreplSendBuffer` (`<Leader>pb`): Send the entire buffer.
-* `:PyreplSendCell` (`<Leader>pc`): Send the cell under the cursor; cells use `# %%` markers.
+* `:PyreplSendCell` (`<Leader>pc`): Send the cell under the cursor; Python uses `# %%`, while JavaScript and TypeScript use `// %%`.
 * `:PyreplSendVisual` (`<Leader>pv`): Send the most recent visual selection.
 * `:PyreplOpenImageHistory` (`<Leader>pi`): Browse generated plots and other images.
 
-Run `uv sync --group dev` from the dotfiles repository to install the console and image dependencies. After syncing `.config/nvim/` into `~/.config/nvim/`, open a Python file and restart Neovim once if `vim.pack` installs Pyrepl during that session.
+When the REPL has focus, the terminal consumes keystrokes instead of invoking normal-mode mappings. Press `<Leader><Esc>` (`<Space>`, then `<Esc>`) to leave terminal-input mode, then `<Leader>pf` to return to the source buffer. Neovim's built-in `<C-\><C-n>` sequence remains available as a fallback.
+
+Run `uv sync --group dev` from the dotfiles repository to install the console and image dependencies. After syncing `.config/nvim/` and `.vim/` into their corresponding home-directory paths, open a supported source file and restart Neovim once if `vim.pack` installs Pyrepl during that session.
 
 Inline plots require a Kitty-graphics-capable terminal such as Ghostty. Through SSH, sync and load `.tmux.conf` on the remote host; every nested tmux layer must report `on` from `tmux show-options -gv allow-passthrough`. Jupytext is required only for notebook conversion.
 
@@ -169,6 +199,7 @@ Inline plots require a Kitty-graphics-capable terminal such as Ghostty. Through 
 Next Edit Suggestions (NES) use the `copilot` LSP client configuration.
 * **LSP Integration**: Initialized via `vim.lsp.enable("copilot")`. The underlying Mason server package name is `copilot-language-server`.
 * **Authentication**: Signs in using the `:LspCopilotSignIn` command via the GitHub device verification flow.
+* **Inline Completion**: Copilot suggestions refresh automatically in insert mode. `<Tab>` accepts the visible suggestion; `<C-Space>` opens the regular `nvim-cmp` LSP completion menu.
 * **Persistence**: AI CLI sessions automatically hook into `tmux` persistence to stay alive when Neovim restarts.
 
 **Usage Mappings:**

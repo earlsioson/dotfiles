@@ -16,7 +16,7 @@ These work in both Vim and Neovim.
 | `z0` | Set local foldlevel to 99 (refresh folds in Vim, recompute in Neovim) |
 | `z1` - `z6` | Set local foldlevel to 1-6 (refresh folds in Vim, recompute in Neovim) |
 | `<Leader><Leader>t` | Open bottom terminal helper |
-| `<Leader><Esc>` | Exit terminal-mode |
+| `<Leader><Esc>` | Exit terminal-input mode (`<Space>`, then `<Esc>` in sequence) |
 
 ## Neovim Defaults
 Built-in Neovim 0.12 mappings used by this config.
@@ -59,6 +59,8 @@ Diagnostic list and float helpers. Navigation uses Neovim defaults above.
 Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (NES) configurations are documented in the [README.md](../README.md).
 
 ### Workflow Capabilities
+* **Copilot Authentication**: `:LspCopilotSignIn` starts the GitHub device verification flow.
+* **Inline Completion**: Copilot refreshes suggestions automatically in insert mode; `<Tab>` accepts the visible suggestion.
 * **Session Selection**: `<Leader>as` opens a selector for installed CLI clients.
 * **Terminal View**: `<Leader>aa` toggles visibility of the active Sidekick split window.
 * **Context Transmission**: Buffers, selections, or visual ranges can be piped to the session using `<Leader>at`, `<Leader>aF`, or visual `<Leader>av`.
@@ -66,6 +68,7 @@ Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (
 
 | Shortcut | Action |
 | --- | --- |
+| `<Tab>` (insert/normal) | Apply Sidekick NES or accept Copilot inline completion; otherwise insert/use a normal tab |
 | `<Leader>aa` | Toggle Sidekick CLI |
 | `<Leader>af` | Focus Sidekick CLI |
 | `<Leader>as` | Select an installed CLI |
@@ -175,17 +178,21 @@ Quick jump navigation. These mappings preserve Vim defaults for `s` and `S`.
 | `<Leader><Leader>x` | Save and source current Lua file |
 
 ## Pyrepl
-Python REPL management and cell execution for Python (`*.py`) and notebook (`*.ipynb`) buffers.
+Jupyter REPL management and cell execution for Python, JavaScript, TypeScript, and notebook buffers. Python uses project-specific kernels; JavaScript and TypeScript automatically use the user-registered Deno kernel.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>po` | Open Pyrepl (connects project `.venv` kernel) |
+| `<Leader>po` | Open Pyrepl (project `.venv` kernel for Python; Deno for JavaScript/TypeScript) |
 | `<Leader>pt` | Toggle REPL window |
 | `<Leader>pf` | Toggle focus between editor and REPL |
-| `<Leader>pc` | Send cell (`# %%`) under cursor |
+| `<Leader>pc` | Send cell under cursor (`# %%` for Python, `// %%` for JavaScript/TypeScript) |
 | `<Leader>pb` | Send entire buffer |
 | `<Leader>pv` (visual) | Send visual selection |
 | `<Leader>pi` | Open image/plot history browser |
+
+When the REPL has focus, its terminal consumes keystrokes. Press `<Leader><Esc>`
+to leave terminal-input mode, then `<Leader>pf` to return to the source buffer.
+Neovim's built-in `<C-\><C-n>` sequence remains available as a fallback.
 
 ## nvim-cmp
 | Shortcut | Action |
@@ -193,7 +200,7 @@ Python REPL management and cell execution for Python (`*.py`) and notebook (`*.i
 | `<CR>` | Confirm selected completion item |
 | `<C-n>` / `<C-p>` | Navigate completion menu |
 | `<C-Space>` | Open completion menu |
-| `<C-b>` / `<C-f>` | Scroll completion docs; jump previous/next snippet placeholder when a snippet is active |
+| `<C-b>` / `<C-f>` | Jump to the previous/next snippet placeholder when a snippet is active |
 
 ## tmux
 Prefix is `C-Space`. Mappings are active session-wide.

@@ -11,7 +11,7 @@ There is no build step in the usual app sense; changes are synced into `$HOME` a
 - `nvim +"PackUpdate"` updates plugins registered in `.config/nvim/lua/es/pack.lua`.
 - `nvim +"Mason"` opens the Mason UI for LSP/DAP tooling.
 - `uv sync --group dev` installs the local Python helpers from `pyproject.toml`.
-- `python -m isort .` sorts Python imports when Python files change.
+- `uv run python -m isort .` sorts Python imports when Python files change.
 
 ## Coding Style & Naming Conventions
 Use Lua for Neovim config and keep modules small and single-purpose. Follow the existing style: 2-space indentation in Lua, snake_case for Lua module filenames, and direct `require("es.plugins.<name>").setup()` wiring from `pack.lua`. Keep plugin responsibilities split cleanly: startup-only UI in `startup`, buffer-driven features behind autocommands, and filetype-specific logic in dedicated handlers.

@@ -194,6 +194,18 @@ When the REPL has focus, its terminal consumes keystrokes. Press `<Leader><Esc>`
 to leave terminal-input mode, then `<Leader>pf` to return to the source buffer.
 Neovim's built-in `<C-\><C-n>` sequence remains available as a fallback.
 
+## Zig
+One-shot compile-and-run, not a REPL session; output streams into a `zig://output` scratch split and there is no carried-over state. Mappings are buffer-local to `zig` filetypes. Persistent diagnostics come from `zls`, not from these commands.
+
+| Shortcut | Action |
+| --- | --- |
+| `<Leader>zr` | Run (`zig build run` in a project, otherwise `zig run` on the file) |
+| `<Leader>za` | Run all tests (`zig build test --summary all`, otherwise `zig test` on the file) |
+| `<Leader>zt` | Run the nearest `test "name"` block via `--test-filter` |
+| `<Leader>zs` | Terminate the running command |
+
+A project is identified by `build.zig` alone, so loose Zig files inside a repository are still run standalone. `<Leader>zt` always compiles the current file on its own so that `--test-filter` applies; use `<Leader>za` for tests that depend on the build graph.
+
 ## nvim-cmp
 | Shortcut | Action |
 | --- | --- |

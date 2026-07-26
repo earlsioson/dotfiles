@@ -42,7 +42,7 @@ The repository contains the following configurations mapping to standard paths i
 * **Deno**: TypeScript runtime, package manager, language server, and Pyrepl Jupyter kernel. Install the binary at `~/.local/bin/deno`, then register its built-in kernel once with `deno jupyter --install`.
 * **Zig**: Compiler and toolchain on `$PATH`, paired with `zls` (Zig language server). Both are static binaries installed outside Mason and declared as `external_server` entries in `es/plugins/lsp.lua`. Keep the two version-matched; `zls` tracks the compiler release series.
 * **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff` or the [astral installer](https://astral.sh/ruff/install.sh). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
-* **Formatter binaries**: `stylua`, `black`, `rumdl`, and `mojo_format` are used when formatting their corresponding filetypes. `isort` is installed by the development dependency group above.
+* **Formatter binaries**: `stylua`, `black`, `rumdl`, and `mojo_format` are used when formatting their corresponding filetypes and must be present on `$PATH`. `isort` is installed by the development dependency group above. `biome` formats JavaScript, TypeScript, CSS, HTML, and JSON, but needs no manual installation because Mason already provides it as a language server.
 * **Pandoc**: Required by `<Leader>mp` to render Markdown as a temporary HTML document in the default browser.
 * **Language-specific runtimes** (Go, Python, Deno, etc.) must be present on `$PATH` before configuring corresponding LSP servers or debug adapters.
 

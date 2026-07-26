@@ -46,6 +46,11 @@ end
 
 local M = {}
 
+-- Exported so tooling outside this repository can read the contract instead of
+-- duplicating it: these are the executables that must already exist on PATH,
+-- and af-workspace's `just doctor` reports any that are missing.
+M.external_servers = external_servers
+
 function M.setup()
   require("mason-lspconfig").setup({
     ensure_installed = mason_servers,

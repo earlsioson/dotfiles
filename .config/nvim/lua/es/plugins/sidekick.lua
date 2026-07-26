@@ -17,11 +17,6 @@ function M.setup()
           cmd = { "agy" },
         },
       },
-      win = {
-        keys = {
-          stopinsert = { "<leader><Esc>", "stopinsert", mode = "t", desc = "Exit terminal mode" },
-        },
-      },
     },
   })
 end

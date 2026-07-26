@@ -99,7 +99,7 @@ vnoremap <Leader>y "+y
 nnoremap <Leader>y "+y
 nnoremap <silent> <Leader><Leader>t :call <SID>small_terminal()<CR>
 
-if has('terminal')
+if has('terminal') || has('nvim')
   tnoremap <Leader><Esc> <C-\><C-n>
 endif
 

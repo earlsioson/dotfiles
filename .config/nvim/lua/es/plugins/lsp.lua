@@ -22,19 +22,26 @@ local mason_servers = {
 }
 
 -- Provided outside Mason (static binary on PATH, or uv) — Mason would
--- pip/venv these, which Lightning blocks. Configured + enabled, but not
--- ensure_installed.
+-- pip/venv these, which Lightning blocks. Each entry maps a server to the
+-- executable it spawns; a server whose binary is absent is skipped entirely,
+-- so opening its filetype never attempts to launch a missing process. This is
+-- what keeps the config portable: mojo ships only for Apple silicon macOS and
+-- Ubuntu, and stays silent everywhere else.
 local external_servers = {
-  "denols",
-  "mojo",
-  "ruff",
-  "zls",
+  denols = "deno",
+  mojo = "mojo-lsp-server",
+  ruff = "ruff",
+  zls = "zls",
 }
 
--- All servers get configured + enabled; only mason_servers get ensure_installed.
+-- All configured servers get enabled; only mason_servers get ensure_installed.
 local servers = {}
 vim.list_extend(servers, mason_servers)
-vim.list_extend(servers, external_servers)
+for server, executable in pairs(external_servers) do
+  if vim.fn.executable(executable) == 1 then
+    table.insert(servers, server)
+  end
+end
 
 local M = {}
 

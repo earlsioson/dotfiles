@@ -195,7 +195,7 @@ to leave terminal-input mode, then `<Leader>pf` to return to the source buffer.
 Neovim's built-in `<C-\><C-n>` sequence remains available as a fallback.
 
 ## Zig
-One-shot compile-and-run, not a REPL session; output streams into a `zig://output` scratch split and there is no carried-over state. Mappings are buffer-local to `zig` filetypes. Persistent diagnostics come from `zls`, not from these commands.
+One-shot compile-and-run, not a REPL session; output streams into a shared `task://output` scratch split and there is no carried-over state. Mappings are buffer-local to `zig` filetypes. Persistent diagnostics come from `zls`, not from these commands.
 
 | Shortcut | Action |
 | --- | --- |
@@ -205,6 +205,17 @@ One-shot compile-and-run, not a REPL session; output streams into a `zig://outpu
 | `<Leader>zs` | Terminate the running command |
 
 A project is identified by `build.zig` alone, so loose Zig files inside a repository are still run standalone. `<Leader>zt` always compiles the current file on its own so that `--test-filter` applies; use `<Leader>za` for tests that depend on the build graph.
+
+## Mojo
+Shares the same runner as Zig, so output behaves identically. There is no project/file distinction because `mojo run` takes a file rather than driving a build system, and no test mapping because `mojo test` was removed — a test file is an ordinary executable, so `<Leader>or` runs it.
+
+| Shortcut | Action |
+| --- | --- |
+| `<Leader>or` | Build and run the current file (also how tests run) |
+| `<Leader>ob` | Build the current file without running it |
+| `<Leader>os` | Terminate the running command |
+
+Mojo runs only on Apple silicon macOS and Ubuntu. On unsupported hosts these mappings report that no toolchain was found instead of failing, and the `mojo` language server is skipped rather than launched.
 
 ## nvim-cmp
 | Shortcut | Action |

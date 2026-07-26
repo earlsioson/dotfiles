@@ -492,4 +492,26 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- ============================================================================
+-- Mojo Operations (<Leader>o* = "mojo")
+-- ============================================================================
+-- `mojo run` builds and executes a file, and is also how tests run since
+-- `mojo test` was removed in favour of self-contained test executables.
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "mojo",
+  group = vim.api.nvim_create_augroup("es_mojo_keymaps", { clear = true }),
+  callback = function(args)
+    local function mojo(lhs, fn, desc)
+      map("n", lhs, function()
+        require("es.mojo")[fn]()
+      end, { buffer = args.buf, desc = desc })
+    end
+
+    mojo("<Leader>or", "run", "Mojo run")
+    mojo("<Leader>ob", "build", "Mojo build")
+    mojo("<Leader>os", "stop", "Mojo stop")
+  end,
+})
+
 return M

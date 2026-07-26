@@ -41,6 +41,7 @@ The repository contains the following configurations mapping to standard paths i
   * Configuration: `es/globals.lua` discovers the repository virtualenv and assigns it to `vim.g.python_host_path`.
 * **Deno**: TypeScript runtime, package manager, language server, and Pyrepl Jupyter kernel. Install the binary at `~/.local/bin/deno`, then register its built-in kernel once with `deno jupyter --install`.
 * **Zig**: Compiler and toolchain on `$PATH`, paired with `zls` (Zig language server). Both are static binaries installed outside Mason and declared as `external_server` entries in `es/plugins/lsp.lua`. Keep the two version-matched; `zls` tracks the compiler release series.
+* **Mojo** (optional): runs only on Apple silicon macOS and Ubuntu 22.04 or later, so it is absent on Intel Macs. Installed per project with uv rather than globally — see the Mojo section below. Both the `mojo` language server and the `<Leader>o` mappings are skipped when the toolchain is missing, so the configuration stays portable across machines.
 * **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff` or the [astral installer](https://astral.sh/ruff/install.sh). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
 * **Formatter binaries**: `stylua`, `black`, `rumdl`, and `mojo_format` are used when formatting their corresponding filetypes and must be present on `$PATH`. `isort` is installed by the development dependency group above. `biome` formats JavaScript, TypeScript, CSS, HTML, and JSON, but needs no manual installation because Mason already provides it as a language server.
 * **Pandoc**: Required by `<Leader>mp` to render Markdown as a temporary HTML document in the default browser.
@@ -227,7 +228,7 @@ The `build.zig` API tracks the compiler release, so adjust the snippet to match 
 
 #### Running and testing
 
-`es/zig.lua` is a task runner, not a REPL: each mapping is a one-shot compile-and-run whose output streams into a `zig://output` scratch split. There is no session and no carried-over state, which is why it lives under its own `<Leader>z` prefix rather than alongside the kernel-backed `<Leader>p` mappings. Compile errors appear in that split as ordinary output; persistent in-editor diagnostics remain `zls`'s responsibility. Mappings are buffer-local to `zig` filetypes.
+`es/zig.lua` is a task runner, not a REPL: each mapping is a one-shot compile-and-run whose output streams into a shared `task://output` scratch split. Process handling, output streaming, and termination live in `es/runner.lua`, which Mojo reuses. There is no session and no carried-over state, which is why it lives under its own `<Leader>z` prefix rather than alongside the kernel-backed `<Leader>p` mappings. Compile errors appear in that split as ordinary output; persistent in-editor diagnostics remain `zls`'s responsibility. Mappings are buffer-local to `zig` filetypes.
 
 * `<Leader>zr`: Run. Uses `zig build run` when a `build.zig` is found, otherwise `zig run` on the current file.
 * `<Leader>za`: Run all tests. Uses `zig build test --summary all` in a project, otherwise `zig test` on the current file. The summary flag is required because `zig build test` prints nothing on success, leaving a passing run indistinguishable from one that executed no tests.
@@ -235,6 +236,41 @@ The `build.zig` API tracks the compiler release, so adjust the snippet to match 
 * `<Leader>zs`: Terminate the running command.
 
 A project is identified by `build.zig` alone, not by `.git`, so loose Zig files inside a repository are still treated as standalone. Note that `<Leader>zt` always compiles the current file on its own so that `--test-filter` applies. Because Zig analyzes declarations lazily, this succeeds more often than expected: a file may import modules declared only in `build.zig` and still run a filtered test cleanly, provided that test does not reach those imports. When a test does depend on the build graph, the standalone compile fails to resolve the module; use `<Leader>za` for those.
+
+### Mojo
+Mojo shares the Zig task runner (`es/runner.lua`) but needs far less of it. `mojo run` builds and executes a single file rather than driving a build system, so there is no project versus loose-file distinction. The `mojo test` command was removed on 31 October 2025 because discovery happened outside the compiled artifact, which produced confusing failures when test files imported stale modules. Tests are now ordinary executables, which means `<Leader>or` runs a program and a test file identically:
+
+```mojo
+from std.testing import assert_equal, TestSuite
+
+def test_example() raises:
+    assert_equal(inc(1), 2)
+
+def main() raises:
+    TestSuite.discover_tests[__functions_in_module()]().run()
+```
+
+Test functions are discovered by their `test_` prefix, must take no arguments, and signal failure by raising. There is no filtering of individual tests, which is why there is no Mojo equivalent of `<Leader>zt`.
+
+#### Platform support and installation
+
+Mojo builds exist only for Apple silicon macOS and Ubuntu 22.04 or later (x86-64 with SSE4.2, or Graviton2/3). Intel Macs are unsupported, so this configuration must degrade rather than break: `es/plugins/lsp.lua` enables an external language server only when its executable is present, and `es/mojo.lua` reports a missing toolchain instead of failing.
+
+Install per project with uv:
+
+```sh
+uv init my-project
+cd my-project
+uv add mojo --prerelease allow
+```
+
+`--prerelease allow` is required while Mojo is in beta. Avoid `uv tool install mojo`: tool isolation breaks Mojo's cross-package binary dependencies and the compiler fails to locate LLDB. Because uv installs the toolchain into the project's `.venv` rather than onto `$PATH`, `es/mojo.lua` looks for `.venv/bin/mojo` beneath the nearest `pyproject.toml` before falling back to `$PATH` — the same resolution order Pyright uses to find a project interpreter. The language server is resolved by `$PATH` alone, so activate the virtualenv to get `mojo-lsp-server`.
+
+Mojo documentation now lives at [mojolang.org](https://mojolang.org), separate from the MAX documentation at `docs.modular.com`.
+
+#### MAX
+
+MAX needs no separate configuration. Its primary interface is a Python library, so MAX work is Python work: install it into a project virtualenv, register a Jupyter kernel for that environment, and the existing `<Leader>p` Pyrepl mappings pick it up through the interpreter matching described above. A real kernel keeps session state, which matters when a loaded model should survive between cells.
 
 ### Sidekick & Copilot LSP Configuration
 Next Edit Suggestions (NES) use the `copilot` LSP client configuration.

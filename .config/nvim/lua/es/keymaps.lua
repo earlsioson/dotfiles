@@ -471,46 +471,46 @@ map("n", "<Leader>pi", function()
 end, { desc = "Pyrepl image history" })
 
 -- ============================================================================
--- Zig Operations (<Leader>z* = "zig")
+-- Code Runner (<Leader>c* = "code")
 -- ============================================================================
--- One-shot compile-and-run, not a REPL session. Diagnostics come from zls.
+-- One-shot compile-and-run for languages without a session, as opposed to the
+-- kernel-backed <Leader>p Pyrepl mappings. The prefix is keyed on the verb
+-- rather than the language so that adding a language never needs a new prefix;
+-- mappings are buffer-local, so only the current filetype's runner is bound.
+
+local runner_modules = {
+  mojo = "es.mojo",
+  odin = "es.odin",
+  zig = "es.zig",
+}
+
+-- Bound only when the language module implements them, so each language
+-- exposes exactly the verbs its toolchain actually supports.
+local runner_verbs = {
+  { key = "r", fn = "run", desc = "Run" },
+  { key = "b", fn = "build", desc = "Build" },
+  { key = "t", fn = "test_nearest", desc = "Test nearest" },
+  { key = "a", fn = "test", desc = "Test all" },
+  { key = "s", fn = "stop", desc = "Stop" },
+}
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "zig",
-  group = vim.api.nvim_create_augroup("es_zig_keymaps", { clear = true }),
+  pattern = vim.tbl_keys(runner_modules),
+  group = vim.api.nvim_create_augroup("es_runner_keymaps", { clear = true }),
   callback = function(args)
-    local function zig(lhs, fn, desc)
-      map("n", lhs, function()
-        require("es.zig")[fn]()
-      end, { buffer = args.buf, desc = desc })
+    local name = runner_modules[vim.bo[args.buf].filetype]
+    local ok, mod = pcall(require, name)
+    if not ok then
+      return
     end
 
-    zig("<Leader>zr", "run", "Zig run")
-    zig("<Leader>zt", "test_nearest", "Zig test nearest")
-    zig("<Leader>za", "test", "Zig test all")
-    zig("<Leader>zs", "stop", "Zig stop")
-  end,
-})
-
--- ============================================================================
--- Mojo Operations (<Leader>o* = "mojo")
--- ============================================================================
--- `mojo run` builds and executes a file, and is also how tests run since
--- `mojo test` was removed in favour of self-contained test executables.
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "mojo",
-  group = vim.api.nvim_create_augroup("es_mojo_keymaps", { clear = true }),
-  callback = function(args)
-    local function mojo(lhs, fn, desc)
-      map("n", lhs, function()
-        require("es.mojo")[fn]()
-      end, { buffer = args.buf, desc = desc })
+    for _, verb in ipairs(runner_verbs) do
+      if type(mod[verb.fn]) == "function" then
+        map("n", "<Leader>c" .. verb.key, function()
+          mod[verb.fn]()
+        end, { buffer = args.buf, desc = verb.desc })
+      end
     end
-
-    mojo("<Leader>or", "run", "Mojo run")
-    mojo("<Leader>ob", "build", "Mojo build")
-    mojo("<Leader>os", "stop", "Mojo stop")
   end,
 })
 

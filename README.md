@@ -41,9 +41,10 @@ The repository contains the following configurations mapping to standard paths i
   * Configuration: `es/globals.lua` discovers the repository virtualenv and assigns it to `vim.g.python_host_path`.
 * **Deno**: TypeScript runtime, package manager, language server, and Pyrepl Jupyter kernel. Install the binary at `~/.local/bin/deno`, then register its built-in kernel once with `deno jupyter --install`.
 * **Zig**: Compiler and toolchain on `$PATH`, paired with `zls` (Zig language server). Both are static binaries installed outside Mason and declared as `external_server` entries in `es/plugins/lsp.lua`. Keep the two version-matched; `zls` tracks the compiler release series.
-* **Mojo** (optional): runs only on Apple silicon macOS and Ubuntu 22.04 or later, so it is absent on Intel Macs. Installed per project with uv rather than globally — see the Mojo section below. Both the `mojo` language server and the `<Leader>o` mappings are skipped when the toolchain is missing, so the configuration stays portable across machines.
+* **Mojo** (optional): runs only on Apple silicon macOS and Ubuntu 22.04 or later, so it is absent on Intel Macs. Installed per project with uv rather than globally — see the Mojo section below. Both the `mojo` language server and the runner mappings are skipped when the toolchain is missing, so the configuration stays portable across machines.
+* **Odin** (optional): compiler on `$PATH`, paired with `ols` (Odin Language Server, a separate binary). Both are declared as `external_server` entries and gated on their executables, so an absent toolchain leaves the configuration inert rather than broken.
 * **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff` or the [astral installer](https://astral.sh/ruff/install.sh). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
-* **Formatter binaries**: `stylua`, `black`, `rumdl`, and `mojo_format` are used when formatting their corresponding filetypes and must be present on `$PATH`. `isort` is installed by the development dependency group above. `biome` formats JavaScript, TypeScript, CSS, HTML, and JSON, but needs no manual installation because Mason already provides it as a language server.
+* **Formatter binaries**: `stylua`, `black`, and `rumdl` are used when formatting their corresponding filetypes and must be present on `$PATH`. `isort` is installed by the development dependency group above. `biome` formats JavaScript, TypeScript, CSS, HTML, and JSON, but needs no manual installation because Mason already provides it as a language server. Mojo formatting shells out to `mojo format` rather than a separate binary, so it follows the Mojo toolchain and is unavailable when that toolchain is not installed.
 * **Pandoc**: Required by `<Leader>mp` to render Markdown as a temporary HTML document in the default browser.
 * **Language-specific runtimes** (Go, Python, Deno, etc.) must be present on `$PATH` before configuring corresponding LSP servers or debug adapters.
 
@@ -228,17 +229,17 @@ The `build.zig` API tracks the compiler release, so adjust the snippet to match 
 
 #### Running and testing
 
-`es/zig.lua` is a task runner, not a REPL: each mapping is a one-shot compile-and-run whose output streams into a shared `task://output` scratch split. Process handling, output streaming, and termination live in `es/runner.lua`, which Mojo reuses. There is no session and no carried-over state, which is why it lives under its own `<Leader>z` prefix rather than alongside the kernel-backed `<Leader>p` mappings. Compile errors appear in that split as ordinary output; persistent in-editor diagnostics remain `zls`'s responsibility. Mappings are buffer-local to `zig` filetypes.
+Zig uses the shared code runner described under [Code Runner](#code-runner): one-shot compile-and-run with no session, which is why it sits under `<Leader>c` rather than alongside the kernel-backed `<Leader>p` mappings. Compile errors appear in the output split as ordinary output; persistent in-editor diagnostics remain `zls`'s responsibility.
 
-* `<Leader>zr`: Run. Uses `zig build run` when a `build.zig` is found, otherwise `zig run` on the current file.
-* `<Leader>za`: Run all tests. Uses `zig build test --summary all` in a project, otherwise `zig test` on the current file. The summary flag is required because `zig build test` prints nothing on success, leaving a passing run indistinguishable from one that executed no tests.
-* `<Leader>zt`: Run the nearest test. Scans upward for the enclosing `test "name"` block and passes it to `--test-filter`.
-* `<Leader>zs`: Terminate the running command.
+* `<Leader>cr`: Run. Uses `zig build run` when a `build.zig` is found, otherwise `zig run` on the current file.
+* `<Leader>ca`: Run all tests. Uses `zig build test --summary all` in a project, otherwise `zig test` on the current file. The summary flag is required because `zig build test` prints nothing on success, leaving a passing run indistinguishable from one that executed no tests.
+* `<Leader>ct`: Run the nearest test. Scans upward for the enclosing `test "name"` block and passes it to `--test-filter`.
+* `<Leader>cs`: Terminate the running command.
 
-A project is identified by `build.zig` alone, not by `.git`, so loose Zig files inside a repository are still treated as standalone. Note that `<Leader>zt` always compiles the current file on its own so that `--test-filter` applies. Because Zig analyzes declarations lazily, this succeeds more often than expected: a file may import modules declared only in `build.zig` and still run a filtered test cleanly, provided that test does not reach those imports. When a test does depend on the build graph, the standalone compile fails to resolve the module; use `<Leader>za` for those.
+A project is identified by `build.zig` alone, not by `.git`, so loose Zig files inside a repository are still treated as standalone. Note that `<Leader>ct` always compiles the current file on its own so that `--test-filter` applies. Because Zig analyzes declarations lazily, this succeeds more often than expected: a file may import modules declared only in `build.zig` and still run a filtered test cleanly, provided that test does not reach those imports. When a test does depend on the build graph, the standalone compile fails to resolve the module; use `<Leader>ca` for those.
 
 ### Mojo
-Mojo shares the Zig task runner (`es/runner.lua`) but needs far less of it. `mojo run` builds and executes a single file rather than driving a build system, so there is no project versus loose-file distinction. The `mojo test` command was removed on 31 October 2025 because discovery happened outside the compiled artifact, which produced confusing failures when test files imported stale modules. Tests are now ordinary executables, which means `<Leader>or` runs a program and a test file identically:
+Mojo shares the code runner but needs far less of it. `mojo run` builds and executes a single file rather than driving a build system, so there is no project versus loose-file distinction. The `mojo test` command was removed on 31 October 2025 because discovery happened outside the compiled artifact, which produced confusing failures when test files imported stale modules. Tests are now ordinary executables, which means `<Leader>cr` runs a program and a test file identically:
 
 ```mojo
 from std.testing import assert_equal, TestSuite
@@ -250,7 +251,7 @@ def main() raises:
     TestSuite.discover_tests[__functions_in_module()]().run()
 ```
 
-Test functions are discovered by their `test_` prefix, must take no arguments, and signal failure by raising. There is no filtering of individual tests, which is why there is no Mojo equivalent of `<Leader>zt`.
+Test functions are discovered by their `test_` prefix, must take no arguments, and signal failure by raising. There is no filtering of individual tests, which is why Mojo binds no `<Leader>ct`.
 
 #### Platform support and installation
 
@@ -271,6 +272,31 @@ Mojo documentation now lives at [mojolang.org](https://mojolang.org), separate f
 #### MAX
 
 MAX needs no separate configuration. Its primary interface is a Python library, so MAX work is Python work: install it into a project virtualenv, register a Jupyter kernel for that environment, and the existing `<Leader>p` Pyrepl mappings pick it up through the interpreter matching described above. A real kernel keeps session state, which matters when a loaded model should survive between cells.
+
+### Odin
+Odin compiles a directory rather than a file: every `.odin` file in a folder forms one package, and `odin run .` builds them together. A single file must opt out explicitly with `odin run file.odin -file`. The runner therefore acts on the directory holding the current buffer, and no build manifest or root marker is involved.
+
+Tests are procedures carrying the `@(test)` attribute:
+
+```odin
+package tests
+
+import "core:testing"
+
+@(test)
+my_test :: proc(t: ^testing.T) {
+    testing.expect(t, 2 + 2 == 4, "arithmetic failed")
+}
+```
+
+`<Leader>ct` runs a single test through `-define:ODIN_TEST_NAMES=<package>.<proc>`. The qualifier comes from the file's `package` declaration, which need not match the directory name, so the runner reads it from the buffer rather than inferring it from the path. Grouped attributes such as `@(test, private)` are recognised.
+
+`ols` resolves its workspace from `ols.json`, `.git`, or any `.odin` file, so the upstream defaults are used unchanged. Unlike Mojo, Odin builds for Intel Macs as well as Apple silicon and Linux.
+
+### Code Runner
+`es/runner.lua` holds everything the language runners share: the reused `task://output` scratch split, chunked stdout and stderr reassembly, and process control. Commands run detached in their own process group, because a build driver usually spawns the compiled program as a grandchild — signalling only the driver would leave that grandchild alive holding the output pipes open, so the exit callback would never fire. `<Leader>cs` signals the whole group and reports immediately rather than waiting on that callback.
+
+Language modules supply only commands. Adding a language means writing one small module, adding a line to the `runner_modules` table in `es/keymaps.lua`, and registering the language server and treesitter parser. Verbs are bound only when the module implements them, so each language exposes exactly what its toolchain supports rather than a uniform set with dead keys.
 
 ### Sidekick & Copilot LSP Configuration
 Next Edit Suggestions (NES) use the `copilot` LSP client configuration.

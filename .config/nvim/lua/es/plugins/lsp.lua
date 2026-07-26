@@ -30,6 +30,7 @@ local mason_servers = {
 local external_servers = {
   denols = "deno",
   mojo = "mojo-lsp-server",
+  ols = "ols",
   ruff = "ruff",
   zls = "zls",
 }

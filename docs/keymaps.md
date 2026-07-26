@@ -194,28 +194,36 @@ When the REPL has focus, its terminal consumes keystrokes. Press `<Leader><Esc>`
 to leave terminal-input mode, then `<Leader>pf` to return to the source buffer.
 Neovim's built-in `<C-\><C-n>` sequence remains available as a fallback.
 
-## Zig
-One-shot compile-and-run, not a REPL session; output streams into a shared `task://output` scratch split and there is no carried-over state. Mappings are buffer-local to `zig` filetypes. Persistent diagnostics come from `zls`, not from these commands.
+## Code Runner
+One-shot compile-and-run for languages that have no REPL session, as opposed to the kernel-backed Pyrepl mappings above. Output streams into a shared `task://output` scratch split and nothing is carried between runs. Persistent diagnostics remain the language server's job.
+
+The prefix names the verb rather than the language, so a new language never needs a new prefix. Mappings are buffer-local, and only the verbs a language actually supports are bound — pressing `<Leader>c` shows what the current filetype offers.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>zr` | Run (`zig build run` in a project, otherwise `zig run` on the file) |
-| `<Leader>za` | Run all tests (`zig build test --summary all`, otherwise `zig test` on the file) |
-| `<Leader>zt` | Run the nearest `test "name"` block via `--test-filter` |
-| `<Leader>zs` | Terminate the running command |
+| `<Leader>cr` | Run |
+| `<Leader>cb` | Build without running |
+| `<Leader>ct` | Run the nearest test |
+| `<Leader>ca` | Run all tests |
+| `<Leader>cs` | Terminate the running command |
 
-A project is identified by `build.zig` alone, so loose Zig files inside a repository are still run standalone. `<Leader>zt` always compiles the current file on its own so that `--test-filter` applies; use `<Leader>za` for tests that depend on the build graph.
+Availability by language, which follows each toolchain rather than being made uniform:
 
-## Mojo
-Shares the same runner as Zig, so output behaves identically. There is no project/file distinction because `mojo run` takes a file rather than driving a build system, and no test mapping because `mojo test` was removed — a test file is an ordinary executable, so `<Leader>or` runs it.
+| | Zig | Mojo | Odin |
+| --- | --- | --- | --- |
+| `<Leader>cr` | yes | yes | yes |
+| `<Leader>cb` | no — `zig build run` already builds | yes | yes |
+| `<Leader>ct` | yes | no — no test filtering exists | yes |
+| `<Leader>ca` | yes | no — a test file is just a program, use `<Leader>cr` | yes |
+| `<Leader>cs` | yes | yes | yes |
 
-| Shortcut | Action |
-| --- | --- |
-| `<Leader>or` | Build and run the current file (also how tests run) |
-| `<Leader>ob` | Build the current file without running it |
-| `<Leader>os` | Terminate the running command |
+**Zig** treats a directory containing `build.zig` as a project and anything else as a loose file. `<Leader>ct` always compiles the current file standalone so `--test-filter` applies, so use `<Leader>ca` for tests that reach build-graph dependencies.
 
-Mojo runs only on Apple silicon macOS and Ubuntu. On unsupported hosts these mappings report that no toolchain was found instead of failing, and the `mojo` language server is skipped rather than launched.
+**Mojo** compiles a single file; there is no build driver to target. Since `mojo test` was removed, a test file is an ordinary executable and `<Leader>cr` runs it.
+
+**Odin** compiles a directory as one package, so every mapping acts on the folder holding the current file. `<Leader>ct` passes `-define:ODIN_TEST_NAMES=<package>.<proc>`, qualified by the name in the file's `package` declaration rather than the directory name.
+
+Toolchains are detected, not assumed. A language whose compiler is missing reports that instead of failing, and its language server is skipped rather than launched — which is how Mojo stays inert on Intel Macs.
 
 ## nvim-cmp
 | Shortcut | Action |

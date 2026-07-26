@@ -229,17 +229,17 @@ The `build.zig` API tracks the compiler release, so adjust the snippet to match 
 
 #### Running and testing
 
-Zig uses the shared code runner described under [Code Runner](#code-runner): one-shot compile-and-run with no session, which is why it sits under `<Leader>c` rather than alongside the kernel-backed `<Leader>p` mappings. Compile errors appear in the output split as ordinary output; persistent in-editor diagnostics remain `zls`'s responsibility.
+Zig uses the shared code runner described under [Code Runner](#code-runner): one-shot compile-and-run with no session, which is why it sits under `<Leader>x` ("execute") rather than alongside the kernel-backed `<Leader>p` mappings. Compile errors appear in the output split as ordinary output; persistent in-editor diagnostics remain `zls`'s responsibility.
 
-* `<Leader>cr`: Run. Uses `zig build run` when a `build.zig` is found, otherwise `zig run` on the current file.
-* `<Leader>ca`: Run all tests. Uses `zig build test --summary all` in a project, otherwise `zig test` on the current file. The summary flag is required because `zig build test` prints nothing on success, leaving a passing run indistinguishable from one that executed no tests.
-* `<Leader>ct`: Run the nearest test. Scans upward for the enclosing `test "name"` block and passes it to `--test-filter`.
-* `<Leader>cs`: Terminate the running command.
+* `<Leader>xr`: Run. Uses `zig build run` when a `build.zig` is found, otherwise `zig run` on the current file.
+* `<Leader>xa`: Run all tests. Uses `zig build test --summary all` in a project, otherwise `zig test` on the current file. The summary flag is required because `zig build test` prints nothing on success, leaving a passing run indistinguishable from one that executed no tests.
+* `<Leader>xt`: Run the nearest test. Scans upward for the enclosing `test "name"` block and passes it to `--test-filter`.
+* `<Leader>xs`: Terminate the running command.
 
-A project is identified by `build.zig` alone, not by `.git`, so loose Zig files inside a repository are still treated as standalone. Note that `<Leader>ct` always compiles the current file on its own so that `--test-filter` applies. Because Zig analyzes declarations lazily, this succeeds more often than expected: a file may import modules declared only in `build.zig` and still run a filtered test cleanly, provided that test does not reach those imports. When a test does depend on the build graph, the standalone compile fails to resolve the module; use `<Leader>ca` for those.
+A project is identified by `build.zig` alone, not by `.git`, so loose Zig files inside a repository are still treated as standalone. Note that `<Leader>xt` always compiles the current file on its own so that `--test-filter` applies. Because Zig analyzes declarations lazily, this succeeds more often than expected: a file may import modules declared only in `build.zig` and still run a filtered test cleanly, provided that test does not reach those imports. When a test does depend on the build graph, the standalone compile fails to resolve the module; use `<Leader>xa` for those.
 
 ### Mojo
-Mojo shares the code runner but needs far less of it. `mojo run` builds and executes a single file rather than driving a build system, so there is no project versus loose-file distinction. The `mojo test` command was removed on 31 October 2025 because discovery happened outside the compiled artifact, which produced confusing failures when test files imported stale modules. Tests are now ordinary executables, which means `<Leader>cr` runs a program and a test file identically:
+Mojo shares the code runner but needs far less of it. `mojo run` builds and executes a single file rather than driving a build system, so there is no project versus loose-file distinction. The `mojo test` command was removed on 31 October 2025 because discovery happened outside the compiled artifact, which produced confusing failures when test files imported stale modules. Tests are now ordinary executables, which means `<Leader>xr` runs a program and a test file identically:
 
 ```mojo
 from std.testing import assert_equal, TestSuite
@@ -251,7 +251,7 @@ def main() raises:
     TestSuite.discover_tests[__functions_in_module()]().run()
 ```
 
-Test functions are discovered by their `test_` prefix, must take no arguments, and signal failure by raising. There is no filtering of individual tests, which is why Mojo binds no `<Leader>ct`.
+Test functions are discovered by their `test_` prefix, must take no arguments, and signal failure by raising. There is no filtering of individual tests, which is why Mojo binds no `<Leader>xt`.
 
 #### Platform support and installation
 
@@ -289,12 +289,12 @@ my_test :: proc(t: ^testing.T) {
 }
 ```
 
-`<Leader>ct` runs a single test through `-define:ODIN_TEST_NAMES=<package>.<proc>`. The qualifier comes from the file's `package` declaration, which need not match the directory name, so the runner reads it from the buffer rather than inferring it from the path. Grouped attributes such as `@(test, private)` are recognised.
+`<Leader>xt` runs a single test through `-define:ODIN_TEST_NAMES=<package>.<proc>`. The qualifier comes from the file's `package` declaration, which need not match the directory name, so the runner reads it from the buffer rather than inferring it from the path. Grouped attributes such as `@(test, private)` are recognised.
 
 `ols` resolves its workspace from `ols.json`, `.git`, or any `.odin` file, so the upstream defaults are used unchanged. Unlike Mojo, Odin builds for Intel Macs as well as Apple silicon and Linux.
 
 ### Code Runner
-`es/runner.lua` holds everything the language runners share: the reused `task://output` scratch split, chunked stdout and stderr reassembly, and process control. Commands run detached in their own process group, because a build driver usually spawns the compiled program as a grandchild — signalling only the driver would leave that grandchild alive holding the output pipes open, so the exit callback would never fire. `<Leader>cs` signals the whole group and reports immediately rather than waiting on that callback.
+`es/runner.lua` holds everything the language runners share: the reused `task://output` scratch split, chunked stdout and stderr reassembly, and process control. Commands run detached in their own process group, because a build driver usually spawns the compiled program as a grandchild — signalling only the driver would leave that grandchild alive holding the output pipes open, so the exit callback would never fire. `<Leader>xs` signals the whole group and reports immediately rather than waiting on that callback.
 
 Language modules supply only commands. Adding a language means writing one small module, adding a line to the `runner_modules` table in `es/keymaps.lua`, and registering the language server and treesitter parser. Verbs are bound only when the module implements them, so each language exposes exactly what its toolchain supports rather than a uniform set with dead keys.
 

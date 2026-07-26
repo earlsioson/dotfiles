@@ -471,7 +471,7 @@ map("n", "<Leader>pi", function()
 end, { desc = "Pyrepl image history" })
 
 -- ============================================================================
--- Code Runner (<Leader>c* = "code")
+-- Execute (<Leader>x* = "execute")
 -- ============================================================================
 -- One-shot compile-and-run for languages without a session, as opposed to the
 -- kernel-backed <Leader>p Pyrepl mappings. The prefix is keyed on the verb
@@ -506,7 +506,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
     for _, verb in ipairs(runner_verbs) do
       if type(mod[verb.fn]) == "function" then
-        map("n", "<Leader>c" .. verb.key, function()
+        map("n", "<Leader>x" .. verb.key, function()
           mod[verb.fn]()
         end, { buffer = args.buf, desc = verb.desc })
       end

@@ -40,6 +40,7 @@ The repository contains the following configurations mapping to standard paths i
   * Instantiation: Created using `uv sync --group dev` from the repository root (defined via `pyproject.toml` and `uv.lock`).
   * Configuration: `es/globals.lua` discovers the repository virtualenv and assigns it to `vim.g.python_host_path`.
 * **Deno**: TypeScript runtime, package manager, language server, and Pyrepl Jupyter kernel. Install the binary at `~/.local/bin/deno`, then register its built-in kernel once with `deno jupyter --install`.
+* **Zig**: Compiler and toolchain on `$PATH`, paired with `zls` (Zig language server). Both are static binaries installed outside Mason and declared as `external_server` entries in `es/plugins/lsp.lua`. Keep the two version-matched; `zls` tracks the compiler release series.
 * **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff` or the [astral installer](https://astral.sh/ruff/install.sh). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
 * **Formatter binaries**: `stylua`, `black`, `rumdl`, and `mojo_format` are used when formatting their corresponding filetypes. `isort` is installed by the development dependency group above.
 * **Pandoc**: Required by `<Leader>mp` to render Markdown as a temporary HTML document in the default browser.
@@ -194,6 +195,46 @@ When the REPL has focus, the terminal consumes keystrokes instead of invoking no
 Run `uv sync --group dev` from the dotfiles repository to install the console and image dependencies. After syncing `.config/nvim/` and `.vim/` into their corresponding home-directory paths, open a supported source file and restart Neovim once if `vim.pack` installs Pyrepl during that session.
 
 Inline plots require a Kitty-graphics-capable terminal such as Ghostty. Through SSH, sync and load `.tmux.conf` on the remote host; every nested tmux layer must report `on` from `tmux show-options -gv allow-passthrough`. Jupytext is required only for notebook conversion.
+
+### Zig
+Zig support is deliberately thin: no plugin, no wrapper module, and no server-specific override file. Neovim detects the `zig` filetype natively, `nvim-treesitter` installs the `zig` parser for highlighting, folding, and indentation, and `zls` provides completion, hover, references, and diagnostics. Debugging already works through the existing `nvim-dap` setup, which maps Zig to the C/C++ adapter configuration.
+
+#### Build-on-save diagnostics
+
+`zls` reports real compile errors — not just the syntax and semantic subset it can derive on its own — by invoking `zig build` when a file is saved. This is left entirely to `zls`'s own auto-detection rather than being forced on in this repository, because the behavior is correct only when it is decided per project:
+
+* When a project's `build.zig` declares a `check` step, `zls` enables build-on-save automatically and prefers that step over the default `install` step.
+* When no `check` step exists, `zls` leaves the feature off. Forcing `enable_build_on_save` on globally would fall back to the `install` step, which runs full LLVM code generation on every save.
+
+Opt a project in by declaring a `check` step whose artifact is never passed to `b.installArtifact`. Omitting the install is the entire point: it adds `-fno-emit-bin`, so the compiler analyzes the code and reports errors without entering the code-generation phase.
+
+```zig
+const exe_check = b.addExecutable(.{
+    .name = "example",
+    .root_module = b.createModule(.{
+        .root_source_file = b.path("src/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    }),
+});
+
+const check = b.step("check", "Type-check without emitting a binary");
+check.dependOn(&exe_check.step);
+// Intentionally no b.installArtifact(exe_check) — that is what enables -fno-emit-bin.
+```
+
+The `build.zig` API tracks the compiler release, so adjust the snippet to match the installed Zig version. Loose `.zig` files outside a project still get full `zls` analysis; only the build-driven diagnostics require a project root.
+
+#### Running and testing
+
+`es/zig.lua` is a task runner, not a REPL: each mapping is a one-shot compile-and-run whose output streams into a `zig://output` scratch split. There is no session and no carried-over state, which is why it lives under its own `<Leader>z` prefix rather than alongside the kernel-backed `<Leader>p` mappings. Compile errors appear in that split as ordinary output; persistent in-editor diagnostics remain `zls`'s responsibility. Mappings are buffer-local to `zig` filetypes.
+
+* `<Leader>zr`: Run. Uses `zig build run` when a `build.zig` is found, otherwise `zig run` on the current file.
+* `<Leader>za`: Run all tests. Uses `zig build test --summary all` in a project, otherwise `zig test` on the current file. The summary flag is required because `zig build test` prints nothing on success, leaving a passing run indistinguishable from one that executed no tests.
+* `<Leader>zt`: Run the nearest test. Scans upward for the enclosing `test "name"` block and passes it to `--test-filter`.
+* `<Leader>zs`: Terminate the running command.
+
+A project is identified by `build.zig` alone, not by `.git`, so loose Zig files inside a repository are still treated as standalone. Note that `<Leader>zt` always compiles the current file on its own so that `--test-filter` applies. Because Zig analyzes declarations lazily, this succeeds more often than expected: a file may import modules declared only in `build.zig` and still run a filtered test cleanly, provided that test does not reach those imports. When a test does depend on the build graph, the standalone compile fails to resolve the module; use `<Leader>za` for those.
 
 ### Sidekick & Copilot LSP Configuration
 Next Edit Suggestions (NES) use the `copilot` LSP client configuration.

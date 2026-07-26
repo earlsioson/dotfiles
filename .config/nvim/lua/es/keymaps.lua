@@ -470,4 +470,26 @@ map("n", "<Leader>pi", function()
   vim.cmd("PyreplOpenImageHistory")
 end, { desc = "Pyrepl image history" })
 
+-- ============================================================================
+-- Zig Operations (<Leader>z* = "zig")
+-- ============================================================================
+-- One-shot compile-and-run, not a REPL session. Diagnostics come from zls.
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "zig",
+  group = vim.api.nvim_create_augroup("es_zig_keymaps", { clear = true }),
+  callback = function(args)
+    local function zig(lhs, fn, desc)
+      map("n", lhs, function()
+        require("es.zig")[fn]()
+      end, { buffer = args.buf, desc = desc })
+    end
+
+    zig("<Leader>zr", "run", "Zig run")
+    zig("<Leader>zt", "test_nearest", "Zig test nearest")
+    zig("<Leader>za", "test", "Zig test all")
+    zig("<Leader>zs", "stop", "Zig stop")
+  end,
+})
+
 return M

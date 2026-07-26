@@ -16,6 +16,7 @@ function M.setup()
       { "<leader>m", group = "Markdown" },
       { "<leader>a", group = "AI" },
       { "<leader>p", group = "Pyrepl" },
+      { "<leader>z", group = "Zig" },
     },
   })
 end

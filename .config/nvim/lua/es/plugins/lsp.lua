@@ -21,13 +21,14 @@ local mason_servers = {
   "yamlls",
 }
 
--- Provided outside Mason (static binary on PATH via ~/.local/bin, or uv) —
--- Mason would pip/venv these, which Lightning blocks. Configured + enabled,
--- but not ensure_installed.
+-- Provided outside Mason (static binary on PATH, or uv) — Mason would
+-- pip/venv these, which Lightning blocks. Configured + enabled, but not
+-- ensure_installed.
 local external_servers = {
   "denols",
   "mojo",
   "ruff",
+  "zls",
 }
 
 -- All servers get configured + enabled; only mason_servers get ensure_installed.

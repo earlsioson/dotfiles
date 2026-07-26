@@ -24,6 +24,7 @@ local languages = {
   "vim",
   "vimdoc",
   "yaml",
+  "zig",
   "query",
 }
 

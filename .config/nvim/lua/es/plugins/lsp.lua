@@ -35,11 +35,21 @@ local external_servers = {
   zls = "zls",
 }
 
+-- Servers whose executable may be installed per-project (a uv venv) instead of
+-- globally, so a PATH probe here would answer for the wrong directory: this
+-- runs once, when the first file of the session is opened, and the answer is
+-- cached for every buffer after it. These are enabled unconditionally and
+-- their `es.lsp.<server>` module owns both resolving the executable and
+-- deciding, per buffer, whether to activate at all (see |lsp-root_dir()|).
+local project_local_servers = {
+  mojo = true,
+}
+
 -- All configured servers get enabled; only mason_servers get ensure_installed.
 local servers = {}
 vim.list_extend(servers, mason_servers)
 for server, executable in pairs(external_servers) do
-  if vim.fn.executable(executable) == 1 then
+  if project_local_servers[server] or vim.fn.executable(executable) == 1 then
     table.insert(servers, server)
   end
 end
@@ -48,8 +58,11 @@ local M = {}
 
 -- Exported so tooling outside this repository can read the contract instead of
 -- duplicating it: these are the executables that must already exist on PATH,
--- and af-workspace's `just doctor` reports any that are missing.
+-- and af-workspace's `just doctor` reports any that are missing. Entries in
+-- project_local_servers are the exception — they may instead live in a
+-- project's `.venv/bin`, so a missing PATH entry there is not a defect.
 M.external_servers = external_servers
+M.project_local_servers = project_local_servers
 
 function M.setup()
   require("mason-lspconfig").setup({

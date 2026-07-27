@@ -57,6 +57,7 @@ autocmd("FileType", {
     "lspinfo",
     "spectre_panel",
     "startuptime",
+    "taskrun",
     "tsplayground",
     "PlenaryTestPopup",
   },

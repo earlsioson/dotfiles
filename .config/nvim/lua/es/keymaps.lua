@@ -481,6 +481,7 @@ end, { desc = "Pyrepl image history" })
 local runner_modules = {
   mojo = "es.mojo",
   odin = "es.odin",
+  python = "es.python",
   rust = "es.rust",
   zig = "es.zig",
 }

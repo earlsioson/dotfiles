@@ -22,10 +22,8 @@ return {
       return
     end
 
-    config.settings = vim.tbl_deep_extend("force", config.settings or {}, {
-      python = {
-        pythonPath = python_path,
-      },
+    config.settings.python = vim.tbl_deep_extend("force", config.settings.python or {}, {
+      pythonPath = python_path,
     })
   end,
 }

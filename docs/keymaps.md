@@ -209,19 +209,21 @@ The prefix names the verb rather than the language, so a new language never need
 
 Availability by language, which follows each toolchain rather than being made uniform:
 
-| | Zig | Mojo | Odin |
-| --- | --- | --- | --- |
-| `<Leader>xr` | yes | yes | yes |
-| `<Leader>xb` | no — `zig build run` already builds | yes | yes |
-| `<Leader>xt` | yes | no — no test filtering exists | yes |
-| `<Leader>xa` | yes | no — a test file is just a program, use `<Leader>xr` | yes |
-| `<Leader>xs` | yes | yes | yes |
+| | Zig | Mojo | Odin | Python |
+| --- | --- | --- | --- | --- |
+| `<Leader>xr` | yes | yes | yes | yes |
+| `<Leader>xb` | no — `zig build run` already builds | yes | yes | no — interpreted language |
+| `<Leader>xt` | yes | no — no test filtering exists | yes | yes |
+| `<Leader>xa` | yes | no — a test file is just a program, use `<Leader>xr` | yes | yes |
+| `<Leader>xs` | yes | yes | yes | yes |
 
 **Zig** treats a directory containing `build.zig` as a project and anything else as a loose file. `<Leader>xt` always compiles the current file standalone so `--test-filter` applies, so use `<Leader>xa` for tests that reach build-graph dependencies.
 
 **Mojo** compiles a single file; there is no build driver to target. Since `mojo test` was removed, a test file is an ordinary executable and `<Leader>xr` runs it.
 
 **Odin** compiles a directory as one package, so every mapping acts on the folder holding the current file. `<Leader>xt` passes `-define:ODIN_TEST_NAMES=<package>.<proc>`, qualified by the name in the file's `package` declaration rather than the directory name.
+
+**Python** executes script files via `<Leader>xr` and runs pytest via `<Leader>xa` / `<Leader>xt` (filtering by nearest `def test_*` or `class Test*` with `-k`). Toolchain resolution automatically prefers `.venv` binaries, then `uv run`, then system `python3`/`pytest`. `<Leader>xb` is omitted as Python is interpreted.
 
 Toolchains are detected, not assumed. A language whose compiler is missing reports that instead of failing, and its language server is skipped rather than launched — which is how Mojo stays inert on Intel Macs.
 

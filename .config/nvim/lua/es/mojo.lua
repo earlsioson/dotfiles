@@ -35,7 +35,12 @@ local M = {}
 --- @return string[]? argv prefix ending in the mojo command
 --- @return string? root project root to run in, when there is one
 local function mojo_command()
-  local root = vim.fs.root(0, { "pyproject.toml", ".git" })
+  local root = vim.fs.root(0, { "pixi.toml", "pyproject.toml", ".git" })
+
+  if root and vim.fn.executable("pixi") == 1 and vim.fs.root(0, { "pixi.toml" }) then
+    return { "pixi", "run", "mojo" }, root
+  end
+
   if root and vim.fn.executable(vim.fs.joinpath(root, ".venv", "bin", "mojo")) == 1 then
     if vim.fn.executable("uv") == 1 then
       return { "uv", "run", "--no-sync", "mojo" }, root

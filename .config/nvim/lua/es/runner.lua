@@ -172,13 +172,16 @@ function M.stop(label)
   append({ "", "[stopped]" })
 end
 
---- Path of the current buffer, or nil with a notification when unsaved.
+--- Path of the current buffer, auto-saving modified buffers before returning.
 --- @param label string language name used in the notification
 function M.current_file(label)
   local name = vim.api.nvim_buf_get_name(0)
   if name == "" then
     vim.notify(label .. ": buffer has no file", vim.log.levels.WARN)
     return nil
+  end
+  if vim.bo.modified then
+    vim.cmd("update")
   end
   return name
 end

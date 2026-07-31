@@ -11,10 +11,44 @@ local function project_root()
   return vim.fs.root(0, { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".venv", ".git" })
 end
 
+--- Check if a file contains PEP 723 inline script metadata (`# /// script`).
+local function has_script_metadata(file)
+  if not file or file == "" then
+    return false
+  end
+
+  local f = io.open(file, "r")
+  if not f then
+    return false
+  end
+
+  for _ = 1, 20 do
+    local line = f:read("*l")
+    if not line then
+      break
+    end
+    if line:find("^#%s*///%s*script") then
+      f:close()
+      return true
+    end
+  end
+
+  f:close()
+  return false
+end
+
 --- Resolve python executable command.
---- Prefers project virtualenv (`.venv/bin/python`), then `uv run python` if uv is present with a project root,
---- then `python3` or `python` from $PATH.
-local function resolve_python(dir)
+--- Prefers `uv run` if uv is present (with script metadata, uv project root, or system uv),
+--- then project virtualenv (`.venv/bin/python`), then `python3` or `python` from $PATH.
+local function resolve_python(dir, file)
+  local is_uv = vim.fn.executable("uv") == 1
+
+  if is_uv then
+    if has_script_metadata(file) or (dir and vim.fs.root(0, { "pyproject.toml", "uv.lock" })) then
+      return { "uv", "run" }
+    end
+  end
+
   if dir then
     local venv_python = dir .. "/.venv/bin/python"
     if vim.fn.executable(venv_python) == 1 then
@@ -22,8 +56,8 @@ local function resolve_python(dir)
     end
   end
 
-  if vim.fn.executable("uv") == 1 and vim.fs.root(0, { "pyproject.toml", "uv.lock" }) then
-    return { "uv", "run", "python" }
+  if is_uv then
+    return { "uv", "run" }
   end
 
   if vim.fn.executable("python3") == 1 then
@@ -90,7 +124,7 @@ function M.run()
   end
 
   local root = project_root() or vim.fs.dirname(file)
-  local cmd = resolve_python(root)
+  local cmd = resolve_python(root, file)
   if not cmd then
     vim.notify("Python: no python executable found", vim.log.levels.WARN)
     return

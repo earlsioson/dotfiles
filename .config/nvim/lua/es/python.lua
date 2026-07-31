@@ -117,6 +117,47 @@ local function nearest_test()
   return nil
 end
 
+--- Parse pyproject.toml in dir to find project name and script entrypoints.
+--- @param dir string|nil
+--- @return string|nil project_name
+--- @return table<string, string> scripts table of script_name -> target
+local function parse_pyproject(dir)
+  if not dir then
+    return nil, {}
+  end
+
+  local path = dir .. "/pyproject.toml"
+  local f = io.open(path, "r")
+  if not f then
+    return nil, {}
+  end
+
+  local content = f:read("*a")
+  f:close()
+
+  if not content then
+    return nil, {}
+  end
+
+  local project_name = content:match('%[project%]%s*.-name%s*=%s*["\']([^"\']+)["\']')
+  local scripts = {}
+
+  local scripts_sec = content:match("%[project%.scripts%]\n(.*)")
+  if scripts_sec then
+    for line in scripts_sec:gmatch("[^\r\n]+") do
+      if line:match("^%s*%[") then
+        break
+      end
+      local name, target = line:match('^%s*([%w_%-]+)%s*=%s*["\']([^"\']+)["\']')
+      if name and target then
+        scripts[name] = target
+      end
+    end
+  end
+
+  return project_name, scripts
+end
+
 function M.run()
   local file = runner.current_file("Python")
   if not file then
@@ -124,6 +165,54 @@ function M.run()
   end
 
   local root = project_root() or vim.fs.dirname(file)
+  local is_uv = vim.fn.executable("uv") == 1
+  local project_name, scripts = parse_pyproject(root)
+
+  if is_uv and root then
+    local filename = vim.fs.basename(file)
+    local rel_path = file:sub(#root + 2)
+
+    -- 1. If project.scripts has an entry matching project_name:
+    if project_name and scripts[project_name] then
+      if filename == "__init__.py" or filename == "main.py" or rel_path:find(project_name, 1, true) then
+        runner.run({ "uv", "run", project_name }, root)
+        return
+      end
+    end
+
+    -- 2. Check if any script in project.scripts matches the file or module
+    for script_name, target in pairs(scripts) do
+      local mod_path = target:match("^([^:]+)")
+      if mod_path then
+        local mod_file_part = mod_path:gsub("%.", "/")
+        if rel_path:find(mod_file_part, 1, true) then
+          runner.run({ "uv", "run", script_name }, root)
+          return
+        end
+      end
+    end
+  end
+
+  -- 3. If file is __init__.py defining main() without top-level main() call
+  if file:sub(-11) == "/__init__.py" then
+    local f = io.open(file, "r")
+    if f then
+      local code = f:read("*a")
+      f:close()
+      if code and code:find("def main%(") and not code:find('if __name__ == ["\']__main__["\']') then
+        local parent_dir = vim.fs.dirname(file)
+        local pkg_name = vim.fs.basename(parent_dir)
+        if pkg_name and pkg_name ~= "" and pkg_name ~= "src" then
+          local cmd = is_uv and { "uv", "run", "python" } or { "python3" }
+          table.insert(cmd, "-c")
+          table.insert(cmd, string.format("import %s; getattr(%s, 'main', lambda: None)()", pkg_name, pkg_name))
+          runner.run(cmd, root)
+          return
+        end
+      end
+    end
+  end
+
   local cmd = resolve_python(root, file)
   if not cmd then
     vim.notify("Python: no python executable found", vim.log.levels.WARN)

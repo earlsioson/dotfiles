@@ -15,6 +15,7 @@ function M.setup()
       tools = {
         agy = {
           cmd = { "agy" },
+          is_proc = "\\<agy\\>",
         },
       },
     },

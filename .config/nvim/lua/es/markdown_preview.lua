@@ -5,73 +5,135 @@ local preview_files = {}
 local stylesheet = [[
   :root {
     color-scheme: light dark;
-    --canvas: #ffffff;
-    --foreground: #1f2328;
-    --muted: #59636e;
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #656d76;
     --accent: #0969da;
-    --border: #d1d9e0;
-    --surface: #f6f8fa;
+    --border: #d0d7de;
+    --code-bg: #f6f8fa;
   }
+
   @media (prefers-color-scheme: dark) {
     :root {
-      --canvas: #0d1117;
-      --foreground: #f0f6fc;
-      --muted: #9198a1;
+      --bg: #0d1117;
+      --fg: #e6edf3;
+      --muted: #8d96a0;
       --accent: #4493f8;
-      --border: #3d444d;
-      --surface: #151b23;
+      --border: #30363d;
+      --code-bg: #161b22;
     }
   }
-  @supports (color: light-dark(white, black)) {
-    :root {
-      --canvas: light-dark(#ffffff, #0d1117);
-      --foreground: light-dark(#1f2328, #f0f6fc);
-      --muted: light-dark(#59636e, #9198a1);
-      --accent: light-dark(#0969da, #4493f8);
-      --border: light-dark(#d1d9e0, #3d444d);
-      --surface: light-dark(#f6f8fa, #151b23);
-    }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
   }
-  @media print {
-    :root {
-      --canvas: #ffffff;
-      --foreground: #1f2328;
-      --muted: #59636e;
-      --accent: #0969da;
-      --border: #d1d9e0;
-      --surface: #f6f8fa;
-    }
-  }
-  *, *::before, *::after { box-sizing: border-box; }
-  html { background: var(--canvas); }
+
   body {
-    min-height: 100vh;
-    max-width: 980px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--fg);
+    background-color: var(--bg);
+    max-width: 860px;
     margin: 0 auto;
-    padding: 45px;
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: var(--foreground);
-    background: var(--canvas);
+    padding: 2rem 1.5rem;
     overflow-wrap: break-word;
   }
-  h1, h2 { padding-block-end: .3em; border-block-end: 1px solid var(--border); }
-  a { color: var(--accent); }
-  pre, code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
-  code { padding: .2em .4em; border-radius: 6px; background: var(--surface); }
-  pre { overflow: auto; padding: 16px; border-radius: 6px; background: var(--surface); }
-  pre code { padding: 0; background: transparent; }
-  blockquote {
-    margin-inline-start: 0;
-    padding-inline-start: 1em;
-    border-inline-start: .25em solid var(--border);
-    color: var(--muted);
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.25;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
   }
-  table { border-collapse: collapse; }
-  th, td { padding: 6px 13px; border: 1px solid var(--border); }
-  img { max-width: 100%; }
-  @supports (min-height: 100dvh) { body { min-height: 100dvh; } }
-  @supports (text-wrap: pretty) { p, li { text-wrap: pretty; } }
-  @media (max-width: 767px) { body { padding: 15px; } }
+
+  h1 {
+    font-size: 2em;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h2 {
+    font-size: 1.5em;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 { font-size: 1.25em; }
+  h4 { font-size: 1em; }
+
+  p, ul, ol, blockquote, table, pre {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  code, pre {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875em;
+  }
+
+  code {
+    padding: 0.2em 0.4em;
+    background-color: var(--code-bg);
+    border-radius: 6px;
+  }
+
+  pre {
+    padding: 1rem;
+    overflow: auto;
+    background-color: var(--code-bg);
+    border-radius: 6px;
+    line-height: 1.45;
+  }
+
+  pre code {
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+  }
+
+  blockquote {
+    margin-left: 0;
+    padding-left: 1rem;
+    color: var(--muted);
+    border-left: 4px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+  }
+
+  th {
+    background-color: var(--code-bg);
+    font-weight: 600;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  hr {
+    height: 1px;
+    padding: 0;
+    margin: 2rem 0;
+    background-color: var(--border);
+    border: 0;
+  }
 ]]
 
 local function html_escape(value)
@@ -112,8 +174,8 @@ function M.open()
     "--from=gfm",
     "--to=html5",
     "--standalone",
-    "--metadata",
-    "title=" .. title,
+    "-V",
+    "pagetitle=" .. title,
   }, { stdin = markdown, text = true }, function(result)
     vim.schedule(function()
       if result.code ~= 0 then
@@ -122,8 +184,9 @@ function M.open()
       end
 
       local base_uri = vim.uri_from_fname(source_dir .. "/")
+      local unstyled_html = result.stdout:gsub("<style>.-</style>", "")
       local additions = ("<base href=\"%s\">\n<style>%s</style>\n</head>"):format(html_escape(base_uri), stylesheet)
-      local html = result.stdout:gsub("</head>", additions, 1)
+      local html = unstyled_html:gsub("</head>", additions, 1)
       local ok, err = pcall(vim.fn.writefile, vim.split(html, "\n", { plain = true }), output_path)
       if not ok then
         vim.notify(("Unable to write markdown preview: %s"):format(err), vim.log.levels.ERROR)

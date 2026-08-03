@@ -17,6 +17,14 @@ function M.setup()
           cmd = { "agy" },
           is_proc = "\\<agy\\>",
         },
+        claude = {
+          cmd = { "claude" },
+          is_proc = "\\<claude\\>",
+        },
+        codex = {
+          cmd = { "codex" },
+          is_proc = "\\<codex\\>",
+        },
       },
     },
   })

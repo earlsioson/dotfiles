@@ -24,6 +24,20 @@ The repository contains the following configurations mapping to standard paths i
 
 ---
 
+## First-Time Neovim Setup
+
+After syncing the repository's `.config/nvim/` into `~/.config/nvim/`, install the global Node.js tools and the repository-local Python host environment:
+
+```sh
+npm install -g tree-sitter-cli neovim
+uv sync --group dev
+nvim
+```
+
+The first Neovim launch installs any missing plugins. `tree-sitter-cli` compiles Tree-sitter parsers, `neovim` provides the Node.js Neovim helper, and the uv environment supplies the Python provider and related tooling. See [Dependencies & Prerequisites](#dependencies--prerequisites) for system requirements and optional language toolchains.
+
+---
+
 ## Dependencies & Prerequisites
 
 ### System Requirements

@@ -31,6 +31,14 @@ function M.setup()
         "-g",
         "!.git",
       },
+      layout_strategy = "horizontal",
+      layout_config = {
+        horizontal = {
+          width = 0.95,
+          height = 0.90,
+          preview_width = 0.58,
+        },
+      },
     },
     pickers = {
       buffers = vim.tbl_deep_extend("force", {}, fixfolds, {

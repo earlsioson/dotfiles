@@ -1,10 +1,21 @@
 # Agent Directives & Repository Guidelines
 
 ## Scope & Deployment Boundaries
-- **Workspace Containment**: Restrict all file creation, edits, and command executions strictly to the repository workspace directory (`/Users/earl/dev/repos/dotfiles`).
+- **Workspace Containment**: Confine every write — file creation, edits, and any side effect of a command — to the repository workspace directory (`/Users/earl/dev/repos/dotfiles`). A command is out of scope if the process it starts writes outside the workspace, even when invoked from within it.
+- **Read-Only Inspection Is Encouraged**: Read freely outside the workspace when diagnosing: installed plugin source (`~/.local/share/nvim/site/pack/`), the Neovim runtime (`$VIMRUNTIME`), and the deployed copies under `~/.config/`. Never write to them.
+- **Editor Runs Are Isolated**: Diagnose configs with `just nvim-probe` / `just nvim-eval`, which boot Neovim headless against a throwaway runtime built from a copy of this repo. Never invoke `nvim`/`vim` directly, and never point a config root (`XDG_CONFIG_HOME`, `NVIM_APPNAME`, `-u`) at `$HOME` or at the workspace. Launching Neovim against `$HOME` mutates the live runtime (`nvim-pack-lock.json`, shada, `~/.cache/nvim`, Mason and Treesitter state); pointing a config root at the workspace deposits `nvim-pack-lock.json` into the changeset.
+- **Never Escalate Out Of A Sandbox**: If the agent runtime sandboxes commands, a denial for a path outside the workspace is this policy working as intended. Report it and stop. Never re-run the command with the sandbox disabled.
+- **Runtime Artifact Check**: `nvim-pack-lock.json`, `*.shada`, `.netrwhist`, and `nvim.log` must never exist in the worktree. These are deliberately **not** gitignored so an escape surfaces as an untracked file in `git status` — never silence one by adding an ignore rule. `just check-containment` is the secondary sweep for anything a global excludes file still hides. Report any hit and never commit it.
 - **User-Driven Synchronization**: Treat this repository as the sole source of truth. Changes in this repository are synced into `$HOME` (`~/.config/`, `~/.vim/`) exclusively by the user running their local sync scripts.
 - **Git Command Scope**: Interpret user requests to "ship", "deploy", or "merge" as instructions to stage, commit, or branch within the git repository workspace.
 - **Environment Stability**: Leave live runtime environments, plugin caches, and pack lockfiles untouched unless the user explicitly requests maintenance commands.
+
+## Default-First Protocol
+This repo is default-first (README "Philosophy"): Vim and Neovim start from native behavior, and config exists only for preferences worth carrying between machines. Before adding any keymap, option, or plugin setting, establish that the editor or the plugin does not already provide it.
+- **Check Before Adding**: Consult `:h vim-defaults`, `:h lsp-defaults`, and the plugin's own preset — e.g. `cmp.mapping.preset.insert` deliberately maps `<C-n>`/`<C-p>`/`<C-y>` to mirror Neovim's native ins-completion, and deliberately leaves `<Tab>` alone. Prefer removing a deviation over adding config that compensates for one.
+- **Own What You Displace**: Overriding a default means reimplementing every behavior it carried. The insert-mode `<Tab>` map in `keymaps.lua` is the worked example: it exists only because Neovim ships no default for `vim.lsp.inline_completion.get()`, and it restores `vim.snippet.jump` and a literal `<Tab>` because it displaced both.
+- **Cite The Docs**: When an override is justified, name the `:h` tag for the mechanism in a comment beside it, so the next reader can distinguish a deliberate override from an accident.
+- **Regression Triage**: When a behavior "used to work", check git history for what the default was before concluding a feature is missing. Restoring a default is more often the fix than adding a mapping.
 
 ## Project Structure & Architecture Map
 - **Neovim Lua Root**: `.config/nvim/lua/es/`
@@ -38,14 +49,27 @@
   - Inspect and verify CLI flags against the installed binary before defining command invocations.
 
 ## Development & Command Reference
+
+Agent-safe commands — these write only inside the workspace or the throwaway probe runtime:
+
+| Command | Purpose |
+| :--- | :--- |
+| `just check-containment` | Fails if runtime artifacts reached the worktree |
+| `just nvim-probe *args` | Boots Neovim headless against the isolated probe runtime (e.g. `just nvim-probe +PackStatus`) |
+| `just nvim-eval '<lua>'` | Evaluates Lua in the probe runtime and prints the result |
+| `just nvim-probe-clean` | Discards the probe runtime and its cloned plugin tree |
+| `luac -p <file>` | Syntax-checks a Lua module without booting an editor |
+| `uv sync --group dev` | Installs local Python helpers declared in `pyproject.toml` |
+| `uv run python -m isort .` | Sorts Python imports across the workspace |
+
+User-only commands — these mutate the live runtime in `$HOME`, so agents must never run them:
+
 | Command | Purpose |
 | :--- | :--- |
 | `nvim` | Bootstraps plugins via `vim.pack` on first launch |
 | `nvim +"PackStatus"` | Displays managed plugin status |
 | `nvim +"PackUpdate"` | Updates plugins registered in `.config/nvim/lua/es/pack.lua` |
 | `nvim +"Mason"` | Opens Mason UI for LSP/DAP tooling |
-| `uv sync --group dev` | Installs local Python helpers declared in `pyproject.toml` |
-| `uv run python -m isort .` | Sorts Python imports across the workspace |
 
 ## Coding Style & Conventions
 - **Language & Style**: Lua for Neovim config using 2-space indentation and `snake_case` module filenames under `es/`.
@@ -53,7 +77,10 @@
 - **Responsibility Isolation**: Place startup UI in `startup`, buffer-driven features in autocommands, and filetype logic in dedicated handlers. Keep modules small and single-purpose.
 
 ## Testing & Verification Protocol
-- Perform manual verification in interactive editor sessions.
+- **Agent-Side Checks**: Verify by reading code, syntax-checking with `luac -p`, and querying the isolated probe runtime via `just nvim-eval`. Confirm plugin API assumptions by reading the installed plugin's source under `~/.local/share/nvim/site/pack/`, never by running it against `$HOME`.
+- **Probe Limits**: The probe boots headless, so it can confirm configuration state (loaded modules, mapping tables, option values) but cannot exercise keystrokes, popup menus, or anything requiring a UI and real input loop. Never present a probe result as proof that an interaction works.
+- **Report Verification Honestly**: State which parts of a change are statically verified and which still need the user's live session.
+- **User-Side Verification**: Perform manual verification in interactive editor sessions.
 - After the user syncs `.config/nvim/` into their runtime environment, verify the target command, keymap, or UI workflow in a live session.
 - For plugin-loading changes, verify both clean dashboard startup and opening a file.
 

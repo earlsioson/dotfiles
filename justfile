@@ -1,5 +1,9 @@
 set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
+# Recipe arguments arrive as "$@" rather than raw interpolation, so Lua snippets
+# and Neovim `+cmd` arguments survive quoting intact.
+set positional-arguments := true
+
 vim_pack_root := env_var_or_default("VIM_PACK_ROOT", env_var("HOME") + "/.vim/pack/plugins")
 
 vim_plugins := '''
@@ -107,3 +111,50 @@ vim-plugins-sync: _vim-plugins-install _vim-plugins-update _vim-plugins-prune _v
 
 vim-go-binaries:
   @vim -Nu NONE -i NONE -n -es +'packadd vim-go' +'GoUpdateBinaries' +qa
+
+# Fail if runtime artifacts (pack lockfiles, shada, swap, logs) reached the worktree.
+check-containment:
+  @scripts/check-containment.sh
+
+# Build the throwaway Neovim runtime: repo config copied (never symlinked, which
+# would make Neovim write its lockfile back into the worktree) and the plugin tree
+# cloned so the probe owns a writable copy and can never mutate ~/.local/share.
+_nvim-probe-runtime:
+  @root="$(scripts/nvim-probe-root.sh)"; \
+  site="$root/data/nvim/site"; \
+  rm -rf "$root/config"; \
+  mkdir -p "$root/config" "$root/data/nvim" "$root/state" "$root/cache"; \
+  cp -R .config/nvim "$root/config/nvim"; \
+  if [ ! -d "$site" ] && [ -d "$HOME/.local/share/nvim/site" ]; then \
+    printf 'cloning plugin tree into probe runtime (first run)\n'; \
+    cp -Rc "$HOME/.local/share/nvim/site" "$site" 2>/dev/null \
+      || { rm -rf "$site"; cp -R "$HOME/.local/share/nvim/site" "$site"; }; \
+  fi
+
+# Discard the probe runtime, including its cloned plugin tree.
+nvim-probe-clean:
+  @root="$(scripts/nvim-probe-root.sh)"; \
+  rm -rf "$root"; \
+  printf 'removed %s\n' "$root"
+
+# Boot Neovim headless against the isolated runtime, e.g. `just nvim-probe +PackStatus`.
+nvim-probe *args: _nvim-probe-runtime
+  @root="$(scripts/nvim-probe-root.sh)"; \
+  XDG_CONFIG_HOME="$root/config" \
+  XDG_DATA_HOME="$root/data" \
+  XDG_STATE_HOME="$root/state" \
+  XDG_CACHE_HOME="$root/cache" \
+  NVIM_LOG_FILE="$root/nvim.log" \
+  nvim --headless -n -i NONE "$@" +'qa!'
+
+# Evaluate Lua against the isolated runtime, e.g.
+# `just nvim-eval 'print(vim.inspect(vim.api.nvim_get_keymap("i")))'`
+nvim-eval lua: _nvim-probe-runtime
+  @root="$(scripts/nvim-probe-root.sh)"; \
+  printf '%s\n' "$1" > "$root/eval.lua"; \
+  XDG_CONFIG_HOME="$root/config" \
+  XDG_DATA_HOME="$root/data" \
+  XDG_STATE_HOME="$root/state" \
+  XDG_CACHE_HOME="$root/cache" \
+  NVIM_LOG_FILE="$root/nvim.log" \
+  nvim --headless -n -i NONE -c "luafile $root/eval.lua" -c 'qa!'

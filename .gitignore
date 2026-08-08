@@ -218,3 +218,5 @@ __marimo__/
 
 # Vim native packages cloned by just recipes.
 .vim/pack/
+
+!nvim.log

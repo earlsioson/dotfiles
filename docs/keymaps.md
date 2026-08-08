@@ -60,7 +60,7 @@ Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (
 
 ### Workflow Capabilities
 * **Copilot Authentication**: `:LspCopilotSignIn` starts the GitHub device verification flow.
-* **Inline Completion**: Copilot refreshes suggestions automatically in insert mode; `<Tab>` accepts the visible suggestion.
+* **Inline Completion**: Copilot refreshes suggestions automatically in insert mode; `<Tab>` accepts the visible suggestion. Neovim ships no default keymap for this, which is why `<Tab>` is overridden — see `:h vim.lsp.inline_completion.get()`.
 * **Session Selection**: `<Leader>as` opens a selector for installed CLI clients.
 * **Terminal View**: `<Leader>aa` toggles visibility of the active Sidekick split window.
 * **Context Transmission**: Buffers, selections, or visual ranges can be piped to the session using `<Leader>at`, `<Leader>aF`, or visual `<Leader>av`.
@@ -68,7 +68,7 @@ Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (
 
 | Shortcut | Action |
 | --- | --- |
-| `<Tab>` (insert/normal) | Apply Sidekick NES or accept Copilot inline completion; otherwise insert/use a normal tab |
+| `<Tab>` (insert/normal) | First match wins: apply Sidekick NES, accept Copilot inline completion, jump to the next snippet placeholder, else a literal tab (insert indent, normal-mode `CTRL-I` jumplist forward). Not a completion-menu key — see the [nvim-cmp](#nvim-cmp) section |
 | `<Leader>aa` | Toggle Sidekick CLI |
 | `<Leader>af` | Focus Sidekick CLI |
 | `<Leader>as` | Select an installed CLI |
@@ -228,12 +228,20 @@ Availability by language, which follows each toolchain rather than being made un
 Toolchains are detected, not assumed. A language whose compiler is missing reports that instead of failing, and its language server is skipped rather than launched — which is how Mojo stays inert on Intel Macs.
 
 ## nvim-cmp
+Navigation keys come from `cmp.mapping.preset.insert`, which mirrors Neovim's native
+ins-completion (`i_CTRL-N`, `i_CTRL-P`, `i_CTRL-Y`, `i_CTRL-E`). `<Tab>` is deliberately
+not a completion key in insert mode; it belongs to the [AI](#ai) chain above.
+
 | Shortcut | Action |
 | --- | --- |
-| `<CR>` | Confirm selected completion item |
-| `<C-n>` / `<C-p>` | Navigate completion menu |
-| `<C-Space>` | Open completion menu |
-| `<C-b>` / `<C-f>` | Jump to the previous/next snippet placeholder when a snippet is active |
+| `<C-n>` / `<C-p>` | Cycle the menu, inserting each entry as you go |
+| `<Down>` / `<Up>` | Cycle the menu, moving the selection without inserting |
+| `<CR>` | Confirm the selected item, or the first item if none is selected |
+| `<C-y>` | Accept the selected item only |
+| `<C-e>` | Abort and close the menu |
+| `<C-Space>` | Open the menu |
+| `<C-b>` / `<C-f>` | Scroll the documentation window while the menu is open; otherwise jump to the previous/next snippet placeholder |
+| `<Tab>` / `<S-Tab>` (cmdline) | Cycle path and command completions at the `:` and `/` prompts |
 
 ## tmux
 Prefix is `C-Space`. Mappings are active session-wide.

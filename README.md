@@ -93,6 +93,21 @@ Neovim uses the native `vim.pack` package mechanism defined in `es/pack.lua`. On
 * `:LspInfo`: Show active LSP clients and config status.
 * `:TSUpdate`: Compile/update Tree-sitter parsers.
 
+### Inspecting the Config Without Touching the Runtime
+The `justfile` can boot Neovim against a throwaway runtime built from a copy of this
+repository, so a diagnostic run cannot write to `~/.config/nvim`, `~/.local/share/nvim`,
+or the pack lockfile. Coding agents are required to use it; it is equally useful for
+checking a change before syncing.
+
+* `just nvim-probe *args`: Boots Neovim headless against the isolated runtime, e.g. `just nvim-probe +PackStatus`.
+* `just nvim-eval '<lua>'`: Evaluates Lua there and prints the result, e.g. `just nvim-eval 'print(vim.inspect(vim.api.nvim_get_keymap("i")))'`.
+* `just nvim-probe-clean`: Discards the runtime and its cloned plugin tree.
+* `just check-containment`: Fails if editor runtime artifacts (a pack lockfile, shada, `nvim.log`) have landed in the worktree, which means a process was pointed at the repository instead of the probe.
+
+The runtime lives under `$TMPDIR` by default; override with `NVIM_PROBE_HOME`. It is
+headless, so it reports configuration state — loaded modules, mapping tables, option
+values — but cannot exercise keystrokes or popup menus. Those still need a live session.
+
 ---
 
 ## Active Paths & State Reset
@@ -316,12 +331,12 @@ Language modules supply only commands. Adding a language means writing one small
 Next Edit Suggestions (NES) use the `copilot` LSP client configuration.
 * **LSP Integration**: Initialized via `vim.lsp.enable("copilot")`. The underlying Mason server package name is `copilot-language-server`.
 * **Authentication**: Signs in using the `:LspCopilotSignIn` command via the GitHub device verification flow.
-* **Inline Completion**: Copilot suggestions refresh automatically in insert mode. `<Tab>` accepts the visible suggestion; `<C-Space>` opens the regular `nvim-cmp` LSP completion menu.
+* **Inline Completion**: Copilot suggestions refresh automatically in insert mode. `<Tab>` accepts the visible suggestion — Neovim ships no default keymap for `vim.lsp.inline_completion.get()`, so this is the one place the default-first rule is knowingly set aside. `<C-Space>` opens the regular `nvim-cmp` LSP completion menu, whose own navigation stays on `<C-n>`/`<C-p>`.
 * **Persistence**: AI CLI sessions automatically hook into `tmux` persistence to stay alive when Neovim restarts.
 
 **Usage Mappings:**
 * **Auto-Trigger**: Pausing, typing, or leaving insert mode prompts automatic suggestions.
-* **`<Tab>`**: Applies active edit suggestion (falls back to inline completion or standard tab).
+* **`<Tab>`** (insert and normal): Applies the active edit suggestion, then falls through in order to inline completion, snippet placeholder jump (`vim.snippet.jump`), and finally a literal tab — preserving insert-mode indent and normal-mode `CTRL-I`. Overriding `<Tab>` means owning each default it displaces.
 * **`:Sidekick nes update`**: Manually requests a suggestion at the cursor.
 * **`:Sidekick nes toggle`**: Disables or re-enables Next Edit Suggestions.
 

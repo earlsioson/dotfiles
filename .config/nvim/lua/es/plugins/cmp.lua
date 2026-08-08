@@ -22,6 +22,10 @@ function M.setup()
         return vim_item
       end,
     },
+    -- Menu navigation stays on preset.insert's keys, which mirror Neovim's native
+    -- ins-completion: <C-n>/<C-p> to cycle, <C-y> to accept, <C-e> to abort, plus
+    -- the arrows. Default-first: do not add <Tab> here. Insert-mode <Tab> belongs to
+    -- the inline-completion/snippet chain in keymaps.lua.
     mapping = cmp.mapping.preset.insert({
       ["<C-b>"] = cmp.mapping.scroll_docs(-4),
       ["<C-f>"] = cmp.mapping.scroll_docs(4),

@@ -3,6 +3,8 @@
 -- ============================================================================
 -- All Neovim keymaps in one place for easy reference and learning
 -- Shared vim/neovim keymaps live in ~/.vim/common.vim
+-- Default-first: check `:h vim-defaults` before adding a mapping. Overriding a
+-- default means reimplementing what it did and citing its `:h` tag (see AGENTS.md).
 
 local M = {}
 local map = vim.keymap.set
@@ -142,6 +144,13 @@ local function sidekick_cli()
   return require("sidekick.cli")
 end
 
+-- Tab is overloaded because Neovim ships no default keymap for accepting an inline
+-- completion; `:h vim.lsp.inline_completion.get()` documents insert-mode <Tab> as the
+-- way to do it. Overriding <Tab> means owning the defaults it displaces, so each
+-- fallthrough restores one: vim.snippet.jump for the default snippet-jump map
+-- (`:h vim.snippet.jump()`), and a literal <Tab> for insert-mode indent and for
+-- normal-mode CTRL-I (jumplist forward). Completion-menu navigation is deliberately
+-- absent — that lives on cmp's native-idiom <C-n>/<C-p> keys.
 map({ "i", "n" }, "<Tab>", function()
   load_feature("ai")
 
@@ -149,12 +158,16 @@ map({ "i", "n" }, "<Tab>", function()
     return
   end
 
-  if vim.lsp.inline_completion and vim.lsp.inline_completion.get() then
+  if vim.lsp.inline_completion.get() then
     return
   end
 
+  if vim.snippet.active({ direction = 1 }) then
+    return "<Cmd>lua vim.snippet.jump(1)<CR>"
+  end
+
   return "<Tab>"
-end, { expr = true, desc = "Goto/apply next edit suggestion" })
+end, { expr = true, desc = "Apply next edit/inline suggestion, else snippet jump" })
 
 map({ "n", "t", "i", "x" }, "<Leader>af", function()
   sidekick_cli().focus()

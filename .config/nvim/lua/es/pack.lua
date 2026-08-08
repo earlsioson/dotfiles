@@ -293,8 +293,13 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
 
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
   once = true,
-  callback = function()
+  callback = function(args)
     M.load("cmp")
+    -- A plugin loaded while its trigger event is being dispatched never sees
+    -- that event. nvim-cmp installs its keymaps (<Tab>, <Down>, <C-n>, <CR>, …)
+    -- from its own InsertEnter/CmdlineEnter handler, so without replaying the
+    -- event the first insert or cmdline session shows the menu with dead keys.
+    vim.api.nvim_exec_autocmds(args.event, { modeline = false })
   end,
 })
 

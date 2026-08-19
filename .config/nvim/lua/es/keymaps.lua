@@ -348,6 +348,22 @@ map("n", "<Leader>fs", function()
   load_feature("telescope")
   require("telescope.builtin").git_status()
 end, { desc = "Find git changed files (status)" })
+map({ "n", "x" }, "<Leader>fc", function()
+  load_feature("telescope")
+  require("telescope.builtin").git_bcommits()
+end, { desc = "Find buffer commits (live diff)" })
+map("n", "<Leader>fC", function()
+  load_feature("telescope")
+  require("telescope.builtin").git_commits()
+end, { desc = "Find git commits (live diff)" })
+map("n", "<Leader>fB", function()
+  load_feature("telescope")
+  require("telescope.builtin").git_branches()
+end, { desc = "Find git branches" })
+map("n", "<Leader>fq", function()
+  load_feature("telescope")
+  require("telescope.builtin").quickfix()
+end, { desc = "Find quickfix entries" })
 
 -- File browser
 map("n", "<Leader>fe", function()
@@ -397,7 +413,13 @@ end, { desc = "Oil open directory (finder)" })
 -- plugins/gitsigns.lua on_attach callback (buffer-local, only in git files)
 
 -- Fugitive
+map("n", "<Leader>gs", "<Cmd>G | only<CR>", { desc = "Git status" })
 map("n", "<Leader>gg", "<Cmd>G | only<CR>", { desc = "Git status" })
+map("n", "<Leader>gc", "<Cmd>0Gclog<CR>", { desc = "Git buffer log (quickfix)" })
+map("n", "<Leader>gC", "<Cmd>Git log --oneline<CR>", { desc = "Git repo log" })
+map("n", "<Leader>gb", "<Cmd>Git blame<CR>", { desc = "Git blame" })
+map("n", "<Leader>gd", "<Cmd>Gvdiffsplit<CR>", { desc = "Git diff (vs index)" })
+map("n", "<Leader>gD", "<Cmd>Gvdiffsplit ~1<CR>", { desc = "Git diff (vs previous ~1)" })
 
 -- ============================================================================
 -- Flash Navigation

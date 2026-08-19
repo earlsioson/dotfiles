@@ -101,7 +101,7 @@ DAP debugger controls and inspection.
 | `<Leader>bp` | Preview scopes |
 
 ## Find
-Telescope pickers use ripgrep for text search and fd for file finding. Hidden file search (`<Leader>fh`) and the directory picker that feeds Oil (`<Leader>fD`) share the same fd exclude list in [keymaps.lua](../.config/nvim/lua/es/keymaps.lua).
+Telescope pickers use ripgrep for text search and fd for file finding. Hidden file search (`<Leader>fh`) and the directory picker that feeds Oil (`<Leader>fD`) share the same fd exclude list in [keymaps.lua](../.config/nvim/lua/es/keymaps.lua). Git commit pickers (`<Leader>fc`, `<Leader>fC`) open read-only Fugitive buffers (`:Gedit`) on selection rather than running `git checkout`.
 
 | Shortcut | Action |
 | --- | --- |
@@ -116,6 +116,10 @@ Telescope pickers use ripgrep for text search and fd for file finding. Hidden fi
 | `<Leader>fd` | Find document symbols |
 | `<Leader>fk` | Find keymaps |
 | `<Leader>fs` | Find changed Git files (status) |
+| `<Leader>fc` | Find buffer commits (live diff) |
+| `<Leader>fC` | Find repository commits (live diff) |
+| `<Leader>fB` | Find Git branches |
+| `<Leader>fq` | Find Quickfix entries |
 | `<Leader>fe` | Find explorer (file browser) |
 | `<Leader>fE` | Find explorer all (no gitignore) |
 | `<M-d>` (buffers picker) | Delete selected buffer and keep picker open |
@@ -125,7 +129,12 @@ Fugitive operations.
 
 | Shortcut | Action |
 | --- | --- |
-| `<Leader>gg` | Git status |
+| `<Leader>gs` / `<Leader>gg` | Git status |
+| `<Leader>gc` | Git buffer history log (quickfix) |
+| `<Leader>gC` | Git repository commit log |
+| `<Leader>gb` | Git interactive blame |
+| `<Leader>gd` | Git diff split (vs index) |
+| `<Leader>gD` | Git diff split (vs previous commit `~1`) |
 
 ## Hunks
 Gitsigns operations are buffer-local and active only in git files.

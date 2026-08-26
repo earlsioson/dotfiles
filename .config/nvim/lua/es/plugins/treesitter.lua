@@ -13,7 +13,6 @@ local languages = {
   "lua",
   "markdown",
   "markdown_inline",
-  "odin",
   "proto",
   "python",
   "regex",

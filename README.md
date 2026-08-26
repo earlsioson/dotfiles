@@ -56,7 +56,6 @@ The first Neovim launch installs any missing plugins. `tree-sitter-cli` compiles
 * **Deno**: TypeScript runtime, package manager, language server, and Pyrepl Jupyter kernel. Install the binary at `~/.local/bin/deno`, then register its built-in kernel once with `deno jupyter --install`.
 * **Zig**: Compiler and toolchain on `$PATH`, paired with `zls` (Zig language server). Both are static binaries installed outside Mason and declared as `external_server` entries in `es/plugins/lsp.lua`. Keep the two version-matched; `zls` tracks the compiler release series.
 * **Mojo** (optional): runs only on Apple silicon macOS and Ubuntu 22.04 or later, so it is absent on Intel Macs. Installed per project with uv rather than globally — see the Mojo section below. Both the `mojo` language server and the runner mappings are skipped when the toolchain is missing, so the configuration stays portable across machines.
-* **Odin** (optional): compiler on `$PATH`, paired with `ols` (Odin Language Server, a separate binary). Both are declared as `external_server` entries and gated on their executables, so an absent toolchain leaves the configuration inert rather than broken.
 * **Ruff** (Python linter/formatter): binary on `$PATH` — `brew install ruff` or the [astral installer](https://astral.sh/ruff/install.sh). Not Mason-managed; declared as `external_server` in `es/plugins/lsp.lua`.
 * **Formatter binaries**: `stylua`, `black`, and `rumdl` are used when formatting their corresponding filetypes and must be present on `$PATH`. `isort` is installed by the development dependency group above. `biome` formats JavaScript, TypeScript, CSS, HTML, and JSON, but needs no manual installation because Mason already provides it as a language server. Mojo formatting shells out to `mojo format` rather than a separate binary, so it follows the Mojo toolchain and is unavailable when that toolchain is not installed.
 * **Pandoc**: Required by `<Leader>mp` to render Markdown as a temporary HTML document in the default browser.
@@ -301,26 +300,6 @@ Mojo documentation now lives at [mojolang.org](https://mojolang.org), separate f
 #### MAX
 
 MAX needs no separate configuration. Its primary interface is a Python library, so MAX work is Python work: install it into a project virtualenv, register a Jupyter kernel for that environment, and the existing `<Leader>p` Pyrepl mappings pick it up through the interpreter matching described above. A real kernel keeps session state, which matters when a loaded model should survive between cells.
-
-### Odin
-Odin compiles a directory rather than a file: every `.odin` file in a folder forms one package, and `odin run .` builds them together. A single file must opt out explicitly with `odin run file.odin -file`. The runner therefore acts on the directory holding the current buffer, and no build manifest or root marker is involved.
-
-Tests are procedures carrying the `@(test)` attribute:
-
-```odin
-package tests
-
-import "core:testing"
-
-@(test)
-my_test :: proc(t: ^testing.T) {
-    testing.expect(t, 2 + 2 == 4, "arithmetic failed")
-}
-```
-
-`<Leader>xt` runs a single test through `-define:ODIN_TEST_NAMES=<package>.<proc>`. The qualifier comes from the file's `package` declaration, which need not match the directory name, so the runner reads it from the buffer rather than inferring it from the path. Grouped attributes such as `@(test, private)` are recognised.
-
-`ols` resolves its workspace from `ols.json`, `.git`, or any `.odin` file, so the upstream defaults are used unchanged. Unlike Mojo, Odin builds for Intel Macs as well as Apple silicon and Linux.
 
 ### Code Runner
 `es/runner.lua` holds everything the language runners share: the reused `task://output` scratch split, chunked stdout and stderr reassembly, and process control. Commands run detached in their own process group, because a build driver usually spawns the compiled program as a grandchild — signalling only the driver would leave that grandchild alive holding the output pipes open, so the exit callback would never fire. `<Leader>xs` signals the whole group and reports immediately rather than waiting on that callback.

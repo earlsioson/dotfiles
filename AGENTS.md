@@ -23,7 +23,7 @@ This repo is default-first (README "Philosophy"): Vim and Neovim start from nati
   - `plugins/`: Contains plugin setup modules.
   - `lsp/`: Contains per-server LSP configuration overrides.
   - Standalone modules (wrap no plugin): `keymaps.lua`, `options.lua`, `globals.lua`, `autocmds.lua`, `ui.lua`, `markdown_preview.lua`.
-  - Language runners: `runner.lua` (core engine) plus `zig.lua`, `mojo.lua`, `odin.lua`, `rust.lua`, and `python.lua`.
+  - Language runners: `runner.lua` (core engine) plus `zig.lua`, `mojo.lua`, `rust.lua`, and `python.lua`.
 - **Other Runtime Configs**: `.vimrc` and `.vim/` (Vim baseline), `.tmux.conf` (tmux).
 
 ## LSP & Language Integration

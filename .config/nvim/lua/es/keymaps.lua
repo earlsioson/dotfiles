@@ -18,6 +18,17 @@ local function nvim_tree()
   return require("nvim-tree.api")
 end
 
+local function open_nvim_tree_at(dir)
+  local nt = nvim_tree().tree
+  if nt.is_visible() then
+    nt.change_root(dir)
+    nt.focus()
+  else
+    nt.open({ path = dir })
+    nt.change_root(dir)
+  end
+end
+
 -- ============================================================================
 -- Gitsigns Keymaps (exported for on_attach callback)
 -- ============================================================================
@@ -441,8 +452,24 @@ map("n", "<Leader>ec", function()
   nvim_tree().tree.close()
 end, { desc = "NvimTree close" })
 map("n", "<Leader>ep", function()
-  local parent_dir = vim.fn.expand("%:p:h")
-  nvim_tree().tree.open({ path = parent_dir })
+  local nt = nvim_tree().tree
+  if nt.is_tree_buf(0) then
+    nt.change_root_to_parent()
+    return
+  end
+
+  local dir
+  if vim.bo.filetype == "oil" or vim.api.nvim_buf_get_name(0):match("^oil://") then
+    load_feature("explorer")
+    dir = require("oil").get_current_dir(0)
+  end
+
+  if not dir then
+    local file_path = vim.api.nvim_buf_get_name(0)
+    dir = file_path ~= "" and vim.fs.dirname(file_path) or vim.fn.getcwd()
+  end
+
+  open_nvim_tree_at(dir)
 end, { desc = "NvimTree open parent directory" })
 
 -- ============================================================================
@@ -462,7 +489,7 @@ vim.api.nvim_create_autocmd("FileType", {
       if not dir then
         return
       end
-      require("nvim-tree.api").tree.open({ path = dir, focus = true })
+      open_nvim_tree_at(dir)
     end, { buffer = true, desc = "NvimTree open Oil directory" })
   end,
 })

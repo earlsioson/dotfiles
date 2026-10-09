@@ -34,6 +34,9 @@ Built-in Neovim 0.12 mappings used by this config.
 | `<C-s>` (insert) | Signature help |
 | `]d` / `[d` | Next/previous diagnostic |
 | `]D` / `[D` | First/last diagnostic |
+| `<C-g>u` (insert) | Close the current undo block and start a new one; press Ctrl-G, then `u` (`:h i_CTRL-G_u`) |
+
+For an undo checkpoint, accept the suggestions you want to keep, then press Ctrl-G followed by `u` before continuing to type. Subsequent edits form a new undo block, so undoing them preserves the text accepted before the checkpoint. This native command also works in Vim and keeps you in insert mode.
 
 ## LSP Extras
 Buffer-local LSP mappings that supplement Neovim defaults instead of duplicating them.
@@ -56,11 +59,13 @@ Diagnostic list and float helpers. Navigation uses Neovim defaults above.
 | `<Leader>dq` | Diagnostic quickfix |
 
 ## AI
-Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (NES) configurations are documented in the [README.md](../README.md).
+Neovim displays Copilot inline completions; Sidekick displays Next Edit Suggestions (NES) and manages terminal sessions for installed AI CLIs. Both kinds of suggestions use the Copilot language server. Configuration is documented in the [README.md](../README.md#sidekick--copilot-lsp-configuration).
 
 ### Workflow Capabilities
+
 * **Copilot Authentication**: `:LspCopilotSignIn` starts the GitHub device verification flow.
-* **Inline Completion**: Copilot refreshes suggestions automatically in insert mode; `<Tab>` accepts the visible suggestion. Neovim ships no default keymap for this, which is why `<Tab>` is overridden — see `:h vim.lsp.inline_completion.get()`.
+* **Inline Completion**: Copilot refreshes suggestions automatically in insert mode; `<Tab>` accepts the visible suggestion. `<M-n>` / `<M-p>` cycle alternatives already returned by the server (`:h vim.lsp.inline_completion.select()`). `<M-i>` toggles inline suggestions for the current buffer (`:h vim.lsp.inline_completion.enable()`). These inline controls also work with other enabled servers supporting inline completion.
+* **Next Edit Suggestions**: `<M-r>` requests a next edit; `<M-e>` toggles NES globally. `<Tab>` jumps to or applies the active edit before falling through to inline completion. `<Esc>` clears NES through Sidekick's default behavior; leaving insert mode dismisses inline ghost text.
 * **Session Selection**: `<Leader>as` opens a selector for installed CLI clients.
 * **Terminal View**: `<Leader>aa` toggles visibility of the active Sidekick split window.
 * **Context Transmission**: Buffers, selections, or visual ranges can be piped to the session using `<Leader>at`, `<Leader>aF`, or visual `<Leader>av`.
@@ -68,7 +73,12 @@ Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (
 
 | Shortcut | Action |
 | --- | --- |
-| `<Tab>` (insert/normal) | First match wins: apply Sidekick NES, accept Copilot inline completion, jump to the next snippet placeholder, else a literal tab (insert indent, normal-mode `CTRL-I` jumplist forward). Not a completion-menu key — see the [nvim-cmp](#nvim-cmp) section |
+| `<Tab>` (insert/normal) | First match wins: jump to/apply Sidekick NES, accept Copilot inline completion, jump to the next snippet placeholder, else a literal tab (insert indent, normal-mode `CTRL-I` jumplist forward). Not a completion-menu key — see the [nvim-cmp](#nvim-cmp) section |
+| `<M-n>` (insert/normal) | Next inline alternative (Alt-N: next; requires an inline candidate) |
+| `<M-p>` (insert/normal) | Previous inline alternative (Alt-P: previous; requires an inline candidate) |
+| `<M-r>` (insert/normal) | Request next-edit suggestion (Alt-R: request) |
+| `<M-e>` (insert/normal) | Toggle Next Edit Suggestions globally (Alt-E: edits) |
+| `<M-i>` (insert/normal) | Toggle inline suggestions for the current buffer (Alt-I: inline) |
 | `<Leader>aa` | Toggle Sidekick CLI |
 | `<Leader>af` | Focus Sidekick CLI |
 | `<Leader>as` | Select an installed CLI |
@@ -77,6 +87,8 @@ Sidekick manages terminal sessions for installed AI CLIs. Next Edit Suggestion (
 | `<Leader>aF` | Send current file (`{file}`) |
 | `<Leader>av` | Send visual selection (`{selection}`) |
 | `<Leader>ap` | Prompt Sidekick |
+
+`<M-...>` means Alt/Meta; on macOS, the terminal must send Option as Alt/Meta. All five suggestion controls use the same Alt keys in insert and normal modes. Inline cycling only has an effect in insert mode because leaving insert mode clears its candidates. Accepting individual words or lines is not configured.
 
 ## Debugging
 DAP debugger controls and inspection.

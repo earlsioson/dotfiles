@@ -307,17 +307,24 @@ MAX needs no separate configuration. Its primary interface is a Python library, 
 Language modules supply only commands. Adding a language means writing one small module, adding a line to the `runner_modules` table in `es/keymaps.lua`, and registering the language server and treesitter parser. Verbs are bound only when the module implements them, so each language exposes exactly what its toolchain supports rather than a uniform set with dead keys.
 
 ### Sidekick & Copilot LSP Configuration
-Next Edit Suggestions (NES) use the `copilot` LSP client configuration.
+Neovim's native inline completion and Sidekick's Next Edit Suggestions (NES) use the same `copilot` LSP client. Inline completion suggests new code at the cursor; NES proposes changes to existing code, potentially elsewhere in the current file.
+
 * **LSP Integration**: Initialized via `vim.lsp.enable("copilot")`. The underlying Mason server package name is `copilot-language-server`.
 * **Authentication**: Signs in using the `:LspCopilotSignIn` command via the GitHub device verification flow.
 * **Inline Completion**: Copilot suggestions refresh automatically in insert mode. `<Tab>` accepts the visible suggestion — Neovim ships no default keymap for `vim.lsp.inline_completion.get()`, so this is the one place the default-first rule is knowingly set aside. `<C-Space>` opens the regular `nvim-cmp` LSP completion menu, whose own navigation stays on `<C-n>`/`<C-p>`.
 * **Persistence**: AI CLI sessions automatically hook into `tmux` persistence to stay alive when Neovim restarts.
 
 **Usage Mappings:**
-* **Auto-Trigger**: Pausing, typing, or leaving insert mode prompts automatic suggestions.
-* **`<Tab>`** (insert and normal): Applies the active edit suggestion, then falls through in order to inline completion, snippet placeholder jump (`vim.snippet.jump`), and finally a literal tab — preserving insert-mode indent and normal-mode `CTRL-I`. Overriding `<Tab>` means owning each default it displaces.
-* **`:Sidekick nes update`**: Manually requests a suggestion at the cursor.
-* **`:Sidekick nes toggle`**: Disables or re-enables Next Edit Suggestions.
+
+* **Auto-Trigger**: Inline suggestions refresh in insert mode. NES requests run after leaving insert mode, changing text in normal mode, or applying a next edit.
+* **`<Tab>`** (insert and normal): Jumps to or applies the active next edit, then falls through in order to inline completion, snippet placeholder jump (`vim.snippet.jump`), and finally a literal tab — preserving insert-mode indent and normal-mode `CTRL-I`. Overriding `<Tab>` means owning each default it displaces.
+* **`<M-n>` / `<M-p>`** (insert and normal, Alt-N / Alt-P): Cycle to the next/previous inline candidate already returned by the server (`:h vim.lsp.inline_completion.select()`). Cycling only has an effect in insert mode because leaving insert mode clears the candidates. The terminal must send Alt/Meta; on macOS, configure Option accordingly.
+* **`<M-r>`** (insert and normal, Alt-R: request): Manually requests a next edit at the cursor, equivalent to `:Sidekick nes update`.
+* **`<M-e>`** (insert and normal, Alt-E: edits): Disables or re-enables NES globally, equivalent to `:Sidekick nes toggle`.
+* **`<M-i>`** (insert and normal, Alt-I: inline): Toggles native inline suggestions for the current buffer (`:h vim.lsp.inline_completion.enable()`). This and inline cycling work with any enabled server supporting inline completion.
+* **`<Esc>`**: Clears NES through Sidekick's defaults; leaving insert mode dismisses inline ghost text.
+
+The suggestion controls use one set of Alt keys across insert and normal modes. Word/line acceptance is not configured. After syncing `.config/nvim/` into the live runtime, restart Neovim and verify the bindings in an interactive session.
 
 ### Keymaps Reference
 Detailed Vim, Neovim, and tmux keymaps are documented in:

@@ -148,7 +148,7 @@ end
 -- ============================================================================
 -- AI Operations (<Leader>a* = "ai")
 -- ============================================================================
--- Sidekick terminal sessions for local AI CLIs.
+-- Inline suggestions, Sidekick next edits, and terminal sessions for local AI CLIs.
 
 local function sidekick_cli()
   load_feature("ai")
@@ -179,6 +179,34 @@ map({ "i", "n" }, "<Tab>", function()
 
   return "<Tab>"
 end, { expr = true, desc = "Apply next edit/inline suggestion, else snippet jump" })
+
+-- No native keymaps for cycling inline candidates; see
+-- `:h vim.lsp.inline_completion.select()`. Keep cmp navigation on <C-n>/<C-p>.
+-- Share Alt keys across modes; cycling is a no-op without an inline candidate.
+map({ "n", "i" }, "<M-n>", function()
+  vim.lsp.inline_completion.select({ count = 1 })
+end, { desc = "Inline suggestion next" })
+map({ "n", "i" }, "<M-p>", function()
+  vim.lsp.inline_completion.select({ count = -1 })
+end, { desc = "Inline suggestion previous" })
+
+-- Sidekick's NES update/toggle actions have no default keymaps.
+-- See `:h sidekick.nvim-sidekick.nvim-next-edit-suggestions-(nes)`.
+map({ "n", "i" }, "<M-r>", function()
+  load_feature("ai")
+  require("sidekick.nes").update()
+end, { desc = "AI next edit request" })
+
+map({ "n", "i" }, "<M-e>", function()
+  load_feature("ai")
+  require("sidekick.nes").toggle()
+end, { desc = "AI next edits toggle" })
+
+-- `:h vim.lsp.inline_completion.enable()` supports buffer-scoped toggling.
+map({ "n", "i" }, "<M-i>", function()
+  local filter = { bufnr = 0 }
+  vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled(filter), filter)
+end, { desc = "AI inline suggestions toggle (buffer)" })
 
 map({ "n", "t", "i", "x" }, "<Leader>af", function()
   sidekick_cli().focus()

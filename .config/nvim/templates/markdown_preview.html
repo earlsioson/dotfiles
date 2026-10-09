@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="$if(lang)$$lang$$else$en$endif$">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>$pagetitle$</title>
+  <!-- Pandoc supplies document semantics; this template supplies reading layout.
+       https://pandoc.org/MANUAL.html#templates
+       https://www.w3.org/WAI/tutorials/page-structure/regions/
+       Neutral surface roles and text hierarchy adapt Material and Fluent guidance:
+       https://material-web.dev/theming/color/
+       https://fluent2.microsoft.design/color
+       Dark layers become lighter, following Carbon's layering model:
+       https://www.carbondesignsystem.com/building-blocks/foundations/color/overview
+       Fluid type and spacing: 320–1240px, 18–20px body, 1.2–1.25 type ratios.
+       https://utopia.fyi/type/calculator/?c=320,18,1.2,1240,20,1.25,3,1
+       Reading measure (ch approximates character width, not a literal count):
+       https://designsystem.digital.gov/components/typography/#measure-line-length
+       Device/browser theme preference: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme -->
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f4f4;
+      --surface: #ffffff;
+      --surface-container: #eaeaea;
+      --fg: #303030;
+      --heading: #161616;
+      --muted: #595959;
+      --accent: #245c9f;
+      --border: #c6c6c6;
+      --code-bg: #f4f4f4;
+
+      --step--1: clamp(0.9375rem, 0.9158rem + 0.1087vw, 1rem);
+      --step-0: clamp(1.125rem, 1.0815rem + 0.2174vw, 1.25rem);
+      --step-1: clamp(1.35rem, 1.2761rem + 0.3696vw, 1.5625rem);
+      --step-2: clamp(1.62rem, 1.5041rem + 0.5793vw, 1.9531rem);
+      --step-3: clamp(1.944rem, 1.771rem + 0.8651vw, 2.4414rem);
+
+      --space-2xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
+      --space-xs: clamp(0.6875rem, 0.6223rem + 0.3261vw, 0.9375rem);
+      --space-s: var(--step-0);
+      --space-m: clamp(1.6875rem, 1.6223rem + 0.3261vw, 1.875rem);
+      --space-l: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
+      --space-xl: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
+      --space-s-m: clamp(1.125rem, 0.9511rem + 0.8696vw, 1.875rem);
+      --space-s-l: clamp(1.125rem, 0.6467rem + 2.3913vw, 2.5rem);
+      --space-l-xl: clamp(2.25rem, 1.9022rem + 1.7391vw, 3.75rem);
+
+      --reading-measure: 66ch;
+      --reading-inset: var(--space-s-m);
+      --reading-width: calc(var(--reading-measure) + var(--reading-inset) + var(--reading-inset));
+      --contents-width: 16rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --surface: #1e1e1e;
+        --surface-container: #262626;
+        --fg: #d6d6d6;
+        --heading: #f0f0f0;
+        --muted: #b5b5b5;
+        --accent: #9ecaff;
+        --border: #525252;
+        --code-bg: #333333;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: var(--space-l-xl) var(--space-s-l);
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: var(--step-0);
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+    }
+
+    .layout { max-width: var(--reading-width); margin-inline: auto; }
+    main {
+      min-width: 0;
+      padding: var(--reading-inset);
+      background: var(--surface);
+      border-radius: 0.75rem;
+    }
+    article > :first-child { margin-top: 0; }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin: var(--space-xl) 0 var(--space-xs);
+      line-height: 1.25;
+      font-weight: 600;
+      color: var(--heading);
+      text-wrap: balance;
+      scroll-margin-top: var(--space-l);
+    }
+
+    h1 { font-size: var(--step-3); letter-spacing: -0.025em; }
+    h2 { font-size: var(--step-2); letter-spacing: -0.015em; }
+    h3 { font-size: var(--step-1); }
+    h4, h5, h6 { font-size: var(--step-0); }
+
+    p, ul, ol, dl, blockquote, pre, figure, .table-scroll {
+      margin-block: 0 var(--space-m);
+    }
+
+    ul, ol { padding-inline-start: 1.5em; }
+    li + li { margin-block-start: var(--space-2xs); }
+    li > ul, li > ol { margin-block: var(--space-2xs) 0; }
+    li > p:last-child { margin-bottom: 0; }
+    strong, b, dt { font-weight: 550; }
+    article .paragraph-emphasis > strong,
+    article .paragraph-emphasis > b { font-weight: 400; }
+    dd { margin-inline-start: 1.5em; }
+
+    a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-thickness: 0.06em;
+      text-underline-offset: 0.18em;
+    }
+    a:hover { text-decoration-thickness: 0.12em; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    main:focus { outline: none; }
+    :target { scroll-margin-top: var(--space-l); }
+
+    .skip-link {
+      position: absolute;
+      top: 0.75rem;
+      left: 1rem;
+      padding: 0.4em 0.8em;
+      background: var(--bg);
+      transform: translateY(-200%);
+      z-index: 1;
+    }
+    .skip-link:focus { transform: none; }
+
+    .contents {
+      margin-bottom: var(--space-l);
+      padding: var(--space-xs) var(--space-s);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background: var(--surface-container);
+      color: var(--muted);
+      font-size: var(--step--1);
+      line-height: 1.5;
+    }
+    .contents summary { cursor: pointer; font-weight: 600; color: var(--heading); }
+    .contents nav { margin-top: var(--space-xs); }
+    .contents ul { margin-bottom: 0; }
+    .contents a { display: inline-block; padding-block: 0.2em; color: var(--muted); }
+    .contents a:hover, .contents a:focus-visible { color: var(--accent); }
+
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9em;
+      font-weight: 400;
+    }
+    code {
+      padding: 0.1em 0.3em;
+      background: var(--code-bg);
+      border-radius: 0.25rem;
+    }
+    pre {
+      max-width: 100%;
+      padding: var(--space-s);
+      overflow-x: auto;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      line-height: 1.6;
+      overflow-wrap: normal;
+    }
+    pre code { padding: 0; background: transparent; font-size: inherit; }
+
+    blockquote {
+      margin-inline: 0;
+      padding-inline-start: var(--space-s);
+      border-inline-start: 3px solid var(--border);
+      color: var(--muted);
+    }
+    blockquote > :last-child { margin-bottom: 0; }
+
+    .table-scroll { max-width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95em; }
+    caption { text-align: start; font-weight: 550; margin-bottom: 0.5em; }
+    th, td { padding: 0.65em 0.9em; border: 1px solid var(--border); }
+    th { background: var(--code-bg); font-weight: 550; }
+    td { vertical-align: top; }
+
+    img, video { max-width: 100%; height: auto; }
+    figure { margin-inline: 0; }
+    figcaption { color: var(--muted); font-size: 0.9em; }
+    hr { border: 0; border-top: 1px solid var(--border); margin-block: var(--space-xl); }
+    .footnotes { font-size: 0.9em; }
+
+    /* Fit the sidebar beside the reading measure; centre the combined layout. */
+    @media (min-width: 76rem) {
+      .layout:has(.contents) {
+        display: grid;
+        grid-template-columns: var(--contents-width) minmax(0, 1fr);
+        gap: var(--space-l);
+        max-width: calc(var(--contents-width) + var(--space-l) + var(--reading-width));
+      }
+      .layout:has(.contents) > main { grid-column: 2; grid-row: 1; }
+      .contents {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: end;
+        align-self: start;
+        position: sticky;
+        top: var(--space-l);
+        width: 100%;
+        max-width: var(--contents-width);
+        max-height: calc(100vh - var(--space-l) - var(--space-l));
+        overflow-y: auto;
+      }
+    }
+
+    @media print {
+      :root { color-scheme: light; --bg: white; --surface: white; --surface-container: white; --fg: black; --heading: black; --muted: #444; --accent: black; --border: #bbb; --code-bg: #f3f3f3; }
+      body { padding: 0; font-size: 11pt; }
+      main { padding: 0; border-radius: 0; }
+      .layout, .layout:has(.contents) { display: block; max-width: none; }
+      .contents, .skip-link { display: none; }
+      h1, h2, h3, h4, h5, h6 { break-after: avoid; }
+      h1 { font-size: 2em; }
+      h2 { font-size: 1.5em; }
+      h3 { font-size: 1.2em; }
+      h4, h5, h6 { font-size: 1em; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+      .table-scroll { overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#preview-content">Skip to content</a>
+  <div class="layout">
+$if(table-of-contents)$
+    <details class="contents">
+      <summary>On this page</summary>
+      <nav aria-label="Table of contents">
+$table-of-contents$
+      </nav>
+    </details>
+$endif$
+    <main id="preview-content" tabindex="-1">
+      <article>
+$body$
+      </article>
+    </main>
+  </div>
+  <script>
+    // Large bold blocks hinder reading (GDS text-emphasis guidance).
+    // Retain the source semantics, but render fully emphasized paragraphs as body text.
+    // https://gds-way.digital.cabinet-office.gov.uk/manuals/programming-languages/html.html#text-emphasis
+    document.querySelectorAll('article p').forEach(paragraph => {
+      const emphasis = paragraph.firstElementChild;
+      if (emphasis && emphasis.matches('strong, b') &&
+          [...paragraph.childNodes].every(node => node === emphasis ||
+            (node.nodeType === Node.TEXT_NODE && !node.textContent.trim()))) {
+        paragraph.classList.add('paragraph-emphasis');
+      }
+    });
+    // Inline contents start collapsed; the desktop sidebar starts expanded.
+    const contents = document.querySelector('.contents');
+    if (contents) {
+      const wideLayout = window.matchMedia('(min-width: 76rem)');
+      contents.open = wideLayout.matches;
+      wideLayout.addEventListener('change', event => { contents.open = event.matches; });
+    }
+    // Keep wide tables scrollable without changing their native table semantics.
+    document.querySelectorAll('article table').forEach(table => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-scroll';
+      table.before(wrapper);
+      wrapper.append(table);
+    });
+    // Keyboard users can scroll overflowing blocks; ordinary blocks stay out of the tab order.
+    const blocks = document.querySelectorAll('pre, .table-scroll');
+    function updateScrollTargets() {
+      blocks.forEach(block => {
+        if (block.scrollWidth > block.clientWidth) {
+          block.tabIndex = 0;
+          block.setAttribute('role', 'region');
+          const caption = block.querySelector('caption');
+          block.setAttribute('aria-label', caption ? caption.textContent : block.matches('pre') ? 'Code sample' : 'Table');
+        } else {
+          block.removeAttribute('tabindex');
+          block.removeAttribute('role');
+          block.removeAttribute('aria-label');
+        }
+      });
+    }
+    updateScrollTargets();
+    window.addEventListener('resize', updateScrollTargets);
+  </script>
+</body>
+</html>
